@@ -18,6 +18,10 @@ Route::get('/', [\App\Http\Controllers\PageController::class, 'home'])->name('ho
 Route::get('/treinamento', [\App\Http\Controllers\PageController::class, 'cursos'])->name('cursos');
 Route::get('/produtos', [\App\Http\Controllers\PageController::class, 'produtos'])->name('produtos');
 
+Route::get('/carrinho', [\App\Http\Controllers\CartController::class, 'index'])->name('carrinho.index');
+Route::post('/carrinho/add', [\App\Http\Controllers\CartController::class, 'add'])->name('carrinho.add');
+Route::post('/carrinho/remove', [\App\Http\Controllers\CartController::class, 'remove'])->name('carrinho.remove');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -30,6 +34,10 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/dashboard', [\App\Http\Controllers\AdminController::class, 'dashboard'])->name('admin.dashboard');
+    
+    // LMS Routes
+    Route::get('/lms/dashboard', [\App\Http\Controllers\LmsController::class, 'dashboard'])->name('lms.dashboard');
+    Route::get('/lms/curso/{course}/aula/{lesson}', [\App\Http\Controllers\LmsController::class, 'lesson'])->name('lms.lesson');
 });
 
 require __DIR__.'/auth.php';

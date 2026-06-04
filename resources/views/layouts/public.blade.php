@@ -147,6 +147,14 @@
                     <button class="btn btn-link text-white text-decoration-none me-3" id="theme-toggle">
                         <i class="fa-solid fa-moon"></i>
                     </button>
+                    <a href="{{ route('carrinho.index') }}" class="btn btn-link text-white text-decoration-none me-4 position-relative">
+                        <i class="fa-solid fa-cart-shopping fs-5"></i>
+                        @if(session('cart') && count(session('cart')) > 0)
+                            <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                {{ count(session('cart')) }}
+                            </span>
+                        @endif
+                    </a>
                     @auth
                         <a href="{{ route('admin.dashboard') }}" class="btn btn-brand">Painel</a>
                     @else
