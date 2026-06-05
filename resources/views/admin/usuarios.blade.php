@@ -11,6 +11,13 @@
     </button>
 </div>
 
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show shadow-sm border-0" role="alert">
+        <i class="fa-solid fa-circle-check me-2"></i>{{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
 <div class="card border-0 shadow-sm rounded-4">
     <div class="card-body px-0 pb-0">
         <div class="table-responsive">
@@ -43,7 +50,13 @@
                                 <span class="badge bg-secondary bg-opacity-10 text-secondary">{{ $role }}</span>
                             @endif
                         </td>
-                        <td><span class="badge bg-success">Ativo</span></td>
+                        <td>
+                            @if($user->is_active ?? true)
+                                <span class="badge bg-success">Ativo</span>
+                            @else
+                                <span class="badge bg-danger">Inativo</span>
+                            @endif
+                        </td>
                         <td class="text-end pe-4">
                             <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#modalEditUsuario{{ $user->id }}"><i class="fa-solid fa-pen"></i></button>
                         </td>
@@ -80,7 +93,14 @@
                                             </div>
                                             <div class="col-12">
                                                 <label class="form-label text-muted small fw-bold">Nova Senha (deixe em branco para não alterar)</label>
-                                                <input type="password" name="password" class="form-control">
+                                                <input type="password" name="password" class="form-control @error('password') is-invalid @enderror">
+                                                @error('password')<div class="invalid-feedback fw-bold">{{ $message }}</div>@enderror
+                                            </div>
+                                            <div class="col-12 mt-2">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" role="switch" name="is_active" id="isActiveSwitch{{ $user->id }}" {{ ($user->is_active ?? true) ? 'checked' : '' }}>
+                                                    <label class="form-check-label fw-bold text-muted small" for="isActiveSwitch{{ $user->id }}">Conta Ativa</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </form>
@@ -111,26 +131,31 @@
                 <form action="{{ route('admin.usuarios.store') }}" method="POST" id="formUsuario">
                     @csrf
                     <div class="row g-3">
+                        <input type="hidden" name="action_type" value="create">
                         <div class="col-12">
                             <label class="form-label text-muted small fw-bold">Nome Completo</label>
-                            <input type="text" name="name" class="form-control" required>
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+                            @error('name')<div class="invalid-feedback fw-bold">{{ $message }}</div>@enderror
                         </div>
                         <div class="col-12">
                             <label class="form-label text-muted small fw-bold">Email</label>
-                            <input type="email" name="email" class="form-control" required>
+                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                            @error('email')<div class="invalid-feedback fw-bold">{{ $message }}</div>@enderror
                         </div>
                         <div class="col-12">
                             <label class="form-label text-muted small fw-bold">Perfil de Acesso (Role)</label>
-                            <select name="role" class="form-select" required>
-                                <option value="Admin">Administrador (Admin)</option>
-                                <option value="Formador">Formador (Cursos)</option>
-                                <option value="Tech">Técnico (Tech)</option>
-                                <option value="Aluno" selected>Aluno / Cliente</option>
+                            <select name="role" class="form-select @error('role') is-invalid @enderror" required>
+                                <option value="Admin" {{ old('role') == 'Admin' ? 'selected' : '' }}>Administrador (Admin)</option>
+                                <option value="Formador" {{ old('role') == 'Formador' ? 'selected' : '' }}>Formador (Cursos)</option>
+                                <option value="Tech" {{ old('role') == 'Tech' ? 'selected' : '' }}>Técnico (Tech)</option>
+                                <option value="Aluno" {{ old('role') == 'Aluno' ? 'selected' : (old('role') ? '' : 'selected') }}>Aluno / Cliente</option>
                             </select>
+                            @error('role')<div class="invalid-feedback fw-bold">{{ $message }}</div>@enderror
                         </div>
                         <div class="col-12">
                             <label class="form-label text-muted small fw-bold">Senha Inicial</label>
-                            <input type="password" name="password" class="form-control" required>
+                            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                            @error('password')<div class="invalid-feedback fw-bold">{{ $message }}</div>@enderror
                         </div>
                     </div>
                 </form>
@@ -147,4 +172,13 @@
     document.querySelector('.d-flex .btn-primary').setAttribute('data-bs-toggle', 'modal');
     document.querySelector('.d-flex .btn-primary').setAttribute('data-bs-target', '#modalUsuario');
 </script>
+
+@if($errors->any() && old('action_type') == 'create')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var myModal = new bootstrap.Modal(document.getElementById('modalUsuario'));
+        myModal.show();
+    });
+</script>
+@endif
 @endsection

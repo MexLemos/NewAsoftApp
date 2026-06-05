@@ -27,6 +27,15 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        if (! Auth::user()->is_active) {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'email' => __('Esta conta foi desativada. Contacte o administrador.'),
+            ]);
+        }
+
         $request->session()->regenerate();
 
         return redirect()->intended(RouteServiceProvider::HOME);

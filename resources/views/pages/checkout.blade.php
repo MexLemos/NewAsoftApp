@@ -18,17 +18,27 @@
                 <form action="{{ route('checkout.process') }}" method="POST" enctype="multipart/form-data" id="checkoutForm">
                     @csrf
                     <div class="row g-3">
+                        @php
+                            $user = auth()->user();
+                            $firstName = '';
+                            $lastName = '';
+                            if ($user) {
+                                $nameParts = explode(' ', $user->name);
+                                $firstName = $nameParts[0];
+                                $lastName = count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : '';
+                            }
+                        @endphp
                         <div class="col-sm-6">
                             <label class="form-label">Nome Próprio</label>
-                            <input type="text" name="first_name" class="form-control" required>
+                            <input type="text" name="first_name" class="form-control" value="{{ $firstName }}" required>
                         </div>
                         <div class="col-sm-6">
                             <label class="form-label">Apelido</label>
-                            <input type="text" name="last_name" class="form-control" required>
+                            <input type="text" name="last_name" class="form-control" value="{{ $lastName }}" required>
                         </div>
                         <div class="col-12">
                             <label class="form-label">Endereço de E-mail</label>
-                            <input type="email" name="email" class="form-control" placeholder="nome@exemplo.com" required>
+                            <input type="email" name="email" class="form-control" placeholder="nome@exemplo.com" value="{{ $user->email ?? '' }}" required>
                         </div>
                         <div class="col-12">
                             <label class="form-label">Telemóvel</label>

@@ -28,7 +28,7 @@ class LmsController extends Controller
             ]);
         }
 
-        return redirect()->route('lms.dashboard')->with('success', 'Matrícula efetuada com sucesso!');
+        return redirect()->route('lms.dashboard')->with('success', 'Curso adicionado! Clique abaixo para abrir e explorar os conteúdos.');
     }
 
     public function lesson($course, $lesson)

@@ -8,7 +8,19 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        return view('admin.dashboard');
+        $metrics = [
+            'cursos_vendidos' => \App\Models\Enrollment::where('status', 'active')->count(),
+            'alunos_ativos' => \App\Models\User::count(),
+            'produtos_catalogo' => \App\Models\Product::count(),
+            'parceiros' => \App\Models\Partner::count(),
+        ];
+        
+        // Orders (Leads with orders)
+        $recentOrders = \App\Models\Lead::where('message', 'like', '%PEDIDO DE COMPRA%')->latest()->take(5)->get();
+        // Just contact leads
+        $recentLeads = \App\Models\Lead::where('message', 'not like', '%PEDIDO DE COMPRA%')->latest()->take(5)->get();
+
+        return view('admin.dashboard', compact('metrics', 'recentOrders', 'recentLeads'));
     }
 
     public function produtos()
@@ -143,6 +155,7 @@ class AdminController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->is_active = $request->has('is_active');
         
         if ($request->filled('password')) {
             $user->password = \Illuminate\Support\Facades\Hash::make($request->password);

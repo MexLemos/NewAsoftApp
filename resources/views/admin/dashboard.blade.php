@@ -17,7 +17,7 @@
                 </div>
                 <div>
                     <h6 class="text-muted mb-1">Cursos Vendidos</h6>
-                    <h3 class="mb-0 fw-bold">145</h3>
+                    <h3 class="mb-0 fw-bold">{{ $metrics['cursos_vendidos'] }}</h3>
                 </div>
             </div>
         </div>
@@ -30,8 +30,8 @@
                     <i class="fa-solid fa-users fs-4"></i>
                 </div>
                 <div>
-                    <h6 class="text-muted mb-1">Alunos Ativos</h6>
-                    <h3 class="mb-0 fw-bold">3,200</h3>
+                    <h6 class="text-muted mb-1">Alunos/Utilizadores</h6>
+                    <h3 class="mb-0 fw-bold">{{ $metrics['alunos_ativos'] }}</h3>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
                 </div>
                 <div>
                     <h6 class="text-muted mb-1">Produtos em Catálogo</h6>
-                    <h3 class="mb-0 fw-bold">87</h3>
+                    <h3 class="mb-0 fw-bold">{{ $metrics['produtos_catalogo'] }}</h3>
                 </div>
             </div>
         </div>
@@ -59,7 +59,7 @@
                 </div>
                 <div>
                     <h6 class="text-muted mb-1">Parceiros</h6>
-                    <h3 class="mb-0 fw-bold">24</h3>
+                    <h3 class="mb-0 fw-bold">{{ $metrics['parceiros'] }}</h3>
                 </div>
             </div>
         </div>
@@ -113,27 +113,26 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @forelse($recentOrders as $order)
                             <tr>
-                                <td>#ORD-001</td>
-                                <td>João Silva</td>
-                                <td>04 Jun 2026</td>
-                                <td><span class="badge bg-success">Completado</span></td>
-                                <td>Kz 70.000,00</td>
+                                <td>#ORD-{{ str_pad($order->id, 3, '0', STR_PAD_LEFT) }}</td>
+                                <td>{{ $order->name }}</td>
+                                <td>{{ $order->created_at->format('d M Y') }}</td>
+                                <td>
+                                    @if($order->status === 'new')
+                                        <span class="badge bg-warning text-dark">Pendente</span>
+                                    @elseif($order->status === 'qualified')
+                                        <span class="badge bg-success">Aprovado</span>
+                                    @else
+                                        <span class="badge bg-secondary">{{ $order->status }}</span>
+                                    @endif
+                                </td>
                             </tr>
+                            @empty
                             <tr>
-                                <td>#ORD-002</td>
-                                <td>Maria Costa</td>
-                                <td>03 Jun 2026</td>
-                                <td><span class="badge bg-warning text-dark">Pendente</span></td>
-                                <td>Kz 15.000,00</td>
+                                <td colspan="4" class="text-center text-muted">Nenhum pedido recente.</td>
                             </tr>
-                            <tr>
-                                <td>#ORD-003</td>
-                                <td>Empresa XYZ</td>
-                                <td>01 Jun 2026</td>
-                                <td><span class="badge bg-info">Processando</span></td>
-                                <td>Kz 350.000,00</td>
-                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -147,20 +146,23 @@
             </div>
             <div class="card-body px-4">
                 <ul class="list-group list-group-flush mt-3">
+                    @forelse($recentLeads as $lead)
                     <li class="list-group-item px-0 d-flex justify-content-between align-items-start border-0 mb-3">
                         <div class="ms-2 me-auto">
-                            <div class="fw-bold">Carlos Mendes</div>
-                            <small class="text-muted">Interesse em Consultoria TI</small>
+                            <div class="fw-bold">{{ $lead->name }}</div>
+                            <small class="text-muted">{{ Str::limit($lead->message, 30) }}</small>
                         </div>
-                        <span class="badge bg-primary rounded-pill">Novo</span>
+                        @if($lead->status === 'new')
+                            <span class="badge bg-primary rounded-pill">Novo</span>
+                        @else
+                            <span class="badge bg-secondary rounded-pill">Visto</span>
+                        @endif
                     </li>
-                    <li class="list-group-item px-0 d-flex justify-content-between align-items-start border-0 mb-3">
-                        <div class="ms-2 me-auto">
-                            <div class="fw-bold">Ana Rita</div>
-                            <small class="text-muted">Dúvida sobre curso React</small>
-                        </div>
-                        <span class="badge bg-warning text-dark rounded-pill">Em Contacto</span>
+                    @empty
+                    <li class="list-group-item px-0 border-0 text-muted">
+                        Sem novos contactos.
                     </li>
+                    @endforelse
                 </ul>
             </div>
         </div>

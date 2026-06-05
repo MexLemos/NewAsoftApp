@@ -80,7 +80,7 @@
                 </li>
                 @endhasanyrole
 
-                @hasrole('admin')
+                @hasanyrole('admin|tech')
                 <li class="nav-item">
                     <a href="{{ route('admin.cursos') }}" class="{{ request()->routeIs('admin.cursos') ? 'active' : '' }}"><i class="fa-solid fa-graduation-cap me-2 w-20px"></i> Cursos</a>
                 </li>
@@ -91,10 +91,13 @@
                     <a href="{{ route('admin.servicos') }}" class="{{ request()->routeIs('admin.servicos') ? 'active' : '' }}"><i class="fa-solid fa-network-wired me-2 w-20px"></i> Serviços</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.usuarios') }}" class="{{ request()->routeIs('admin.usuarios') ? 'active' : '' }}"><i class="fa-solid fa-users me-2 w-20px"></i> Usuários</a>
-                </li>
-                <li class="nav-item">
                     <a href="{{ route('admin.leads') }}" class="{{ request()->routeIs('admin.leads') ? 'active' : '' }}"><i class="fa-solid fa-bullhorn me-2 w-20px"></i> Leads / CRM</a>
+                </li>
+                @endhasanyrole
+
+                @hasrole('admin')
+                <li class="nav-item">
+                    <a href="{{ route('admin.usuarios') }}" class="{{ request()->routeIs('admin.usuarios') ? 'active' : '' }}"><i class="fa-solid fa-users me-2 w-20px"></i> Usuários</a>
                 </li>
                 <li class="nav-item border-top mt-3 pt-3 border-secondary border-opacity-25">
                     <a href="{{ route('admin.configuracoes') }}" class="{{ request()->routeIs('admin.configuracoes') ? 'active' : '' }}"><i class="fa-solid fa-gear me-2 w-20px"></i> Configurações</a>

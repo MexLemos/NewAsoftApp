@@ -1,20 +1,14 @@
-@extends('layouts.public')
+@extends('layouts.lms')
 
-@section('title', 'Meus Cursos - Área do Aluno')
+@section('title', 'Meus Cursos')
 
 @section('content')
-<div class="py-4" style="background-color: var(--asoft-primary); color: #fff;">
-    <div class="container">
-        <h2 class="fw-bold mb-0">Área do Aluno</h2>
-        <p class="mb-0 opacity-75">Bem-vindo de volta, {{ Auth::user()->name }}!</p>
+<div class="row mb-4">
+    <div class="col-12">
+        <h4 class="fw-bold mb-1">Meus Cursos</h4>
+        <p class="text-muted">Continue de onde parou e acompanhe o seu progresso.</p>
     </div>
 </div>
-
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="fw-bold">Meus Cursos</h4>
-        <a href="{{ route('cursos') }}" class="btn btn-outline-primary">Navegar por mais cursos</a>
-    </div>
 
     <div class="row g-4">
         @forelse($enrolledCourses as $course)
