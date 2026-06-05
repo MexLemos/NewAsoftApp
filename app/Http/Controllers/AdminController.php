@@ -45,6 +45,11 @@ class AdminController extends Controller
         $slug = \Illuminate\Support\Str::slug($request->name) . '-' . time();
         $price = $request->price ?? 0;
 
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('produtos', 'public');
+        }
+
         if ($request->category === 'curso') {
             $cat = \App\Models\Category::firstOrCreate(['name' => 'Geral', 'slug' => 'geral']);
             \App\Models\Course::create([
@@ -138,11 +143,52 @@ class AdminController extends Controller
         return back()->with('success', 'Produto removido com sucesso!');
     }
 
+    public function updateProduct(Request $request, $id)
+    {
+        $product = \App\Models\Product::findOrFail($id);
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+        ]);
+
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = $request->price ? (float)$request->price : 0;
+        
+        if ($request->hasFile('image')) {
+            $product->image = $request->file('image')->store('produtos', 'public');
+        }
+        
+        $product->save();
+        return back()->with('success', 'Produto atualizado com sucesso!');
+    }
+
     public function destroyService($id)
     {
         $service = \App\Models\Service::findOrFail($id);
         $service->delete();
         return back()->with('success', 'Serviço removido com sucesso!');
+    }
+
+    public function updateService(Request $request, $id)
+    {
+        $service = \App\Models\Service::findOrFail($id);
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+        ]);
+
+        $service->title = $request->name;
+        $service->description = $request->description;
+        
+        if ($request->hasFile('image')) {
+            $service->icon = $request->file('image')->store('produtos', 'public');
+        }
+        
+        $service->save();
+        return back()->with('success', 'Serviço atualizado com sucesso!');
     }
 
     public function updateConfiguracoes(Request $request)

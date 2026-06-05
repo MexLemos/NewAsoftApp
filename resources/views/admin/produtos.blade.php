@@ -42,6 +42,7 @@
                         <td>Kz {{ number_format($product->price, 2, ',', '.') }}</td>
                         <td><span class="badge bg-success">Ativo</span></td>
                         <td class="text-end pe-4">
+                            <button type="button" class="btn btn-sm btn-light me-1" data-bs-toggle="modal" data-bs-target="#modalEditProduct{{ $product->id }}"><i class="fa-solid fa-pen"></i></button>
                             <form action="{{ route('admin.produtos.destroy', $product->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja deletar este produto?');">
                                 @csrf
                                 @method('DELETE')
@@ -49,13 +50,54 @@
                             </form>
                         </td>
                     </tr>
+                    <!-- Edit Modal para Produto -->
+                    <div class="modal fade" id="modalEditProduct{{ $product->id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content border-0 rounded-4 shadow">
+                                <div class="modal-header border-bottom-0 pb-0">
+                                    <h5 class="modal-title fw-bold">Editar Produto</h5>
+                                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body p-4">
+                                    <form action="{{ route('admin.produtos.update', $product->id) }}" method="POST" enctype="multipart/form-data" id="formEditProduct{{ $product->id }}">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted small fw-bold">Nome</label>
+                                            <input type="text" name="name" class="form-control" value="{{ $product->name }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted small fw-bold">Preço (Kz)</label>
+                                            <input type="number" name="price" class="form-control" value="{{ $product->price }}" step="0.01">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted small fw-bold">Nova Imagem (opcional)</label>
+                                            <input type="file" name="image" class="form-control">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted small fw-bold">Descrição</label>
+                                            <textarea name="description" class="form-control" rows="3" required>{{ $product->description }}</textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
+                                    <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" form="formEditProduct{{ $product->id }}" class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     @endforeach
 
                     @foreach($services as $service)
                     <tr>
                         <td class="ps-4">
                             <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                <i class="fa-solid fa-network-wired text-muted"></i>
+                                @if($service->icon)
+                                    <img src="{{ asset('storage/' . $service->icon) }}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                @else
+                                    <i class="fa-solid fa-network-wired text-muted"></i>
+                                @endif
                             </div>
                         </td>
                         <td class="fw-medium">{{ $service->title }}</td>
@@ -63,7 +105,7 @@
                         <td>-</td>
                         <td><span class="badge bg-success">Ativo</span></td>
                         <td class="text-end pe-4">
-                            <button class="btn btn-sm btn-light me-1"><i class="fa-solid fa-pen"></i></button>
+                            <button type="button" class="btn btn-sm btn-light me-1" data-bs-toggle="modal" data-bs-target="#modalEditService{{ $service->id }}"><i class="fa-solid fa-pen"></i></button>
                             <form action="{{ route('admin.servicos.destroy', $service->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja deletar este serviço?');">
                                 @csrf
                                 @method('DELETE')
@@ -71,6 +113,39 @@
                             </form>
                         </td>
                     </tr>
+                    <!-- Edit Modal para Serviço -->
+                    <div class="modal fade" id="modalEditService{{ $service->id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content border-0 rounded-4 shadow">
+                                <div class="modal-header border-bottom-0 pb-0">
+                                    <h5 class="modal-title fw-bold">Editar Serviço</h5>
+                                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body p-4">
+                                    <form action="{{ route('admin.servicos.update', $service->id) }}" method="POST" enctype="multipart/form-data" id="formEditService{{ $service->id }}">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted small fw-bold">Nome</label>
+                                            <input type="text" name="name" class="form-control" value="{{ $service->title }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted small fw-bold">Nova Imagem (opcional)</label>
+                                            <input type="file" name="image" class="form-control">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted small fw-bold">Descrição</label>
+                                            <textarea name="description" class="form-control" rows="3" required>{{ $service->description }}</textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
+                                    <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" form="formEditService{{ $service->id }}" class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     @endforeach
 
                     @if($products->isEmpty() && $services->isEmpty())

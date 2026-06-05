@@ -24,6 +24,7 @@ class PageController extends Controller
 
     public function produtos()
     {
-        return view('pages.produtos');
+        $products = \App\Models\Product::latest()->get();
+        return view('pages.produtos', compact('products'));
     }
 }
