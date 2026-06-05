@@ -52,7 +52,8 @@ class AdminController extends Controller
 
     public function configuracoes()
     {
-        return view('admin.configuracoes');
+        $partners = \App\Models\Partner::latest()->get();
+        return view('admin.configuracoes', compact('partners'));
     }
 
     public function storeItem(Request $request)
@@ -177,6 +178,7 @@ class AdminController extends Controller
 
         $validated['slug'] = \Illuminate\Support\Str::slug($request->title) . '-' . time();
         $validated['is_published'] = $request->has('is_published');
+        $validated['is_free'] = $request->has('is_free');
 
         if ($request->hasFile('thumbnail')) {
             $validated['thumbnail'] = $request->file('thumbnail')->store('courses', 'public');
@@ -270,5 +272,29 @@ class AdminController extends Controller
         }
 
         return redirect()->back()->with('success', 'Configurações atualizadas com sucesso!');
+    }
+
+    public function storePartner(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'logo' => 'required|image',
+            'website_url' => 'nullable|url',
+        ]);
+
+        \App\Models\Partner::create([
+            'name' => $request->name,
+            'logo_url' => $request->file('logo')->store('partners', 'public'),
+            'website_url' => $request->website_url,
+        ]);
+
+        return redirect()->back()->with('success', 'Parceiro adicionado com sucesso!');
+    }
+
+    public function destroyPartner($id)
+    {
+        $partner = \App\Models\Partner::findOrFail($id);
+        $partner->delete();
+        return redirect()->back()->with('success', 'Parceiro removido com sucesso!');
     }
 }

@@ -117,8 +117,13 @@
                     <div class="card-body p-4 d-flex flex-column">
                         <h5 class="fw-bold mb-2">{{ $course->title }}</h5>
                         <p class="text-muted small mb-4">{{ \Illuminate\Support\Str::limit($course->description, 100) }}</p>
-                        <div class="mt-auto">
+                        <div class="mt-auto d-flex justify-content-between align-items-center">
                             <a href="{{ route('cursos') }}" class="btn btn-warning fw-bold btn-sm px-3 shadow-sm" style="background-color: var(--asoft-accent); border-color: var(--asoft-accent); color: white;">Ver curso</a>
+                            @if($course->is_free)
+                                <span class="badge bg-success shadow-sm px-3 py-2 rounded-pill">Grátis</span>
+                            @else
+                                <span class="fw-bold text-primary small">{{ number_format($course->price, 2, ',', '.') }} Kz</span>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -299,20 +304,21 @@
         </style>
         <div class="partners-carousel-container">
             <div class="partners-carousel-track">
-                <!-- Original set -->
-                <img src="{{ asset('images/partners/partner-1.png') }}" class="partner-logo" alt="Parceiro 1">
-                <img src="{{ asset('images/partners/partner-2.png') }}" class="partner-logo" alt="Parceiro 2">
-                <img src="{{ asset('images/partners/partner-3.png') }}" class="partner-logo" alt="Parceiro 3">
-                <img src="{{ asset('images/partners/partner-1.png') }}" class="partner-logo" alt="Parceiro 1">
-                <img src="{{ asset('images/partners/partner-2.png') }}" class="partner-logo" alt="Parceiro 2">
-                <img src="{{ asset('images/partners/partner-3.png') }}" class="partner-logo" alt="Parceiro 3">
-                <!-- Duplicated set for seamless scrolling -->
-                <img src="{{ asset('images/partners/partner-1.png') }}" class="partner-logo" alt="Parceiro 1">
-                <img src="{{ asset('images/partners/partner-2.png') }}" class="partner-logo" alt="Parceiro 2">
-                <img src="{{ asset('images/partners/partner-3.png') }}" class="partner-logo" alt="Parceiro 3">
-                <img src="{{ asset('images/partners/partner-1.png') }}" class="partner-logo" alt="Parceiro 1">
-                <img src="{{ asset('images/partners/partner-2.png') }}" class="partner-logo" alt="Parceiro 2">
-                <img src="{{ asset('images/partners/partner-3.png') }}" class="partner-logo" alt="Parceiro 3">
+                <!-- Loop over the dynamic partners twice for seamless scrolling if needed -->
+                @foreach($partners as $partner)
+                    <img src="{{ $partner->logo_url ? asset('storage/' . $partner->logo_url) : asset('images/default-partner.png') }}" class="partner-logo" alt="{{ $partner->name }}" title="{{ $partner->name }}">
+                @endforeach
+                <!-- Duplicated set for seamless scrolling if there are at least some partners -->
+                @if($partners->count() > 0)
+                    @foreach($partners as $partner)
+                        <img src="{{ $partner->logo_url ? asset('storage/' . $partner->logo_url) : asset('images/default-partner.png') }}" class="partner-logo" alt="{{ $partner->name }}" title="{{ $partner->name }}">
+                    @endforeach
+                    @foreach($partners as $partner)
+                        <img src="{{ $partner->logo_url ? asset('storage/' . $partner->logo_url) : asset('images/default-partner.png') }}" class="partner-logo" alt="{{ $partner->name }}" title="{{ $partner->name }}">
+                    @endforeach
+                @else
+                    <p class="text-muted">Parceiros em breve</p>
+                @endif
             </div>
         </div>
     </div>

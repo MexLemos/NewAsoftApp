@@ -18,10 +18,13 @@ class LmsController extends Controller
         $user = \Illuminate\Support\Facades\Auth::user();
         
         if (!$user->enrollments()->where('course_id', $course_id)->exists()) {
+            $course = \App\Models\Course::findOrFail($course_id);
+            
             \App\Models\Enrollment::create([
                 'user_id' => $user->id,
                 'course_id' => $course_id,
                 'progress_percent' => 0,
+                'status' => $course->is_free ? 'active' : 'pending',
             ]);
         }
 

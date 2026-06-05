@@ -4,11 +4,12 @@
 
 @section('content')
 <!-- Page Header -->
-<div class="py-5" style="background-color: var(--asoft-primary); color: #fff;">
-    <div class="container py-5 text-center">
+<div class="py-5 position-relative" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center;">
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(15, 23, 42, 0.85);"></div>
+    <div class="container py-5 text-center position-relative z-1 text-white">
         <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill fw-bold">Melhor Plataforma de Cursos {{ date('Y') }}</span>
-        <h1 class="display-4 fw-bolder mb-3">Transforme sua Carreira<br>com Nossos Cursos Profissionais</h1>
-        <p class="lead opacity-75 mx-auto" style="max-width: 700px;">Aprenda com especialistas do mercado de modo híbrido (presencial e online). Agende as suas aulas práticas e interaja com nossa comunidade.</p>
+        <h1 class="display-4 fw-bolder mb-3 text-white">Transforme sua Carreira<br>com Nossos Cursos Profissionais</h1>
+        <p class="lead opacity-75 mx-auto" style="max-width: 700px; color: #fff;">Aprenda com especialistas do mercado de modo híbrido (presencial e online). Agende as suas aulas práticas e interaja com nossa comunidade.</p>
     </div>
 </div>
 
@@ -59,7 +60,11 @@
                         <h5 class="card-title fw-bold">{{ $course->title }}</h5>
                         <p class="card-text text-muted small mb-4">{{ \Illuminate\Support\Str::limit($course->description, 100) }}</p>
                         <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="fw-bold fs-5 text-dark">{{ number_format($course->price, 2, ',', '.') }} Kz</span>
+                            @if($course->is_free)
+                                <span class="badge bg-success px-3 py-2 fs-6 rounded-pill">Grátis</span>
+                            @else
+                                <span class="fw-bold fs-5 text-dark">{{ number_format($course->price, 2, ',', '.') }} Kz</span>
+                            @endif
                             
                             @auth
                                 @if(Auth::user()->enrollments()->where('course_id', $course->id)->exists())

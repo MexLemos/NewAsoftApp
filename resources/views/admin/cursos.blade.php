@@ -45,7 +45,13 @@
                         </td>
                         <td class="fw-bold">{{ $course->title }}</td>
                         <td>{{ $course->category->name ?? 'Geral' }}</td>
-                        <td>{{ number_format($course->price, 2, ',', '.') }} Kz</td>
+                        <td>
+                            @if($course->is_free)
+                                <span class="badge bg-success">Grátis</span>
+                            @else
+                                {{ number_format($course->price, 2, ',', '.') }} Kz
+                            @endif
+                        </td>
                         <td class="text-center">
                             @if($course->is_published)
                                 <span class="badge bg-success rounded-pill px-3">Publicado</span>
@@ -117,9 +123,13 @@
                             <textarea name="description" class="form-control" rows="4" required></textarea>
                         </div>
                         <div class="col-12">
-                            <div class="form-check form-switch mt-2">
+                            <div class="form-check form-switch mt-2 d-inline-block me-4">
                                 <input class="form-check-input" type="checkbox" name="is_published" id="isPublished" value="1" checked>
-                                <label class="form-check-label" for="isPublished">Publicar curso imediatamente</label>
+                                <label class="form-check-label" for="isPublished">Publicar imediatamente</label>
+                            </div>
+                            <div class="form-check form-switch mt-2 d-inline-block">
+                                <input class="form-check-input" type="checkbox" name="is_free" id="isFree" value="1">
+                                <label class="form-check-label text-success fw-bold" for="isFree">Curso Gratuito</label>
                             </div>
                         </div>
                     </div>

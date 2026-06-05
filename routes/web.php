@@ -70,6 +70,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/admin/usuarios/store', [\App\Http\Controllers\AdminController::class, 'storeUser'])->name('admin.store.user');
     Route::post('/admin/usuarios/{id}/update', [\App\Http\Controllers\AdminController::class, 'updateUser'])->name('admin.usuarios.update');
     Route::post('/admin/configuracoes/update', [\App\Http\Controllers\AdminController::class, 'updateConfiguracoes'])->name('admin.configuracoes.update');
+    Route::post('/admin/parceiros/store', [\App\Http\Controllers\AdminController::class, 'storePartner'])->name('admin.parceiros.store');
+    Route::delete('/admin/parceiros/{id}', [\App\Http\Controllers\AdminController::class, 'destroyPartner'])->name('admin.parceiros.destroy');
     Route::post('/admin/leads/{id}/approve-courses', [\App\Http\Controllers\AdminController::class, 'approveLeadCourses'])->name('admin.leads.approve_courses');
     
     // LMS Routes
