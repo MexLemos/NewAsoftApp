@@ -113,7 +113,7 @@
             @forelse($courses as $course)
             <div class="col-md-6 col-lg-4">
                 <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden animate-on-scroll delay-100">
-                    <img src="{{ $course->thumbnail ? asset('storage/' . $course->thumbnail) : 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' }}" class="card-img-top" alt="{{ $course->title }}" style="height: 180px; object-fit: cover;">
+                    <img src="{{ $course->thumbnail ? asset('storage/' . $course->thumbnail) : 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' }}" class="card-img-top mx-auto d-block" alt="{{ $course->title }}" style="height: 180px; object-fit: contain; background-color: #f8f9fa; width: 100%;">
                     <div class="card-body p-4 d-flex flex-column">
                         <h5 class="fw-bold mb-2">{{ $course->title }}</h5>
                         <p class="text-muted small mb-4">{{ \Illuminate\Support\Str::limit($course->description, 100) }}</p>
@@ -146,13 +146,12 @@
                     <div class="card-body p-4 text-start">
                         <div class="text-center mb-3">
                             @if($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" style="max-height: 80px; object-fit: contain;">
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="mx-auto d-block" style="height: 120px; object-fit: contain; width: 100%;">
                             @else
                                 <i class="fa-solid fa-box-open text-primary" style="font-size: 4rem;"></i>
                             @endif
                         </div>
-                        <h6 class="fw-bold mb-2">{{ $product->name }}</h6>
-                        <p class="fw-bold small mb-0" style="color: var(--asoft-primary);">{{ number_format($product->price, 2, ',', '.') }} Kz</p>
+                        <h6 class="fw-bold mb-0">{{ $product->name }}</h6>
                     </div>
                 </div>
             </div>
@@ -166,7 +165,7 @@
             <div class="col-md-6 col-lg-4">
                 <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-200">
                     <div class="card-body p-4 text-start">
-                        <h6 class="fw-bold mb-2">{{ $service->name }}</h6>
+                        <h6 class="fw-bold mb-2">{{ $service->title }}</h6>
                         <p class="text-muted small mb-0">{{ \Illuminate\Support\Str::limit($service->description, 80) }}</p>
                     </div>
                 </div>

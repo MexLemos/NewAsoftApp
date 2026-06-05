@@ -21,7 +21,7 @@
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
                 @if($course->thumbnail)
-                    <img src="{{ asset('storage/' . $course->thumbnail) }}" class="card-img-top" alt="{{ $course->title }}" style="height: 180px; object-fit: cover;">
+                    <img src="{{ asset('storage/' . $course->thumbnail) }}" class="card-img-top mx-auto d-block" alt="{{ $course->title }}" style="height: 180px; object-fit: contain; background-color: #f8f9fa; width: 100%;">
                 @else
                     <div class="bg-secondary bg-opacity-25 card-img-top d-flex align-items-center justify-content-center" style="height: 180px;">
                         <i class="fa-solid fa-graduation-cap text-secondary" style="font-size: 4rem;"></i>

@@ -26,49 +26,58 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach($products as $product)
                     <tr>
                         <td class="ps-4">
-                            <img src="https://via.placeholder.com/50" class="rounded" alt="Cegid PHC" style="width: 50px; height: 50px; object-fit: cover;">
+                            @if($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                            @else
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <i class="fa-solid fa-box-open text-muted"></i>
+                                </div>
+                            @endif
                         </td>
-                        <td class="fw-medium">Cegid PHC</td>
+                        <td class="fw-medium">{{ $product->name }}</td>
                         <td><span class="badge bg-primary bg-opacity-10 text-primary">Produto</span></td>
-                        <td>Kz 150.000</td>
+                        <td>Kz {{ number_format($product->price, 2, ',', '.') }}</td>
                         <td><span class="badge bg-success">Ativo</span></td>
                         <td class="text-end pe-4">
-                            <button class="btn btn-sm btn-light me-1"><i class="fa-solid fa-pen"></i></button>
-                            <button class="btn btn-sm btn-light text-danger"><i class="fa-solid fa-trash"></i></button>
+                            <form action="{{ route('admin.produtos.destroy', $product->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja deletar este produto?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-light text-danger" title="Apagar Produto"><i class="fa-solid fa-trash"></i></button>
+                            </form>
                         </td>
                     </tr>
+                    @endforeach
+
+                    @foreach($services as $service)
                     <tr>
                         <td class="ps-4">
                             <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                 <i class="fa-solid fa-network-wired text-muted"></i>
                             </div>
                         </td>
-                        <td class="fw-medium">Instalação de Redes</td>
+                        <td class="fw-medium">{{ $service->title }}</td>
                         <td><span class="badge bg-info bg-opacity-10 text-info">Serviço</span></td>
-                        <td>Kz 50.000</td>
+                        <td>-</td>
                         <td><span class="badge bg-success">Ativo</span></td>
                         <td class="text-end pe-4">
                             <button class="btn btn-sm btn-light me-1"><i class="fa-solid fa-pen"></i></button>
-                            <button class="btn btn-sm btn-light text-danger"><i class="fa-solid fa-trash"></i></button>
+                            <form action="{{ route('admin.servicos.destroy', $service->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja deletar este serviço?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-light text-danger" title="Apagar Serviço"><i class="fa-solid fa-trash"></i></button>
+                            </form>
                         </td>
                     </tr>
+                    @endforeach
+
+                    @if($products->isEmpty() && $services->isEmpty())
                     <tr>
-                        <td class="ps-4">
-                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                <i class="fa-solid fa-graduation-cap text-muted"></i>
-                            </div>
-                        </td>
-                        <td class="fw-medium">Curso Laravel Avançado</td>
-                        <td><span class="badge bg-warning bg-opacity-10 text-warning text-dark">Curso</span></td>
-                        <td>Kz 35.000</td>
-                        <td><span class="badge bg-success">Ativo</span></td>
-                        <td class="text-end pe-4">
-                            <button class="btn btn-sm btn-light me-1"><i class="fa-solid fa-pen"></i></button>
-                            <button class="btn btn-sm btn-light text-danger"><i class="fa-solid fa-trash"></i></button>
-                        </td>
+                        <td colspan="6" class="text-center py-4 text-muted">Nenhum produto ou serviço cadastrado.</td>
                     </tr>
+                    @endif
                 </tbody>
             </table>
         </div>

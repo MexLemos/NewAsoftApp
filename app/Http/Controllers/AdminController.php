@@ -13,7 +13,9 @@ class AdminController extends Controller
 
     public function produtos()
     {
-        return view('admin.produtos');
+        $products = \App\Models\Product::latest()->get();
+        $services = \App\Models\Service::latest()->get();
+        return view('admin.produtos', compact('products', 'services'));
     }
 
     public function usuarios()
@@ -60,12 +62,14 @@ class AdminController extends Controller
                 'description' => $request->description,
                 'price' => $price,
                 'product_category_id' => $cat->id,
+                'image' => $imagePath,
             ]);
         } elseif ($request->category === 'servico') {
             \App\Models\Service::create([
-                'name' => $request->name,
+                'title' => $request->name,
                 'slug' => $slug,
                 'description' => $request->description,
+                'icon' => $imagePath,
             ]);
         }
 
@@ -124,7 +128,21 @@ class AdminController extends Controller
 
         \App\Models\Course::create($validated);
 
-        return redirect()->back()->with('success', 'Curso cadastrado com sucesso!');
+        return back()->with('success', 'Item cadastrado com sucesso!');
+    }
+
+    public function destroyProduct($id)
+    {
+        $product = \App\Models\Product::findOrFail($id);
+        $product->delete();
+        return back()->with('success', 'Produto removido com sucesso!');
+    }
+
+    public function destroyService($id)
+    {
+        $service = \App\Models\Service::findOrFail($id);
+        $service->delete();
+        return back()->with('success', 'Serviço removido com sucesso!');
     }
 
     public function updateConfiguracoes(Request $request)
