@@ -44,69 +44,44 @@
         </div>
 
         <div class="row g-4">
-            <!-- Sample Course 1 -->
+            @forelse($courses as $course)
             <div class="col-md-6 col-lg-4">
                 <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden course-card transition-all">
-                    <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Programação Web" style="height: 200px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <span class="badge bg-primary bg-opacity-10 text-primary mb-2">Desenvolvimento</span>
-                        <h5 class="card-title fw-bold">Programação Web (PHP + MySQL)</h5>
-                        <p class="card-text text-muted small mb-4">Duração: 1 Mês - Focado em desenvolvimento backend, aborda a criação de sites dinâmicos utilizando PHP e banco de dados.</p>
+                    @if($course->thumbnail)
+                        <img src="{{ asset('storage/' . $course->thumbnail) }}" class="card-img-top" alt="{{ $course->title }}" style="height: 200px; object-fit: cover;">
+                    @else
+                        <div class="bg-secondary bg-opacity-25 card-img-top d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="fa-solid fa-graduation-cap text-secondary" style="font-size: 4rem;"></i>
+                        </div>
+                    @endif
+                    <div class="card-body p-4 d-flex flex-column">
+                        <span class="badge bg-primary bg-opacity-10 text-primary mb-2 align-self-start">{{ $course->category->name ?? 'Geral' }}</span>
+                        <h5 class="card-title fw-bold">{{ $course->title }}</h5>
+                        <p class="card-text text-muted small mb-4">{{ \Illuminate\Support\Str::limit($course->description, 100) }}</p>
                         <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="fw-bold fs-5 text-dark">Kz 25.000</span>
-                            <a href="#" class="btn btn-outline-primary rounded-pill px-4">Ver</a>
+                            <span class="fw-bold fs-5 text-dark">{{ number_format($course->price, 2, ',', '.') }} Kz</span>
+                            
+                            @auth
+                                @if(Auth::user()->enrollments()->where('course_id', $course->id)->exists())
+                                    <a href="{{ route('lms.dashboard') }}" class="btn btn-success rounded-pill px-4">Já Inscrito</a>
+                                @else
+                                    <form action="{{ route('lms.enroll', $course->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-outline-primary rounded-pill px-4">Comprar</button>
+                                    </form>
+                                @endif
+                            @else
+                                <a href="{{ route('login') }}" class="btn btn-outline-primary rounded-pill px-4">Login</a>
+                            @endauth
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Sample Course 2 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden course-card transition-all">
-                    <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="ReactJS" style="height: 200px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <span class="badge bg-primary bg-opacity-10 text-primary mb-2">Frontend</span>
-                        <h5 class="card-title fw-bold">Front-End com ReactJS</h5>
-                        <p class="card-text text-muted small mb-4">Aborda o desenvolvimento de interfaces modernas e dinâmicas usando ReactJS. Ensina componentes reutilizáveis, gerenciamento de estado.</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="fw-bold fs-5 text-dark">Kz 25.000</span>
-                            <a href="#" class="btn btn-outline-primary rounded-pill px-4">Ver</a>
-                        </div>
-                    </div>
-                </div>
+            @empty
+            <div class="col-12 text-center py-5">
+                <p class="text-muted mb-0">Nenhum curso publicado de momento.</p>
             </div>
-
-            <!-- Sample Course 3 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden course-card transition-all">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Gestão de Projetos" style="height: 200px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <span class="badge bg-success bg-opacity-10 text-success mb-2">Gestão</span>
-                        <h5 class="card-title fw-bold">Fundamentos de Gestão de Projetos</h5>
-                        <p class="card-text text-muted small mb-4">Duração: 2 Semanas - Apresenta conceitos essenciais de planejamento, execução e monitoramento de projetos. Aborda metodologia ágil.</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="fw-bold fs-5 text-dark">Kz 40.000</span>
-                            <a href="#" class="btn btn-outline-primary rounded-pill px-4">Ver</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Sample Course 4 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden course-card transition-all">
-                    <img src="https://images.unsplash.com/photo-1542744094-24638ea0b56c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Marketing" style="height: 200px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <span class="badge bg-warning bg-opacity-10 text-warning text-dark mb-2">Marketing</span>
-                        <h5 class="card-title fw-bold">Marketing Digital</h5>
-                        <p class="card-text text-muted small mb-4">Duração: 2 Semanas - Explora estratégias de promoção online, incluindo redes sociais, SEO, campanhas pagas e análise de dados.</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="fw-bold fs-5 text-dark">Kz 20.000</span>
-                            <a href="#" class="btn btn-outline-primary rounded-pill px-4">Ver</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforelse
         </div>
     </div>
 </section>

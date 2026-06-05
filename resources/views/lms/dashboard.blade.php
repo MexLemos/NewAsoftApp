@@ -17,35 +17,33 @@
     </div>
 
     <div class="row g-4">
-        <!-- Enrolled Course Dummy -->
+        @forelse($enrolledCourses as $course)
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="ReactJS" style="height: 180px; object-fit: cover;">
-                <div class="card-body p-4 d-flex flex-column">
-                    <h5 class="card-title fw-bold">Front-End com ReactJS</h5>
-                    <p class="text-muted small mb-3">Progresso: 45%</p>
-                    <div class="progress mb-4" style="height: 8px;">
-                        <div class="progress-bar bg-success rounded-pill" role="progressbar" style="width: 45%;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                @if($course->thumbnail)
+                    <img src="{{ asset('storage/' . $course->thumbnail) }}" class="card-img-top" alt="{{ $course->title }}" style="height: 180px; object-fit: cover;">
+                @else
+                    <div class="bg-secondary bg-opacity-25 card-img-top d-flex align-items-center justify-content-center" style="height: 180px;">
+                        <i class="fa-solid fa-graduation-cap text-secondary" style="font-size: 4rem;"></i>
                     </div>
-                    <a href="{{ route('lms.lesson', ['course' => 1, 'lesson' => 1]) }}" class="btn btn-brand mt-auto w-100"><i class="fa-solid fa-play me-2"></i> Continuar Aula</a>
+                @endif
+                <div class="card-body p-4 d-flex flex-column">
+                    <h5 class="card-title fw-bold">{{ $course->title }}</h5>
+                    <p class="text-muted small mb-3">Progresso: {{ $course->pivot->progress_percent }}%</p>
+                    <div class="progress mb-4" style="height: 8px;">
+                        <div class="progress-bar bg-success rounded-pill" role="progressbar" style="width: {{ $course->pivot->progress_percent }}%;" aria-valuenow="{{ $course->pivot->progress_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <a href="{{ route('lms.lesson', ['course' => $course->id, 'lesson' => 1]) }}" class="btn btn-brand mt-auto w-100"><i class="fa-solid fa-play me-2"></i> Continuar Aula</a>
                 </div>
             </div>
         </div>
-
-        <!-- Enrolled Course Dummy 2 -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="PHP" style="height: 180px; object-fit: cover;">
-                <div class="card-body p-4 d-flex flex-column">
-                    <h5 class="card-title fw-bold">Programação Web (PHP + MySQL)</h5>
-                    <p class="text-muted small mb-3">Progresso: 10%</p>
-                    <div class="progress mb-4" style="height: 8px;">
-                        <div class="progress-bar bg-success rounded-pill" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <a href="{{ route('lms.lesson', ['course' => 2, 'lesson' => 1]) }}" class="btn btn-brand mt-auto w-100"><i class="fa-solid fa-play me-2"></i> Continuar Aula</a>
-                </div>
-            </div>
+        @empty
+        <div class="col-12 text-center py-5">
+            <i class="fa-solid fa-box-open fs-1 text-muted mb-3 opacity-50"></i>
+            <h5 class="text-muted">Ainda não está inscrito em nenhum curso.</h5>
+            <a href="{{ route('cursos') }}" class="btn btn-primary mt-3">Explorar Catálogo</a>
         </div>
+        @endforelse
     </div>
 </div>
 @endsection

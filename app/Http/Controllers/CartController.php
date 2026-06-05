@@ -11,6 +11,11 @@ class CartController extends Controller
         return view('pages.carrinho');
     }
 
+    public function checkout()
+    {
+        return view('pages.checkout');
+    }
+
     public function add(Request $request)
     {
         $id = $request->id;

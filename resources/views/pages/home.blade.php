@@ -17,8 +17,8 @@
                 <div class="row align-items-center min-vh-50 py-5">
                     <div class="col-lg-7 mb-5 mb-lg-0">
                         <h2 class="fs-1 fw-bolder mb-3 text-white text-uppercase" style="letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Além de produtos e serviços,<br><span style="color: var(--asoft-accent);">causamos impacto</span></h2>
-                        <h5 class="fw-bold mb-4 text-white" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5);">Treinamento e Estágio Profissional</h5>
-                        <p class="mb-5 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">Investimos no futuro da inovação ao proporcionar programas de treinamento e estágios que aproximam estudantes e jovens profissionais do ambiente real de trabalho em TI — desde desenvolvimento de software até cloud computing, inteligência artificial e segurança digital.</p>
+                        <h5 class="fw-bold mb-3 text-white" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5);">Treinamento e Estágio Profissional</h5>
+                        <p class="mb-4 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">Investimos no futuro da inovação ao proporcionar programas de treinamento e estágios que aproximam estudantes do ambiente real de trabalho em TI — desde desenvolvimento de software até cloud computing e IA.</p>
                         <div class="d-flex gap-3">
                             <a href="{{ route('cursos') }}" class="btn btn-brand px-4 py-2 fw-bold shadow btn-sm">Explorar Cursos</a>
                             <a href="#contactos" class="btn btn-outline-light px-4 py-2 fw-bold shadow btn-sm">Fale Connosco</a>
@@ -106,49 +106,28 @@
 </section>
 
 <!-- Featured Courses Section -->
-<section class="py-5 bg-white">
-    <div class="container py-4">
+<section class="pt-5 pb-3 bg-white">
+    <div class="container pt-4 pb-2">
         <h3 class="fw-bold mb-5" style="color: var(--asoft-secondary);">Cursos em destaque</h3>
         <div class="row g-4 justify-content-center">
-            <!-- Course 1 -->
+            @forelse($courses as $course)
             <div class="col-md-6 col-lg-4">
                 <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden animate-on-scroll delay-100">
-                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="PHP & Laravel" style="height: 180px; object-fit: cover;">
+                    <img src="{{ $course->thumbnail ? asset('storage/' . $course->thumbnail) : 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' }}" class="card-img-top" alt="{{ $course->title }}" style="height: 180px; object-fit: cover;">
                     <div class="card-body p-4 d-flex flex-column">
-                        <h5 class="fw-bold mb-2">PHP & Laravel - Do Zero ao Avançado</h5>
-                        <p class="text-muted small mb-4">Aprenda a construir aplicações web modernas com PHP 8 e Laravel 10.</p>
+                        <h5 class="fw-bold mb-2">{{ $course->title }}</h5>
+                        <p class="text-muted small mb-4">{{ \Illuminate\Support\Str::limit($course->description, 100) }}</p>
                         <div class="mt-auto">
                             <a href="#" class="btn btn-warning fw-bold btn-sm px-3 shadow-sm" style="background-color: var(--asoft-accent); border-color: var(--asoft-accent); color: white;">Ver curso</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Course 2 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden animate-on-scroll delay-200">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Excel Avançado" style="height: 180px; object-fit: cover;">
-                    <div class="card-body p-4 d-flex flex-column">
-                        <h5 class="fw-bold mb-2">Excel Avançado para Negócios</h5>
-                        <p class="text-muted small mb-4">Tabelas dinâmicas, macros e dashboards em Excel.</p>
-                        <div class="mt-auto">
-                            <a href="#" class="btn btn-warning fw-bold btn-sm px-3 shadow-sm" style="background-color: var(--asoft-accent); border-color: var(--asoft-accent); color: white;">Ver curso</a>
-                        </div>
-                    </div>
-                </div>
+            @empty
+            <div class="col-12 text-center text-muted">
+                <p>Nenhum curso cadastrado de momento.</p>
             </div>
-            <!-- Course 3 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden animate-on-scroll delay-300">
-                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="OPNSense" style="height: 180px; object-fit: cover;">
-                    <div class="card-body p-4 d-flex flex-column">
-                        <h5 class="fw-bold mb-2">OPNSense</h5>
-                        <p class="text-muted small mb-4">Securing networks made easy.</p>
-                        <div class="mt-auto">
-                            <a href="#" class="btn btn-warning fw-bold btn-sm px-3 shadow-sm" style="background-color: var(--asoft-accent); border-color: var(--asoft-accent); color: white;">Ver curso</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforelse
         </div>
         <div class="text-center mt-5">
             <a href="{{ route('cursos') }}" class="btn btn-outline-warning fw-bold px-4 py-2 rounded-pill shadow-sm" style="color: var(--asoft-accent); border-color: var(--asoft-accent);">Todos os cursos</a>
@@ -157,103 +136,47 @@
 </section>
 
 <!-- Products & Services Section -->
-<section class="py-5" style="background-color: #f8fafc;">
-    <div class="container py-4">
+<section class="pt-3 pb-5" style="background-color: #f8fafc;">
+    <div class="container pt-2 pb-4">
         <h3 class="fw-bold mb-5" style="color: var(--asoft-secondary);">Produtos & Serviços</h3>
         <div class="row g-4 justify-content-center">
-            <!-- Product 1 -->
+            @forelse($products as $product)
             <div class="col-md-6 col-lg-4">
                 <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-100">
                     <div class="card-body p-4 text-start">
                         <div class="text-center mb-3">
-                            <i class="fa-brands fa-microsoft text-danger" style="font-size: 4rem;"></i>
+                            @if($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" style="max-height: 80px; object-fit: contain;">
+                            @else
+                                <i class="fa-solid fa-box-open text-primary" style="font-size: 4rem;"></i>
+                            @endif
                         </div>
-                        <h6 class="fw-bold mb-2">Microsoft Office 365 Business</h6>
-                        <p class="fw-bold small mb-0" style="color: var(--asoft-primary);">45.000 Kz</p>
+                        <h6 class="fw-bold mb-2">{{ $product->name }}</h6>
+                        <p class="fw-bold small mb-0" style="color: var(--asoft-primary);">{{ number_format($product->price, 2, ',', '.') }} Kz</p>
                     </div>
                 </div>
             </div>
-            <!-- Product 2 -->
+            @empty
+            <div class="col-12 text-center text-muted">
+                <p>Nenhum produto em destaque.</p>
+            </div>
+            @endforelse
+
+            @foreach($services->take(3) as $service)
             <div class="col-md-6 col-lg-4">
                 <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-200">
                     <div class="card-body p-4 text-start">
-                        <div class="text-center mb-3">
-                            <i class="fa-brands fa-windows text-primary" style="font-size: 4rem;"></i>
-                        </div>
-                        <h6 class="fw-bold mb-2">Windows 11 Pro</h6>
-                        <p class="fw-bold small mb-0" style="color: var(--asoft-primary);">35.000 Kz</p>
+                        <h6 class="fw-bold mb-2">{{ $service->name }}</h6>
+                        <p class="text-muted small mb-0">{{ \Illuminate\Support\Str::limit($service->description, 80) }}</p>
                     </div>
                 </div>
             </div>
-            <!-- Product 3 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-300">
-                    <div class="card-body p-4 text-start">
-                        <div class="text-center mb-3">
-                            <i class="fa-solid fa-bowl-food text-warning" style="font-size: 4rem;"></i>
-                        </div>
-                        <h6 class="fw-bold mb-2">2Funges</h6>
-                        <p class="fw-bold small mb-0" style="color: var(--asoft-primary);">0 Kz</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Service 1 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-100">
-                    <div class="card-body p-4 text-start">
-                        <h6 class="fw-bold mb-2">Venda de Softwares de Gestão</h6>
-                        <p class="text-muted small mb-0">Soluções ERP e desenvolvimento digital para empresas.</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Service 2 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-200">
-                    <div class="card-body p-4 text-start">
-                        <h6 class="fw-bold mb-2">Homologação de Equipamentos de TI</h6>
-                        <p class="text-muted small mb-0">Certificação e documentação técnica de equipamentos.</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Service 3 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-300">
-                    <div class="card-body p-4 text-start">
-                        <h6 class="fw-bold mb-2">Redes e Infraestrutura</h6>
-                        <p class="text-muted small mb-0">Infraestrutura, conectividade e segurança.</p>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </section>
 
-<!-- Testimonials Section -->
-<section class="py-5 bg-white">
-    <div class="container py-5 text-center">
-        <h3 class="fw-bold mb-5" style="color: var(--asoft-secondary);">O que dizem os nossos clientes</h3>
-        <div class="row justify-content-center g-4 text-start">
-            <div class="col-md-6 col-lg-5">
-                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 animate-on-scroll delay-100" style="background-color: #f8fafc;">
-                    <div class="card-body">
-                        <p class="fst-italic text-muted mb-4">"O curso de Excel Avançado aumentou a minha produtividade em 40%."</p>
-                        <h6 class="fw-bold mb-1">Ana Paula</h6>
-                        <p class="text-muted small mb-0">Analista Financeira</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-5">
-                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 animate-on-scroll delay-200" style="background-color: #f8fafc;">
-                    <div class="card-body">
-                        <p class="fst-italic text-muted mb-4">"A formação em Laravel transformou a nossa equipa de desenvolvimento."</p>
-                        <h6 class="fw-bold mb-1">João Manuel</h6>
-                        <p class="text-muted small mb-0">Director de TI, Empresa XYZ</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+
 <!-- About Section (Mission, Vision, Values) -->
 <section id="sobre" class="pt-5 pb-2" style="background-color: #f8fafc;">
     <div class="container pt-5 pb-0">
@@ -377,8 +300,8 @@
 </section>
 
 <!-- Services Overview -->
-<section id="servicos" class="py-5" style="background-color: #f8fafc;">
-    <div class="container py-5">
+<section id="servicos" class="pt-5 pb-2" style="background-color: #f8fafc;">
+    <div class="container pt-5 pb-2">
         <h2 class="text-center fw-bolder mb-5">Nossas Áreas de Atuação</h2>
         <div class="row g-5 justify-content-center text-center">
             <!-- Service 1 -->
@@ -427,8 +350,35 @@
     </div>
 </section>
 
+<!-- Testimonials Section -->
+<section class="pt-2 pb-5 bg-white">
+    <div class="container pt-2 pb-5 text-center">
+        <h3 class="fw-bold mb-5" style="color: var(--asoft-secondary);">O que dizem os nossos clientes</h3>
+        <div class="row justify-content-center g-4 text-start">
+            <div class="col-md-6 col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 animate-on-scroll delay-100" style="background-color: #f8fafc;">
+                    <div class="card-body">
+                        <p class="fst-italic text-muted mb-4">"O curso de Excel Avançado aumentou a minha produtividade em 40%."</p>
+                        <h6 class="fw-bold mb-1">Ana Paula</h6>
+                        <p class="text-muted small mb-0">Analista Financeira</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 animate-on-scroll delay-200" style="background-color: #f8fafc;">
+                    <div class="card-body">
+                        <p class="fst-italic text-muted mb-4">"A formação em Laravel transformou a nossa equipa de desenvolvimento."</p>
+                        <h6 class="fw-bold mb-1">João Manuel</h6>
+                        <p class="text-muted small mb-0">Director de TI, Empresa XYZ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Contact Form Section (Leads) -->
-<section id="contactos" class="py-5 bg-white">
+<section id="contactos" class="py-5 bg-light">
     <div class="container py-5">
         <div class="row g-5">
             <div class="col-lg-6">

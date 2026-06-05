@@ -1,66 +1,110 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ASoftMedia - Plataforma Corporativa e Educacional
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Laravel](https://img.shields.io/badge/Laravel-10.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.1+-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 
-## About Laravel
+Aplicação Web institucional, e-commerce simplificado e plataforma E-Learning (LMS) desenvolvida sob medida para a **ASoftMedia**, empresa angolana focada em inovação tecnológica, vendas de software de gestão, consultoria e treinamento em TI.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Módulos da Plataforma
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+A plataforma está dividida em 4 grandes eixos perfeitamente integrados:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. **Portal Institucional**
+   - Apresentação da empresa (Visão, Missão, Valores).
+   - Catálogo de Serviços Corporativos (Consultoria, Redes, Homologação).
+   - Landing pages dinâmicas com suporte nativo a **Dark Mode**.
+   - Integração com Google Maps e formulários avançados de captação de Leads.
 
-## Learning Laravel
+2. **E-Commerce (Loja de Produtos & Cursos)**
+   - Catálogo com pesquisa e filtragem.
+   - Sistema de Carrinho de Compras interativo (gerido por sessão).
+   - Área de *Checkout* com resumo do pedido e cálculo de valores (Kz).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+3. **Plataforma E-Learning (LMS)**
+   - Dashboard exclusiva do Aluno para acompanhamento de progresso.
+   - **Visualizador de Aulas** moderno e otimizado (estilo Udemy), com suporte a *iframes* do YouTube, navegação lateral de módulos e partilha de recursos anexos (PDFs, Códigos, etc).
+   - Layout dedicado focado na imersão e foco no estudo.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+4. **Painel de Administração Global**
+   - Dashboard interativa com métricas gerais, gráficos (Chart.js) e atalhos rápidos.
+   - Gestão de Utilizadores (Alunos, Formadores, Admins) e Controle de Acessos (ACL).
+   - Gestão integrada de Produtos e Cursos (`/admin/produtos`).
+   - Gestão de Leads recebidas pelo portal.
+   - Configurações globais da plataforma.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Tecnologias Utilizadas
 
-## Laravel Sponsors
+* **Back-End:** Laravel 10 (PHP 8.1+)
+* **Banco de Dados:** MySQL 8+
+* **Front-End:** Blade Templates, Bootstrap 5.3 (com suporte nativo a `data-bs-theme="dark"`), HTML5, CSS3, Vanilla JS.
+* **Autenticação:** Laravel Breeze
+* **Gráficos & Data Visualization:** Chart.js
+* **Ícones:** FontAwesome 6
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## ⚙️ Pré-requisitos
 
-### Premium Partners
+Para executar este projeto localmente, vai necessitar das seguintes ferramentas instaladas:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+* [PHP](https://www.php.net/) >= 8.1
+* [Composer](https://getcomposer.org/)
+* [Node.js](https://nodejs.org/) & NPM
+* Banco de Dados MySQL / MariaDB
 
-## Contributing
+## 📦 Instalação
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Siga os passos abaixo para preparar o ambiente de desenvolvimento:
 
-## Code of Conduct
+1. **Clone o repositório:**
+   ```bash
+   git clone https://github.com/seu-usuario/asoftmedia-app.git
+   cd asoftmedia-app
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. **Instale as dependências do PHP:**
+   ```bash
+   composer install
+   ```
 
-## Security Vulnerabilities
+3. **Instale e compile os recursos de Front-End:**
+   ```bash
+   npm install
+   npm run build
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. **Configuração de Variáveis de Ambiente:**
+   Duplique o ficheiro `.env.example` para `.env` e configure os dados do seu banco de dados:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-## License
+5. **Execute as Migrações e Seeders:**
+   ```bash
+   php artisan migrate --seed
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+6. **Inicie o Servidor Local:**
+   ```bash
+   php artisan serve
+   ```
+
+A aplicação estará acessível em `http://localhost:8000` (ou a porta especificada).
+
+## 🗂️ Estrutura de Rotas Principais
+
+* `/` - Página Inicial (Portal)
+* `/treinamento` - Catálogo de Cursos
+* `/produtos` - Catálogo de Produtos
+* `/carrinho` e `/checkout` - Fluxo de Compras
+* `/lms/dashboard` - Painel do Aluno
+* `/lms/curso/{id}/aula/{id}` - Sala de Aula do Aluno
+* `/admin/dashboard` - Painel de Controle (Acesso Restrito)
+
+## 🤝 Desenvolvido Por
+
+Criado como solução customizada pela empresa **ASoftMedia** para acelerar a digitalização e treinamento em TI.
+
+---
+*© ASoftMedia. Todos os direitos reservados.*

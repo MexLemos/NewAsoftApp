@@ -39,6 +39,10 @@
             background-color: rgba(255, 255, 255, 0.1);
             color: #fff;
         }
+        .w-20px {
+            width: 25px;
+            text-align: center;
+        }
         .navbar-top {
             background-color: #fff;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -65,25 +69,34 @@
                 <img src="{{ asset('images/logo.png') }}" alt="ASoftMedia Logo" height="65">
                 <h5 class="text-white mt-3 fw-bold" style="letter-spacing: 1px;">ASOFTMEDIA</h5>
             </div>
-            <ul class="nav flex-column">
+            <ul class="nav flex-column mt-3">
                 <li class="nav-item">
-                    <a href="{{ route('admin.dashboard') }}" class="active"><i class="fa-solid fa-gauge me-2"></i> Dashboard</a>
+                    <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><i class="fa-solid fa-gauge me-2 w-20px"></i> Dashboard</a>
+                </li>
+                
+                @hasanyrole('admin|instrutor|aluno')
+                <li class="nav-item">
+                    <a href="{{ route('lms.dashboard') }}" class="{{ request()->routeIs('lms.*') ? 'active' : '' }}"><i class="fa-solid fa-graduation-cap me-2 w-20px"></i> Cursos (LMS)</a>
+                </li>
+                @endhasanyrole
+
+                @hasrole('admin')
+                <li class="nav-item">
+                    <a href="{{ route('admin.cursos') }}" class="{{ request()->routeIs('admin.cursos') ? 'active' : '' }}"><i class="fa-solid fa-graduation-cap me-2 w-20px"></i> Cursos</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#"><i class="fa-solid fa-graduation-cap me-2"></i> Cursos (LMS)</a>
+                    <a href="{{ route('admin.produtos') }}" class="{{ request()->routeIs('admin.produtos') ? 'active' : '' }}"><i class="fa-solid fa-box-open me-2 w-20px"></i> Produtos</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#"><i class="fa-solid fa-box-open me-2"></i> Produtos</a>
+                    <a href="{{ route('admin.usuarios') }}" class="{{ request()->routeIs('admin.usuarios') ? 'active' : '' }}"><i class="fa-solid fa-users me-2 w-20px"></i> Usuários</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#"><i class="fa-solid fa-users me-2"></i> Usuários</a>
+                    <a href="{{ route('admin.leads') }}" class="{{ request()->routeIs('admin.leads') ? 'active' : '' }}"><i class="fa-solid fa-bullhorn me-2 w-20px"></i> Leads / CRM</a>
                 </li>
-                <li class="nav-item">
-                    <a href="#"><i class="fa-solid fa-bullhorn me-2"></i> Leads / CRM</a>
+                <li class="nav-item border-top mt-3 pt-3 border-secondary border-opacity-25">
+                    <a href="{{ route('admin.configuracoes') }}" class="{{ request()->routeIs('admin.configuracoes') ? 'active' : '' }}"><i class="fa-solid fa-gear me-2 w-20px"></i> Configurações</a>
                 </li>
-                <li class="nav-item">
-                    <a href="#"><i class="fa-solid fa-gear me-2"></i> Configurações</a>
-                </li>
+                @endhasrole
             </ul>
         </div>
 
@@ -93,7 +106,8 @@
             <nav class="navbar navbar-expand-lg navbar-top px-4 py-3 d-flex justify-content-between">
                 <div>
                     <button class="btn btn-sm btn-outline-secondary d-lg-none" type="button"><i class="fa-solid fa-bars"></i></button>
-                    <span class="fw-semibold ms-2">Painel Administrativo</span>
+                    <a href="{{ route('home') }}" class="btn btn-sm btn-outline-secondary me-2 ms-lg-2"><i class="fa-solid fa-arrow-left"></i> Voltar ao Site</a>
+                    <span class="fw-semibold ms-2 d-none d-md-inline">Painel Administrativo</span>
                 </div>
                 <div>
                     <button class="btn btn-sm btn-outline-secondary me-3" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>

@@ -1,0 +1,135 @@
+@extends('layouts.admin')
+
+@section('content')
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h3 mb-1 fw-bold">Produtos</h2>
+        <p class="text-muted mb-0">Gerencie os produtos do seu e-commerce.</p>
+    </div>
+    <button class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;" data-bs-toggle="modal" data-bs-target="#modalCadastrar">
+        <i class="fa-solid fa-plus me-1"></i> Novo Produto
+    </button>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body px-0 pb-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Imagem</th>
+                        <th>Nome</th>
+                        <th>Categoria</th>
+                        <th>Preço</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="ps-4">
+                            <img src="https://via.placeholder.com/50" class="rounded" alt="Cegid PHC" style="width: 50px; height: 50px; object-fit: cover;">
+                        </td>
+                        <td class="fw-medium">Cegid PHC</td>
+                        <td><span class="badge bg-primary bg-opacity-10 text-primary">Produto</span></td>
+                        <td>Kz 150.000</td>
+                        <td><span class="badge bg-success">Ativo</span></td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-light me-1"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn-sm btn-light text-danger"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4">
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                <i class="fa-solid fa-network-wired text-muted"></i>
+                            </div>
+                        </td>
+                        <td class="fw-medium">Instalação de Redes</td>
+                        <td><span class="badge bg-info bg-opacity-10 text-info">Serviço</span></td>
+                        <td>Kz 50.000</td>
+                        <td><span class="badge bg-success">Ativo</span></td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-light me-1"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn-sm btn-light text-danger"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4">
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                <i class="fa-solid fa-graduation-cap text-muted"></i>
+                            </div>
+                        </td>
+                        <td class="fw-medium">Curso Laravel Avançado</td>
+                        <td><span class="badge bg-warning bg-opacity-10 text-warning text-dark">Curso</span></td>
+                        <td>Kz 35.000</td>
+                        <td><span class="badge bg-success">Ativo</span></td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-light me-1"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn-sm btn-light text-danger"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Cadastrar -->
+<div class="modal fade" id="modalCadastrar" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold">Cadastrar Novo Item</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form action="{{ route('admin.produtos.store') }}" method="POST" enctype="multipart/form-data" id="formCadastrar">
+                    @csrf
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label text-muted small fw-bold">Nome do Item</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted small fw-bold">Categoria</label>
+                            <select name="category" class="form-select" required>
+                                <option value="produto">Produto</option>
+                                <option value="servico">Serviço</option>
+                                <option value="curso">Curso</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">Preço (Kz)</label>
+                            <input type="number" name="price" class="form-control" step="0.01">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">Imagem de Destaque</label>
+                            <input type="file" name="image" class="form-control">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label text-muted small fw-bold">Descrição Curta</label>
+                            <textarea name="description" class="form-control" rows="2" required></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label text-muted small fw-bold">Conteúdo / Detalhes (HTML permitido)</label>
+                            <textarea name="content" class="form-control" rows="4" placeholder="Detalhes do serviço ou módulos do curso..."></textarea>
+                            <small class="text-muted">Use este campo para adicionar informações detalhadas ou listar os módulos de um curso.</small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
+                <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" form="formCadastrar" class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;">Guardar Item</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelector('[data-bs-target="#modalCadastrar"]') || 
+    document.querySelector('.d-flex .btn-primary').setAttribute('data-bs-toggle', 'modal');
+    document.querySelector('.d-flex .btn-primary').setAttribute('data-bs-target', '#modalCadastrar');
+</script>
+@endsection

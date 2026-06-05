@@ -3,8 +3,8 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="h3 mb-0">Estatísticas Gerais</h2>
-    <button class="btn btn-primary" style="background-color: var(--asoft-accent); border: none;">
-        <i class="fa-solid fa-download me-1"></i> Relatório
+    <button class="btn btn-primary d-print-none" style="background-color: var(--asoft-accent); border: none;" onclick="window.print()">
+        <i class="fa-solid fa-download me-1"></i> Imprimir Relatório
     </button>
 </div>
 
@@ -61,6 +61,34 @@
                     <h6 class="text-muted mb-1">Parceiros</h6>
                     <h3 class="mb-0 fw-bold">24</h3>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="row g-4 mb-4">
+    <div class="col-12 col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-header bg-transparent border-0 pt-4 pb-0 px-4 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0">Receitas Mensais</h5>
+                <select class="form-select form-select-sm w-auto shadow-none">
+                    <option>Este Ano</option>
+                    <option>Ano Passado</option>
+                </select>
+            </div>
+            <div class="card-body px-4">
+                <canvas id="revenueChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-primary text-white">
+            <div class="card-body p-4 d-flex flex-column justify-content-center">
+                <h6 class="fw-bold mb-3 opacity-75">Crescimento de Alunos (LMS)</h6>
+                <h2 class="display-4 fw-bold mb-2">+15%</h2>
+                <p class="mb-4 opacity-75">Em relação ao mês anterior.</p>
+                <button class="btn btn-light fw-bold w-100 rounded-pill text-primary">Ver Relatório Completo</button>
             </div>
         </div>
     </div>
@@ -138,4 +166,41 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        const revenueChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'],
+                datasets: [{
+                    label: 'Receitas (Kz)',
+                    data: [120000, 190000, 150000, 220000, 180000, 250000, 300000],
+                    borderColor: '#1e3a8a',
+                    backgroundColor: 'rgba(30, 58, 138, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [5, 5] }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    });
+</script>
 @endsection

@@ -10,4 +10,148 @@ class AdminController extends Controller
     {
         return view('admin.dashboard');
     }
+
+    public function produtos()
+    {
+        return view('admin.produtos');
+    }
+
+    public function usuarios()
+    {
+        return view('admin.usuarios');
+    }
+
+    public function leads()
+    {
+        return view('admin.leads');
+    }
+
+    public function configuracoes()
+    {
+        return view('admin.configuracoes');
+    }
+
+    public function storeItem(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'required|string',
+            'price' => 'nullable|numeric',
+            'description' => 'required|string',
+        ]);
+
+        $slug = \Illuminate\Support\Str::slug($request->name) . '-' . time();
+        $price = $request->price ?? 0;
+
+        if ($request->category === 'curso') {
+            $cat = \App\Models\Category::firstOrCreate(['name' => 'Geral', 'slug' => 'geral']);
+            \App\Models\Course::create([
+                'title' => $request->name,
+                'slug' => $slug,
+                'description' => $request->description,
+                'price' => $price,
+                'category_id' => $cat->id,
+            ]);
+        } elseif ($request->category === 'produto') {
+            $cat = \App\Models\ProductCategory::firstOrCreate(['name' => 'Geral', 'slug' => 'geral']);
+            \App\Models\Product::create([
+                'name' => $request->name,
+                'slug' => $slug,
+                'description' => $request->description,
+                'price' => $price,
+                'product_category_id' => $cat->id,
+            ]);
+        } elseif ($request->category === 'servico') {
+            \App\Models\Service::create([
+                'name' => $request->name,
+                'slug' => $slug,
+                'description' => $request->description,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Item adicionado com sucesso!');
+    }
+
+    public function storeUser(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'role' => 'required|string'
+        ]);
+
+        $user = \App\Models\User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+        ]);
+
+        if (class_exists(\Spatie\Permission\Models\Role::class)) {
+            $user->assignRole($request->role);
+        }
+
+        return redirect()->back()->with('success', 'Usuário criado com sucesso!');
+    }
+
+    public function cursos()
+    {
+        $courses = \App\Models\Course::with('category')->latest()->get();
+        $categories = \App\Models\Category::all();
+        if ($categories->isEmpty()) {
+            $categories = collect([\App\Models\Category::create(['name' => 'Desenvolvimento', 'slug' => 'desenvolvimento'])]);
+        }
+        return view('admin.cursos', compact('courses', 'categories'));
+    }
+
+    public function storeCurso(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'level' => 'required|in:basic,intermediate,advanced',
+            'thumbnail' => 'nullable|image',
+        ]);
+
+        $validated['slug'] = \Illuminate\Support\Str::slug($request->title) . '-' . time();
+        $validated['is_published'] = $request->has('is_published');
+
+        if ($request->hasFile('thumbnail')) {
+            $validated['thumbnail'] = $request->file('thumbnail')->store('courses', 'public');
+        }
+
+        \App\Models\Course::create($validated);
+
+        return redirect()->back()->with('success', 'Curso cadastrado com sucesso!');
+    }
+
+    public function updateConfiguracoes(Request $request)
+    {
+        $request->validate([
+            'company_name' => 'nullable|string',
+            'contact_email' => 'nullable|email',
+            'address' => 'nullable|string',
+            'facebook' => 'nullable|url',
+            'instagram' => 'nullable|url',
+        ]);
+
+        $settings = [
+            'company_name' => $request->company_name,
+            'contact_email' => $request->contact_email,
+            'address' => $request->address,
+            'facebook' => $request->facebook,
+            'instagram' => $request->instagram,
+        ];
+
+        foreach ($settings as $key => $value) {
+            \App\Models\Setting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $value]
+            );
+        }
+
+        return redirect()->back()->with('success', 'Configurações atualizadas com sucesso!');
+    }
 }

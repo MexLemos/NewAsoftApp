@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('app.name', 'ASoftMedia'))</title>
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -113,13 +115,27 @@
         }
 
         /* Dark Mode overrides */
-        [data-bs-theme="dark"] body {
-            background-color: #0f172a;
-            color: #e2e8f0;
+        [data-bs-theme="dark"] body, 
+        [data-bs-theme="dark"] .bg-white, 
+        [data-bs-theme="dark"] .bg-light,
+        [data-bs-theme="dark"] [style*="background-color: #f8fafc"] {
+            background-color: #0f172a !important;
+            color: #e2e8f0 !important;
         }
-        [data-bs-theme="dark"] .card {
-            background-color: #1e293b;
-            border-color: #334155;
+        [data-bs-theme="dark"] .card,
+        [data-bs-theme="dark"] .card[style*="background-color: #f8fafc"] {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+        }
+        [data-bs-theme="dark"] h1, [data-bs-theme="dark"] h2, [data-bs-theme="dark"] h3, 
+        [data-bs-theme="dark"] h4, [data-bs-theme="dark"] h5, [data-bs-theme="dark"] h6,
+        [data-bs-theme="dark"] .text-dark,
+        [data-bs-theme="dark"] [style*="color: #0f172a"],
+        [data-bs-theme="dark"] [style*="color: var(--asoft-secondary)"] {
+            color: #f8fafc !important;
+        }
+        [data-bs-theme="dark"] .text-muted {
+            color: #94a3b8 !important;
         }
 
         /* Scroll Animations */
