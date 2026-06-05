@@ -88,6 +88,9 @@
                     <a href="{{ route('admin.produtos') }}" class="{{ request()->routeIs('admin.produtos') ? 'active' : '' }}"><i class="fa-solid fa-box-open me-2 w-20px"></i> Produtos</a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('admin.servicos') }}" class="{{ request()->routeIs('admin.servicos') ? 'active' : '' }}"><i class="fa-solid fa-network-wired me-2 w-20px"></i> Serviços</a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('admin.usuarios') }}" class="{{ request()->routeIs('admin.usuarios') ? 'active' : '' }}"><i class="fa-solid fa-users me-2 w-20px"></i> Usuários</a>
                 </li>
                 <li class="nav-item">

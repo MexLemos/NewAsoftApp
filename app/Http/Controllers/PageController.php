@@ -8,9 +8,9 @@ class PageController extends Controller
 {
     public function home()
     {
-        $courses = \App\Models\Course::latest()->take(3)->get();
-        $products = \App\Models\Product::latest()->take(3)->get();
-        $services = \App\Models\Service::latest()->take(6)->get();
+        $courses = \App\Models\Course::where('is_published', true)->take(3)->get();
+        $products = \App\Models\Product::where('is_featured', true)->latest()->take(3)->get();
+        $services = \App\Models\Service::where('is_featured', true)->latest()->take(3)->get();
         $settings = \App\Models\Setting::all()->pluck('value', 'key');
         
         return view('pages.home', compact('courses', 'products', 'services', 'settings'));

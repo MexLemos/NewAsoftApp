@@ -118,7 +118,7 @@
                         <h5 class="fw-bold mb-2">{{ $course->title }}</h5>
                         <p class="text-muted small mb-4">{{ \Illuminate\Support\Str::limit($course->description, 100) }}</p>
                         <div class="mt-auto">
-                            <a href="#" class="btn btn-warning fw-bold btn-sm px-3 shadow-sm" style="background-color: var(--asoft-accent); border-color: var(--asoft-accent); color: white;">Ver curso</a>
+                            <a href="{{ route('cursos') }}" class="btn btn-warning fw-bold btn-sm px-3 shadow-sm" style="background-color: var(--asoft-accent); border-color: var(--asoft-accent); color: white;">Ver curso</a>
                         </div>
                     </div>
                 </div>
@@ -143,15 +143,25 @@
             @forelse($products as $product)
             <div class="col-md-6 col-lg-4">
                 <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-100">
-                    <div class="card-body p-4 text-start">
-                        <div class="text-center mb-3">
+                    <div class="card-body p-4 d-flex flex-column align-items-center justify-content-center">
+                        <div class="text-center mb-3 w-100 d-flex align-items-center justify-content-center" style="height: 120px;">
                             @if($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="mx-auto d-block" style="height: 120px; object-fit: contain; width: 100%;">
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="mx-auto d-block" style="max-height: 120px; object-fit: contain; width: 100%;">
                             @else
                                 <i class="fa-solid fa-box-open text-primary" style="font-size: 4rem;"></i>
                             @endif
                         </div>
-                        <h6 class="fw-bold mb-0">{{ $product->name }}</h6>
+                        <h6 class="fw-bold mb-3 text-center">{{ $product->name }}</h6>
+                        <div class="mt-auto w-100 text-center">
+                            <form action="{{ route('carrinho.add') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="id" value="{{ $product->id }}">
+                                <input type="hidden" name="name" value="{{ $product->name }}">
+                                <input type="hidden" name="price" value="{{ $product->price }}">
+                                <input type="hidden" name="image" value="{{ $product->image ? asset('storage/' . $product->image) : '' }}">
+                                <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-bold w-100"><i class="fa-solid fa-cart-plus me-1"></i> Adicionar ao Carrinho</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -164,9 +174,19 @@
             @foreach($services->take(3) as $service)
             <div class="col-md-6 col-lg-4">
                 <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-200">
-                    <div class="card-body p-4 text-start">
-                        <h6 class="fw-bold mb-2">{{ $service->title }}</h6>
-                        <p class="text-muted small mb-0">{{ \Illuminate\Support\Str::limit($service->description, 80) }}</p>
+                    <div class="card-body p-4 d-flex flex-column align-items-center justify-content-center">
+                        <div class="text-center mb-3 w-100 d-flex align-items-center justify-content-center" style="height: 120px;">
+                            @if($service->icon)
+                                <img src="{{ asset('storage/' . $service->icon) }}" alt="{{ $service->title }}" class="mx-auto d-block" style="max-height: 120px; object-fit: contain; width: 100%;">
+                            @else
+                                <i class="fa-solid fa-network-wired text-primary" style="font-size: 4rem;"></i>
+                            @endif
+                        </div>
+                        <h6 class="fw-bold mb-2 text-center">{{ $service->title }}</h6>
+                        <p class="text-muted small mb-4 text-center">{{ \Illuminate\Support\Str::limit($service->description, 80) }}</p>
+                        <div class="mt-auto w-100 text-center">
+                            <a href="#contactos" class="btn btn-outline-secondary btn-sm rounded-pill px-4 fw-bold w-100"><i class="fa-solid fa-envelope me-1"></i> Fale Connosco</a>
+                        </div>
                     </div>
                 </div>
             </div>

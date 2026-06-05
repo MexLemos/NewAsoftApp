@@ -78,6 +78,10 @@
                                             <label class="form-label text-muted small fw-bold">Descrição</label>
                                             <textarea name="description" class="form-control" rows="3" required>{{ $product->description }}</textarea>
                                         </div>
+                                        <div class="mb-3 form-check">
+                                            <input type="checkbox" class="form-check-input" name="is_featured" id="isFeatured{{ $product->id }}" value="1" {{ $product->is_featured ? 'checked' : '' }}>
+                                            <label class="form-check-label text-muted small fw-bold" for="isFeatured{{ $product->id }}">Produto em Destaque (Home)</label>
+                                        </div>
                                     </form>
                                 </div>
                                 <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
@@ -89,68 +93,9 @@
                     </div>
                     @endforeach
 
-                    @foreach($services as $service)
+                    @if($products->isEmpty())
                     <tr>
-                        <td class="ps-4">
-                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                @if($service->icon)
-                                    <img src="{{ asset('storage/' . $service->icon) }}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
-                                @else
-                                    <i class="fa-solid fa-network-wired text-muted"></i>
-                                @endif
-                            </div>
-                        </td>
-                        <td class="fw-medium">{{ $service->title }}</td>
-                        <td><span class="badge bg-info bg-opacity-10 text-info">Serviço</span></td>
-                        <td>-</td>
-                        <td><span class="badge bg-success">Ativo</span></td>
-                        <td class="text-end pe-4">
-                            <button type="button" class="btn btn-sm btn-light me-1" data-bs-toggle="modal" data-bs-target="#modalEditService{{ $service->id }}"><i class="fa-solid fa-pen"></i></button>
-                            <form action="{{ route('admin.servicos.destroy', $service->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja deletar este serviço?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-light text-danger" title="Apagar Serviço"><i class="fa-solid fa-trash"></i></button>
-                            </form>
-                        </td>
-                    </tr>
-                    <!-- Edit Modal para Serviço -->
-                    <div class="modal fade" id="modalEditService{{ $service->id }}" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content border-0 rounded-4 shadow">
-                                <div class="modal-header border-bottom-0 pb-0">
-                                    <h5 class="modal-title fw-bold">Editar Serviço</h5>
-                                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body p-4">
-                                    <form action="{{ route('admin.servicos.update', $service->id) }}" method="POST" enctype="multipart/form-data" id="formEditService{{ $service->id }}">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="mb-3">
-                                            <label class="form-label text-muted small fw-bold">Nome</label>
-                                            <input type="text" name="name" class="form-control" value="{{ $service->title }}" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label text-muted small fw-bold">Nova Imagem (opcional)</label>
-                                            <input type="file" name="image" class="form-control">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label text-muted small fw-bold">Descrição</label>
-                                            <textarea name="description" class="form-control" rows="3" required>{{ $service->description }}</textarea>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
-                                    <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="submit" form="formEditService{{ $service->id }}" class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;">Guardar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
-
-                    @if($products->isEmpty() && $services->isEmpty())
-                    <tr>
-                        <td colspan="6" class="text-center py-4 text-muted">Nenhum produto ou serviço cadastrado.</td>
+                        <td colspan="6" class="text-center py-4 text-muted">Nenhum produto cadastrado.</td>
                     </tr>
                     @endif
                 </tbody>
@@ -159,29 +104,22 @@
     </div>
 </div>
 
-<!-- Modal Cadastrar -->
+<!-- Modal Cadastrar Produto -->
 <div class="modal fade" id="modalCadastrar" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content border-0 rounded-4 shadow">
             <div class="modal-header border-bottom-0 pb-0">
-                <h5 class="modal-title fw-bold">Cadastrar Novo Item</h5>
+                <h5 class="modal-title fw-bold">Cadastrar Novo Produto</h5>
                 <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
                 <form action="{{ route('admin.produtos.store') }}" method="POST" enctype="multipart/form-data" id="formCadastrar">
                     @csrf
+                    <input type="hidden" name="category" value="produto">
                     <div class="row g-3">
-                        <div class="col-md-8">
-                            <label class="form-label text-muted small fw-bold">Nome do Item</label>
+                        <div class="col-md-12">
+                            <label class="form-label text-muted small fw-bold">Nome do Produto</label>
                             <input type="text" name="name" class="form-control" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label text-muted small fw-bold">Categoria</label>
-                            <select name="category" class="form-select" required>
-                                <option value="produto">Produto</option>
-                                <option value="servico">Serviço</option>
-                                <option value="curso">Curso</option>
-                            </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-muted small fw-bold">Preço (Kz)</label>
@@ -199,6 +137,12 @@
                             <label class="form-label text-muted small fw-bold">Conteúdo / Detalhes (HTML permitido)</label>
                             <textarea name="content" class="form-control" rows="4" placeholder="Detalhes do serviço ou módulos do curso..."></textarea>
                             <small class="text-muted">Use este campo para adicionar informações detalhadas ou listar os módulos de um curso.</small>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" name="is_featured" id="isFeaturedNew" value="1">
+                                <label class="form-check-label text-muted small fw-bold" for="isFeaturedNew">Produto em Destaque (Mostrar na Home)</label>
+                            </div>
                         </div>
                     </div>
                 </form>

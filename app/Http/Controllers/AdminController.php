@@ -14,8 +14,13 @@ class AdminController extends Controller
     public function produtos()
     {
         $products = \App\Models\Product::latest()->get();
+        return view('admin.produtos', compact('products'));
+    }
+
+    public function servicos()
+    {
         $services = \App\Models\Service::latest()->get();
-        return view('admin.produtos', compact('products', 'services'));
+        return view('admin.servicos', compact('services'));
     }
 
     public function usuarios()
@@ -68,6 +73,7 @@ class AdminController extends Controller
                 'price' => $price,
                 'product_category_id' => $cat->id,
                 'image' => $imagePath,
+                'is_featured' => $request->has('is_featured'),
             ]);
         } elseif ($request->category === 'servico') {
             \App\Models\Service::create([
@@ -75,6 +81,7 @@ class AdminController extends Controller
                 'slug' => $slug,
                 'description' => $request->description,
                 'icon' => $imagePath,
+                'is_featured' => $request->has('is_featured'),
             ]);
         }
 
@@ -155,6 +162,7 @@ class AdminController extends Controller
         $product->name = $request->name;
         $product->description = $request->description;
         $product->price = $request->price ? (float)$request->price : 0;
+        $product->is_featured = $request->has('is_featured');
         
         if ($request->hasFile('image')) {
             $product->image = $request->file('image')->store('produtos', 'public');
@@ -182,6 +190,7 @@ class AdminController extends Controller
 
         $service->title = $request->name;
         $service->description = $request->description;
+        $service->is_featured = $request->has('is_featured');
         
         if ($request->hasFile('image')) {
             $service->icon = $request->file('image')->store('produtos', 'public');

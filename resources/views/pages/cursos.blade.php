@@ -63,15 +63,19 @@
                             
                             @auth
                                 @if(Auth::user()->enrollments()->where('course_id', $course->id)->exists())
-                                    <a href="{{ route('lms.dashboard') }}" class="btn btn-success rounded-pill px-4">Já Inscrito</a>
+                                    <a href="{{ route('lms.dashboard') }}" class="btn btn-success rounded-pill px-4">Acessar Curso</a>
                                 @else
-                                    <form action="{{ route('lms.enroll', $course->id) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('carrinho.add') }}" method="POST" class="d-inline">
                                         @csrf
-                                        <button type="submit" class="btn btn-outline-primary rounded-pill px-4">Comprar</button>
+                                        <input type="hidden" name="id" value="course_{{ $course->id }}">
+                                        <input type="hidden" name="name" value="{{ $course->title }}">
+                                        <input type="hidden" name="price" value="{{ $course->price }}">
+                                        <input type="hidden" name="image" value="{{ $course->thumbnail ? asset('storage/' . $course->thumbnail) : '' }}">
+                                        <button type="submit" class="btn btn-outline-primary rounded-pill px-4">Inscrever-se</button>
                                     </form>
                                 @endif
                             @else
-                                <a href="{{ route('login') }}" class="btn btn-outline-primary rounded-pill px-4">Login</a>
+                                <a href="{{ route('register') }}" class="btn btn-outline-primary rounded-pill px-4">Inscrever-se</a>
                             @endauth
                         </div>
                     </div>
