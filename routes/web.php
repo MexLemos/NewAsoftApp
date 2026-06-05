@@ -81,7 +81,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // LMS Routes
     Route::get('/lms/dashboard', [\App\Http\Controllers\LmsController::class, 'dashboard'])->name('lms.dashboard');
     Route::get('/lms/certificados', function() { return view('lms.certificados'); })->name('lms.certificados');
-    Route::get('/lms/historico', function() { return view('lms.historico'); })->name('lms.historico');
+    Route::get('/lms/historico', [\App\Http\Controllers\LmsController::class, 'historico'])->name('lms.historico');
     Route::get('/lms/curso/{course}/aula/{lesson}', [\App\Http\Controllers\LmsController::class, 'lesson'])->name('lms.lesson');
     Route::post('/lms/curso/{course}/comprar', [\App\Http\Controllers\LmsController::class, 'enroll'])->name('lms.enroll');
 });

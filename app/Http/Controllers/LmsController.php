@@ -13,6 +13,13 @@ class LmsController extends Controller
         return view('lms.dashboard', compact('enrolledCourses'));
     }
 
+    public function historico()
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        $purchases = \App\Models\Lead::where('email', $user->email)->latest()->get();
+        return view('lms.historico', compact('purchases'));
+    }
+
     public function enroll(Request $request, $course_id)
     {
         $user = \Illuminate\Support\Facades\Auth::user();
