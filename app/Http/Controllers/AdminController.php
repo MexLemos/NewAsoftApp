@@ -25,12 +25,29 @@ class AdminController extends Controller
 
     public function usuarios()
     {
-        return view('admin.usuarios');
+        $users = \App\Models\User::latest()->get();
+        return view('admin.usuarios', compact('users'));
     }
 
     public function leads()
     {
-        return view('admin.leads');
+        $leads = \App\Models\Lead::latest()->get();
+        return view('admin.leads', compact('leads'));
+    }
+
+    public function approveLeadCourses($id)
+    {
+        $lead = \App\Models\Lead::findOrFail($id);
+        
+        $user = \App\Models\User::where('email', $lead->email)->first();
+        if ($user) {
+            \App\Models\Enrollment::where('user_id', $user->id)
+                ->where('status', 'pending')
+                ->update(['status' => 'active']);
+        }
+        
+        $lead->update(['status' => 'qualified']);
+        return redirect()->back()->with('success', 'Pagamento aprovado e cursos liberados com sucesso!');
     }
 
     public function configuracoes()
@@ -108,6 +125,33 @@ class AdminController extends Controller
         }
 
         return redirect()->back()->with('success', 'Usuário criado com sucesso!');
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        $user = \App\Models\User::findOrFail($id);
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+            'password' => 'nullable|string|min:8',
+            'role' => 'required|string'
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        
+        if ($request->filled('password')) {
+            $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
+        }
+        
+        $user->save();
+
+        if (class_exists(\Spatie\Permission\Models\Role::class)) {
+            $user->syncRoles([$request->role]);
+        }
+
+        return redirect()->back()->with('success', 'Usuário atualizado com sucesso!');
     }
 
     public function cursos()

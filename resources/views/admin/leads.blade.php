@@ -21,7 +21,7 @@
         <div class="card border-0 shadow-sm rounded-4 h-100">
             <div class="card-body">
                 <h6 class="text-muted fw-bold mb-1">Total de Contactos</h6>
-                <h2 class="fw-bolder mb-0">348</h2>
+                <h2 class="fw-bolder mb-0">{{ $leads->count() }}</h2>
             </div>
         </div>
     </div>
@@ -53,64 +53,72 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach($leads as $lead)
                     <tr>
-                        <td class="ps-4 fw-medium">Carlos Mendes</td>
-                        <td class="text-muted">carlos.m@example.com</td>
-                        <td>Consultoria TI</td>
-                        <td class="text-muted small">Hoje, 14:30</td>
-                        <td><span class="badge bg-warning text-dark">Pendente</span></td>
+                        <td class="ps-4 fw-medium">{{ $lead->name }}</td>
+                        <td class="text-muted">{{ $lead->email }}</td>
+                        <td>{{ Str::limit($lead->message, 40) }}</td>
+                        <td class="text-muted small">{{ $lead->created_at->format('d/m/Y H:i') }}</td>
+                        <td>
+                            @if($lead->status === 'new')
+                                <span class="badge bg-warning text-dark">Novo / Pendente</span>
+                            @elseif($lead->status === 'qualified')
+                                <span class="badge bg-success">Aprovado / Qualificado</span>
+                            @else
+                                <span class="badge bg-secondary">{{ $lead->status }}</span>
+                            @endif
+                        </td>
                         <td class="text-end pe-4">
-                            <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#modalLead">Ver Detalhes</button>
+                            <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#modalLead{{ $lead->id }}">Ver Detalhes</button>
                         </td>
                     </tr>
-                    <tr>
-                        <td class="ps-4 fw-medium">Ana Rita</td>
-                        <td class="text-muted">ana.rita@example.com</td>
-                        <td>Curso de React</td>
-                        <td class="text-muted small">Ontem, 09:15</td>
-                        <td><span class="badge bg-info">Em Contacto</span></td>
-                        <td class="text-end pe-4">
-                            <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#modalLead">Ver Detalhes</button>
-                        </td>
-                    </tr>
+
+                    <!-- Modal Detalhes Lead -->
+                    <div class="modal fade" id="modalLead{{ $lead->id }}" tabindex="-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content border-0 rounded-4 shadow">
+                                <div class="modal-header border-bottom-0 pb-0">
+                                    <h5 class="modal-title fw-bold">Detalhes do Pedido / Contacto</h5>
+                                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body p-4">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="text-muted small fw-bold">Nome</label>
+                                            <p class="mb-0 fw-medium">{{ $lead->name }}</p>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="text-muted small fw-bold">Email</label>
+                                            <p class="mb-0">{{ $lead->email }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="text-muted small fw-bold">Telemóvel</label>
+                                        <p class="mb-0">{{ $lead->phone }}</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="text-muted small fw-bold">Mensagem / Resumo do Pedido</label>
+                                        <div class="p-3 bg-light rounded mt-1 text-dark" style="white-space: pre-line; font-family: monospace;">
+                                            {!! nl2br(e($lead->message)) !!}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
+                                    <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Fechar</button>
+                                    
+                                    @if(str_contains($lead->message, 'PEDIDO DE COMPRA') && $lead->status !== 'qualified')
+                                        <form action="{{ route('admin.leads.approve_courses', $lead->id) }}" method="POST" class="m-0 p-0">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success fw-bold"><i class="fa-solid fa-check me-2"></i>Aprovar Pagamento e Liberar Cursos</button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Detalhes Lead -->
-<div class="modal fade" id="modalLead" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content border-0 rounded-4 shadow">
-            <div class="modal-header border-bottom-0 pb-0">
-                <h5 class="modal-title fw-bold">Detalhes da Lead</h5>
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-4">
-                <div class="mb-3">
-                    <label class="text-muted small fw-bold">Nome</label>
-                    <p class="mb-0 fw-medium">Exemplo Lead</p>
-                </div>
-                <div class="mb-3">
-                    <label class="text-muted small fw-bold">Email</label>
-                    <p class="mb-0">lead@example.com</p>
-                </div>
-                <div class="mb-3">
-                    <label class="text-muted small fw-bold">Interesse</label>
-                    <p class="mb-0">Consultoria TI</p>
-                </div>
-                <div class="mb-3">
-                    <label class="text-muted small fw-bold">Mensagem</label>
-                    <div class="p-3 bg-light rounded mt-1 text-muted small">
-                        "Gostaria de saber mais informações sobre a implementação de redes para o meu escritório..."
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
-                <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;" data-bs-dismiss="modal">Marcar como Contactado</button>
-            </div>
         </div>
     </div>
 </div>

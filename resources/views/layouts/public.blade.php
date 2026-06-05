@@ -41,6 +41,7 @@
             background-color: var(--asoft-secondary);
             padding: 15px 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            z-index: 1050;
         }
         .navbar-custom .nav-link {
             color: rgba(255,255,255,0.85);

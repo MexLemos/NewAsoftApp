@@ -9,7 +9,7 @@ class LmsController extends Controller
     public function dashboard()
     {
         $user = \Illuminate\Support\Facades\Auth::user();
-        $enrolledCourses = $user->courses()->withPivot('progress_percent')->get();
+        $enrolledCourses = $user->courses()->wherePivot('status', 'active')->withPivot('progress_percent')->get();
         return view('lms.dashboard', compact('enrolledCourses'));
     }
 

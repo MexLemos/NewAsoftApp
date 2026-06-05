@@ -88,6 +88,14 @@ class CartController extends Controller
             $itemsList .= "- " . $item['quantity'] . "x " . $item['name'] . " (Kz " . number_format($item['price'], 2, ',', '.') . ")\n";
             if (!str_starts_with((string)$id, 'course_')) {
                 $hasProducts = true;
+            } else {
+                if (auth()->check()) {
+                    $courseId = str_replace('course_', '', (string)$id);
+                    \App\Models\Enrollment::firstOrCreate(
+                        ['user_id' => auth()->id(), 'course_id' => $courseId],
+                        ['status' => 'pending', 'progress_percent' => 0]
+                    );
+                }
             }
         }
         
