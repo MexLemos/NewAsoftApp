@@ -21,10 +21,23 @@ Route::get('/produtos', [\App\Http\Controllers\PageController::class, 'produtos'
 Route::get('/carrinho', [\App\Http\Controllers\CartController::class, 'index'])->name('carrinho.index');
 Route::post('/carrinho/add', [\App\Http\Controllers\CartController::class, 'add'])->name('carrinho.add');
 Route::post('/carrinho/remove', [\App\Http\Controllers\CartController::class, 'remove'])->name('carrinho.remove');
+Route::post('/carrinho/update', [\App\Http\Controllers\CartController::class, 'update'])->name('carrinho.update');
 Route::get('/checkout', [\App\Http\Controllers\CartController::class, 'checkout'])->name('checkout');
+Route::post('/checkout/process', [\App\Http\Controllers\CartController::class, 'process'])->name('checkout.process');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $user = auth()->user();
+    
+    if ($user->hasRole('admin')) {
+        return redirect()->route('admin.dashboard');
+    }
+    
+    if ($user->hasAnyRole(['instrutor', 'formador', 'aluno'])) {
+        return redirect()->route('lms.dashboard');
+    }
+    
+    // Fallback padrão
+    return redirect()->route('lms.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

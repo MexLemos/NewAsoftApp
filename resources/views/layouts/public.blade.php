@@ -198,6 +198,31 @@
         </div>
     </nav>
 
+    <!-- Flash Messages (Toast/Alert) -->
+    @if(session('success'))
+        <div class="toast-container position-fixed top-0 end-0 p-4" style="z-index: 1060; margin-top: 60px;">
+            <div id="successToast" class="toast align-items-center text-bg-success border-0 show shadow-lg rounded-3" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body fw-bold">
+                        <i class="fa-solid fa-circle-check me-2"></i>{{ session('success') }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto shadow-none" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                setTimeout(() => {
+                    let toastEl = document.getElementById('successToast');
+                    if(toastEl) {
+                        toastEl.classList.remove('show');
+                        setTimeout(() => toastEl.remove(), 300);
+                    }
+                }, 4000);
+            });
+        </script>
+    @endif
+
     <!-- Main Content -->
     <main>
         @yield('content')

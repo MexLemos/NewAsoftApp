@@ -47,4 +47,83 @@ class CartController extends Controller
             return redirect()->back()->with('success', 'Produto removido com sucesso.');
         }
     }
+
+    public function update(Request $request)
+    {
+        if($request->id && $request->quantity) {
+            $cart = session()->get('cart');
+            if(isset($cart[$request->id])) {
+                $cart[$request->id]['quantity'] = max(1, intval($request->quantity));
+                session()->put('cart', $cart);
+            }
+            return redirect()->back()->with('success', 'Quantidade atualizada!');
+        }
+        return redirect()->back();
+    }
+
+    public function process(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email',
+            'phone' => 'required',
+            'payment_method' => 'required',
+            'proof' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120'
+        ]);
+
+        $proofPath = $request->file('proof')->store('comprovativos', 'public');
+        
+        $cart = session()->get('cart', []);
+        if (empty($cart)) {
+            return redirect()->route('produtos')->with('error', 'O carrinho está vazio.');
+        }
+
+        $total = 0;
+        $hasProducts = false;
+        $itemsList = "";
+        
+        foreach($cart as $id => $item) {
+            $total += $item['price'] * $item['quantity'];
+            $itemsList .= "- " . $item['quantity'] . "x " . $item['name'] . " (Kz " . number_format($item['price'], 2, ',', '.') . ")\n";
+            if (!str_starts_with((string)$id, 'course_')) {
+                $hasProducts = true;
+            }
+        }
+        
+        $tax = $hasProducts ? 3000 : 0;
+        $grandTotal = $total + $tax;
+
+        $fullName = $request->first_name . ' ' . $request->last_name;
+
+        $msg = "--- NOVO PEDIDO DE COMPRA ---\n";
+        $msg .= "Cliente: " . $fullName . " (NIF: " . ($request->nif ?? 'N/A') . ")\n";
+        $msg .= "Morada: " . $request->address . "\n";
+        $msg .= "Forma de Pagamento: " . $request->payment_method . "\n";
+        $msg .= "\nITENS:\n" . $itemsList;
+        $msg .= "\nRESUMO:\n";
+        $msg .= "Subtotal: Kz " . number_format($total, 2, ',', '.') . "\n";
+        $msg .= "Taxa Entrega: Kz " . number_format($tax, 2, ',', '.') . "\n";
+        $msg .= "TOTAL: Kz " . number_format($grandTotal, 2, ',', '.') . "\n";
+        $msg .= "\nCOMPROVATIVO:\n" . asset('storage/' . $proofPath) . "\n";
+        
+        $lead = \App\Models\Lead::create([
+            'name' => $fullName,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'message' => $msg,
+            'status' => 'new'
+        ]);
+
+        try {
+            \Illuminate\Support\Facades\Mail::to('comercial@asoftmedia-ao.com')->send(new \App\Mail\OrderAdminNotification($lead));
+            \Illuminate\Support\Facades\Mail::to($request->email)->send(new \App\Mail\OrderClientNotification($lead));
+        } catch (\Exception $e) {
+            // Se falhar o email, a compra continua guardada nos leads
+        }
+
+        session()->forget('cart');
+
+        return redirect()->route('produtos')->with('success', 'Pedido efetuado com sucesso! Receberá um e-mail de confirmação.');
+    }
 }

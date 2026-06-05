@@ -21,7 +21,10 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-body p-4">
-                    @php $total = 0; @endphp
+                    @php 
+                        $total = 0; 
+                        $hasProducts = false;
+                    @endphp
                     @if(session('cart') && count(session('cart')) > 0)
                         <div class="table-responsive">
                             <table class="table align-middle">
@@ -36,7 +39,12 @@
                                 </thead>
                                 <tbody>
                                     @foreach(session('cart') as $id => $details)
-                                        @php $total += $details['price'] * $details['quantity']; @endphp
+                                        @php 
+                                            $total += $details['price'] * $details['quantity']; 
+                                            if (!str_starts_with((string)$id, 'course_')) {
+                                                $hasProducts = true;
+                                            }
+                                        @endphp
                                         <tr>
                                             <td style="width: 80px;">
                                                 <img src="{{ $details['image'] ?? 'https://images.unsplash.com/photo-1544144433-d50aff500b91?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80' }}" alt="{{ $details['name'] }}" class="img-fluid rounded">
@@ -45,7 +53,11 @@
                                             <td>Kz {{ number_format($details['price'], 2, ',', '.') }}</td>
                                             <td class="text-center">
                                                 <div class="d-flex justify-content-center align-items-center">
-                                                    <span class="badge bg-light text-dark border px-3 py-2 fs-6">{{ $details['quantity'] }}</span>
+                                                    <form action="{{ route('carrinho.update') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="id" value="{{ $id }}">
+                                                        <input type="number" name="quantity" value="{{ $details['quantity'] }}" class="form-control form-control-sm text-center" style="width: 70px;" min="1" onchange="this.form.submit()">
+                                                    </form>
                                                 </div>
                                             </td>
                                             <td class="text-end fw-bold text-primary">Kz {{ number_format($details['price'] * $details['quantity'], 2, ',', '.') }}</td>
@@ -82,22 +94,23 @@
                         <span class="fw-semibold">Kz {{ number_format($total, 2, ',', '.') }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-3">
-                        <span class="text-muted">Impostos (IVA 14%)</span>
-                        <span class="fw-semibold">Kz {{ number_format($total * 0.14, 2, ',', '.') }}</span>
+                        <span class="text-muted">Taxa de Entrega / Deslocação</span>
+                        @php $tax = $hasProducts ? 3000 : 0; @endphp
+                        <span class="fw-semibold">Kz {{ number_format($tax, 2, ',', '.') }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-4 pb-4 border-bottom">
-                        <span class="text-muted">Envio</span>
-                        <span class="text-success fw-semibold">Grátis</span>
+                        <span class="text-muted">Data de Entrega</span>
+                        <span class="text-success fw-semibold text-end" style="font-size: 0.85rem;">1 a 2 dias após<br>o pagamento</span>
                     </div>
                     
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <span class="fw-bold fs-5">Total</span>
-                        <span class="fw-bolder fs-4 text-primary">Kz {{ number_format($total + ($total * 0.14), 2, ',', '.') }}</span>
+                        <span class="fw-bolder fs-4 text-primary">Kz {{ number_format($total + $tax, 2, ',', '.') }}</span>
                     </div>
 
                     @if(session('cart') && count(session('cart')) > 0)
                         @auth
-                            <a href="#" class="btn btn-primary btn-lg w-100 fw-bold" style="background-color: var(--asoft-primary); border: none;">Finalizar Compra</a>
+                            <a href="{{ route('checkout') }}" class="btn btn-primary btn-lg w-100 fw-bold" style="background-color: var(--asoft-primary); border: none;">Finalizar Compra</a>
                         @else
                             <a href="{{ route('login') }}" class="btn btn-primary btn-lg w-100 fw-bold" style="background-color: var(--asoft-primary); border: none;">Login para Finalizar</a>
                         @endauth
