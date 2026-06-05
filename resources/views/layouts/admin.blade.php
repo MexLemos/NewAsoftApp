@@ -61,7 +61,10 @@
     <div class="d-flex">
         <!-- Sidebar -->
         <div class="sidebar p-3" style="width: 250px;">
-            <h4 class="text-center text-white mb-4 fw-bold">ASOFTMEDIA</h4>
+            <div class="text-center mb-4">
+                <img src="{{ asset('images/logo.png') }}" alt="ASoftMedia Logo" height="65">
+                <h5 class="text-white mt-3 fw-bold" style="letter-spacing: 1px;">ASOFTMEDIA</h5>
+            </div>
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a href="{{ route('admin.dashboard') }}" class="active"><i class="fa-solid fa-gauge me-2"></i> Dashboard</a>

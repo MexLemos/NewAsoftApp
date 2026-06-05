@@ -1,35 +1,266 @@
 @extends('layouts.public')
 
 @section('content')
-<!-- Hero Section -->
-<section class="py-5 text-white" style="background-color: var(--asoft-primary); position: relative; overflow: hidden;">
-    <div class="container py-5">
-        <div class="row align-items-center">
-            <div class="col-lg-6 mb-5 mb-lg-0 z-1">
-                <h1 class="display-4 fw-bolder mb-4">ALÉM DE PRODUTOS E SERVIÇOS, <span style="color: var(--asoft-accent);">CAUSAMOS IMPACTO</span></h1>
-                <h3 class="fw-semibold mb-4">Treinamento e Estágio Profissional</h3>
-                <p class="lead mb-4" style="color: rgba(255,255,255,0.85);">Investimos no futuro da inovação ao proporcionar programas de treinamento e estágios que aproximam estudantes e jovens profissionais do ambiente real de trabalho em TI — desde desenvolvimento de software até cloud computing, inteligência artificial e segurança digital.</p>
-                <div class="d-flex gap-3">
-                    <a href="#" class="btn btn-brand btn-lg">Explorar Cursos</a>
-                    <a href="#" class="btn btn-outline-light btn-lg">Fale Connosco</a>
+<!-- Hero Carousel Section -->
+<div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+        <!-- Slide 1: Impacto/Treinamento -->
+        <div class="carousel-item active" style="background-image: url('{{ asset('images/hero-bg-new.png') }}'); background-size: cover; background-position: center; background-color: #0f172a;">
+            <!-- Dark overlay to ensure text is readable and blends well -->
+            <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.9) 0%, rgba(15,23,42,0.4) 50%, rgba(15,23,42,0) 100%);"></div>
+            <div class="container py-5 position-relative z-1">
+                <div class="row align-items-center min-vh-50 py-5">
+                    <div class="col-lg-7 mb-5 mb-lg-0">
+                        <h2 class="fs-1 fw-bolder mb-3 text-white text-uppercase" style="letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Além de produtos e serviços,<br><span style="color: var(--asoft-accent);">causamos impacto</span></h2>
+                        <h5 class="fw-bold mb-4 text-white" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5);">Treinamento e Estágio Profissional</h5>
+                        <p class="mb-5 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">Investimos no futuro da inovação ao proporcionar programas de treinamento e estágios que aproximam estudantes e jovens profissionais do ambiente real de trabalho em TI — desde desenvolvimento de software até cloud computing, inteligência artificial e segurança digital.</p>
+                        <div class="d-flex gap-3">
+                            <a href="{{ route('cursos') }}" class="btn btn-brand px-4 py-2 fw-bold shadow btn-sm">Explorar Cursos</a>
+                            <a href="#contactos" class="btn btn-outline-light px-4 py-2 fw-bold shadow btn-sm">Fale Connosco</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-5"></div>
                 </div>
             </div>
-            <div class="col-lg-6 position-relative z-1">
-                <!-- Using a professional placeholder or simple illustration for hero -->
-                <div class="bg-white rounded-circle position-absolute top-50 start-50 translate-middle opacity-10" style="width: 500px; height: 500px;"></div>
-                <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Profissional TI" class="img-fluid rounded-4 shadow-lg position-relative">
+        </div>
+        <!-- Slide 2: Treinamentos LMS -->
+        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center; background-color: #0f172a;">
+            <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.6) 50%, rgba(15,23,42,0) 100%);"></div>
+            <div class="container py-5 position-relative z-1">
+                <div class="row align-items-center min-vh-50 py-5">
+                    <div class="col-lg-7 mb-5 mb-lg-0 z-1">
+                        <h2 class="fs-1 fw-bolder mb-3 text-white text-uppercase" style="letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">TRANSFORME A SUA CARREIRA COM <span style="color: var(--asoft-accent);">NOSSOS CURSOS</span></h2>
+                        <p class="mb-5 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">Aceda à nossa plataforma E-learning com aulas práticas focadas no mercado atual. Aprenda programação, gestão e redes com especialistas e alcance o próximo nível na sua carreira.</p>
+                        <div class="d-flex gap-3">
+                            <a href="{{ route('cursos') }}" class="btn btn-brand px-4 py-2 fw-bold shadow btn-sm">Ver Catálogo de Cursos</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-5"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 3: Serviços Corporativos -->
+        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center; background-color: #0f172a;">
+            <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.6) 50%, rgba(15,23,42,0) 100%);"></div>
+            <div class="container py-5 position-relative z-1">
+                <div class="row align-items-center min-vh-50 py-5">
+                    <div class="col-lg-7 mb-5 mb-lg-0 z-1">
+                        <h2 class="fs-1 fw-bolder mb-3 text-white text-uppercase" style="letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">SOLUÇÕES INOVADORAS PARA O <span style="color: var(--asoft-accent);">SEU NEGÓCIO</span></h2>
+                        <p class="mb-5 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">Fornecemos os melhores equipamentos, venda de software de gestão avançada (Cegid), consultoria em TI e implementação de redes para otimizar os seus resultados.</p>
+                        <div class="d-flex gap-3">
+                            <a href="#servicos" class="btn btn-brand px-4 py-2 fw-bold shadow btn-sm">Conhecer Serviços</a>
+                            <a href="{{ route('produtos') }}" class="btn btn-outline-light px-4 py-2 fw-bold shadow btn-sm">Ir para a Loja</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-5"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Próximo</span>
+    </button>
+</div>
+
+<!-- Statistics Section -->
+<section class="py-4 position-relative" style="background-color: #f8fafc; z-index: 10;">
+    <div class="container">
+        <!-- Negative margin to pull the cards slightly up over the hero if desired, but standard layout per image -->
+        <div class="row g-4 justify-content-center" style="margin-top: -30px;">
+            <div class="col-6 col-md-3">
+                <div class="bg-white rounded-4 shadow-sm p-4 text-center h-100 animate-on-scroll delay-100">
+                    <h2 class="fw-bolder mb-1" style="color: var(--asoft-accent); font-size: 2.5rem;">150+</h2>
+                    <p class="text-muted small fw-bold mb-0 text-uppercase" style="letter-spacing: 1px;">Clientes</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="bg-white rounded-4 shadow-sm p-4 text-center h-100 animate-on-scroll delay-200">
+                    <h2 class="fw-bolder mb-1" style="color: var(--asoft-accent); font-size: 2.5rem;">25+</h2>
+                    <p class="text-muted small fw-bold mb-0 text-uppercase" style="letter-spacing: 1px;">Cursos</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="bg-white rounded-4 shadow-sm p-4 text-center h-100 animate-on-scroll delay-300">
+                    <h2 class="fw-bolder mb-1" style="color: var(--asoft-accent); font-size: 2.5rem;">12+</h2>
+                    <p class="text-muted small fw-bold mb-0 text-uppercase" style="letter-spacing: 1px;">Produtos</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="bg-white rounded-4 shadow-sm p-4 text-center h-100 animate-on-scroll delay-400">
+                    <h2 class="fw-bolder mb-1" style="color: var(--asoft-accent); font-size: 2.5rem;">10+</h2>
+                    <p class="text-muted small fw-bold mb-0 text-uppercase" style="letter-spacing: 1px;">Anos</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- Featured Courses Section -->
+<section class="py-5 bg-white">
+    <div class="container py-4">
+        <h3 class="fw-bold mb-5" style="color: var(--asoft-secondary);">Cursos em destaque</h3>
+        <div class="row g-4 justify-content-center">
+            <!-- Course 1 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden animate-on-scroll delay-100">
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="PHP & Laravel" style="height: 180px; object-fit: cover;">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h5 class="fw-bold mb-2">PHP & Laravel - Do Zero ao Avançado</h5>
+                        <p class="text-muted small mb-4">Aprenda a construir aplicações web modernas com PHP 8 e Laravel 10.</p>
+                        <div class="mt-auto">
+                            <a href="#" class="btn btn-warning fw-bold btn-sm px-3 shadow-sm" style="background-color: var(--asoft-accent); border-color: var(--asoft-accent); color: white;">Ver curso</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Course 2 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden animate-on-scroll delay-200">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Excel Avançado" style="height: 180px; object-fit: cover;">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h5 class="fw-bold mb-2">Excel Avançado para Negócios</h5>
+                        <p class="text-muted small mb-4">Tabelas dinâmicas, macros e dashboards em Excel.</p>
+                        <div class="mt-auto">
+                            <a href="#" class="btn btn-warning fw-bold btn-sm px-3 shadow-sm" style="background-color: var(--asoft-accent); border-color: var(--asoft-accent); color: white;">Ver curso</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Course 3 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden animate-on-scroll delay-300">
+                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="OPNSense" style="height: 180px; object-fit: cover;">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h5 class="fw-bold mb-2">OPNSense</h5>
+                        <p class="text-muted small mb-4">Securing networks made easy.</p>
+                        <div class="mt-auto">
+                            <a href="#" class="btn btn-warning fw-bold btn-sm px-3 shadow-sm" style="background-color: var(--asoft-accent); border-color: var(--asoft-accent); color: white;">Ver curso</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-5">
+            <a href="{{ route('cursos') }}" class="btn btn-outline-warning fw-bold px-4 py-2 rounded-pill shadow-sm" style="color: var(--asoft-accent); border-color: var(--asoft-accent);">Todos os cursos</a>
+        </div>
+    </div>
+</section>
+
+<!-- Products & Services Section -->
+<section class="py-5" style="background-color: #f8fafc;">
+    <div class="container py-4">
+        <h3 class="fw-bold mb-5" style="color: var(--asoft-secondary);">Produtos & Serviços</h3>
+        <div class="row g-4 justify-content-center">
+            <!-- Product 1 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-100">
+                    <div class="card-body p-4 text-start">
+                        <div class="text-center mb-3">
+                            <i class="fa-brands fa-microsoft text-danger" style="font-size: 4rem;"></i>
+                        </div>
+                        <h6 class="fw-bold mb-2">Microsoft Office 365 Business</h6>
+                        <p class="fw-bold small mb-0" style="color: var(--asoft-primary);">45.000 Kz</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Product 2 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-200">
+                    <div class="card-body p-4 text-start">
+                        <div class="text-center mb-3">
+                            <i class="fa-brands fa-windows text-primary" style="font-size: 4rem;"></i>
+                        </div>
+                        <h6 class="fw-bold mb-2">Windows 11 Pro</h6>
+                        <p class="fw-bold small mb-0" style="color: var(--asoft-primary);">35.000 Kz</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Product 3 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-300">
+                    <div class="card-body p-4 text-start">
+                        <div class="text-center mb-3">
+                            <i class="fa-solid fa-bowl-food text-warning" style="font-size: 4rem;"></i>
+                        </div>
+                        <h6 class="fw-bold mb-2">2Funges</h6>
+                        <p class="fw-bold small mb-0" style="color: var(--asoft-primary);">0 Kz</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Service 1 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-100">
+                    <div class="card-body p-4 text-start">
+                        <h6 class="fw-bold mb-2">Venda de Softwares de Gestão</h6>
+                        <p class="text-muted small mb-0">Soluções ERP e desenvolvimento digital para empresas.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Service 2 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-200">
+                    <div class="card-body p-4 text-start">
+                        <h6 class="fw-bold mb-2">Homologação de Equipamentos de TI</h6>
+                        <p class="text-muted small mb-0">Certificação e documentação técnica de equipamentos.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Service 3 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-300">
+                    <div class="card-body p-4 text-start">
+                        <h6 class="fw-bold mb-2">Redes e Infraestrutura</h6>
+                        <p class="text-muted small mb-0">Infraestrutura, conectividade e segurança.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5 bg-white">
+    <div class="container py-5 text-center">
+        <h3 class="fw-bold mb-5" style="color: var(--asoft-secondary);">O que dizem os nossos clientes</h3>
+        <div class="row justify-content-center g-4 text-start">
+            <div class="col-md-6 col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 animate-on-scroll delay-100" style="background-color: #f8fafc;">
+                    <div class="card-body">
+                        <p class="fst-italic text-muted mb-4">"O curso de Excel Avançado aumentou a minha produtividade em 40%."</p>
+                        <h6 class="fw-bold mb-1">Ana Paula</h6>
+                        <p class="text-muted small mb-0">Analista Financeira</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 animate-on-scroll delay-200" style="background-color: #f8fafc;">
+                    <div class="card-body">
+                        <p class="fst-italic text-muted mb-4">"A formação em Laravel transformou a nossa equipa de desenvolvimento."</p>
+                        <h6 class="fw-bold mb-1">João Manuel</h6>
+                        <p class="text-muted small mb-0">Director de TI, Empresa XYZ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <!-- About Section (Mission, Vision, Values) -->
-<section id="sobre" class="py-5" style="background-color: #f8fafc;">
-    <div class="container py-5">
-        <div class="row g-4 align-items-center">
+<section id="sobre" class="pt-5 pb-2" style="background-color: #f8fafc;">
+    <div class="container pt-5 pb-0">
+        <div class="row g-4 align-items-center mb-5">
             <div class="col-lg-5">
-                <div class="mb-4">
-                    <div class="d-flex align-items-center bg-white p-4 rounded-4 shadow-sm mb-4 border-start border-4" style="border-color: var(--asoft-primary) !important;">
+                <div class="mb-4 mb-lg-0">
+                    <div class="d-flex align-items-center bg-white p-4 rounded-4 shadow-sm mb-4 border-start border-4 animate-on-scroll delay-100" style="border-color: var(--asoft-primary) !important;">
                         <div class="me-4 rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                             <i class="fa-solid fa-eye fs-4"></i>
                         </div>
@@ -39,7 +270,7 @@
                         </div>
                     </div>
 
-                    <div class="d-flex align-items-center bg-white p-4 rounded-4 shadow-sm mb-4 border-start border-4" style="border-color: var(--asoft-primary) !important;">
+                    <div class="d-flex align-items-center bg-white p-4 rounded-4 shadow-sm mb-4 border-start border-4 animate-on-scroll delay-200" style="border-color: var(--asoft-primary) !important;">
                         <div class="me-4 rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                             <i class="fa-solid fa-bullseye fs-4"></i>
                         </div>
@@ -49,7 +280,7 @@
                         </div>
                     </div>
 
-                    <div class="d-flex align-items-center bg-white p-4 rounded-4 shadow-sm border-start border-4" style="border-color: var(--asoft-primary) !important;">
+                    <div class="d-flex align-items-center bg-white p-4 rounded-4 shadow-sm border-start border-4 animate-on-scroll delay-300" style="border-color: var(--asoft-primary) !important;">
                         <div class="me-4 rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                             <i class="fa-solid fa-heart fs-4"></i>
                         </div>
@@ -60,25 +291,87 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-7 px-lg-5">
-                <h3 class="fw-bold mb-4">Sobre a ASOFTMEDIA</h3>
-                <p class="mb-4 text-muted" style="line-height: 1.8;">A ASOFTMEDIA é uma empresa de tecnologia fundada em 2018, com o objetivo de desenvolver soluções em software e proporcionar a digitalização de empresas. Com uma equipa qualificada, oferece serviços de desenvolvimento de software sob medida para empresas de todos os tamanhos.</p>
-                <p class="text-muted" style="line-height: 1.8;">Além disso, oferece serviços de consultoria em tecnologia, implementação de soluções e gerenciamento de ambientes de T.I. das pequenas e médias empresas, ajudando a garantir continuidade, produtividade e redução de custos.</p>
+            <div class="col-lg-7 px-lg-5 animate-on-scroll delay-400">
+                <img src="{{ asset('images/asoftmedia-team.jpg') }}" alt="Equipa Asoftmedia" class="img-fluid rounded-4 shadow-sm w-100" style="object-fit: cover; max-height: 400px;">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <h3 class="fw-bold mb-4 text-center">Sobre a ASOFTMEDIA</h3>
+                <p class="mb-4 text-muted" style="line-height: 1.8; text-align: justify;">A ASOFTMEDIA é uma empresa de tecnologia fundada em 2018, com o objetivo de desenvolver soluções em software e proporcionar a digitalização de empresas. Com uma equipa qualificada, oferece serviços de desenvolvimento de software sob medida para empresas de todos os tamanhos.</p>
+                <p class="text-muted" style="line-height: 1.8; text-align: justify;">Além disso, oferece serviços de consultoria em tecnologia, implementação de soluções e gerenciamento de ambientes de T.I. das pequenas e médias empresas, ajudando a garantir continuidade, produtividade e redução de custos.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Partners Section -->
-<section class="py-5 bg-white">
-    <div class="container py-4 text-center">
+<section class="pt-2 pb-5 bg-white">
+    <div class="container pt-2 pb-4 text-center">
         <h3 class="fw-bold mb-5">Nossos Parceiros</h3>
-        <div class="d-flex justify-content-center flex-wrap gap-4 gap-md-5 align-items-center opacity-75">
-            <!-- Emulating logos with text for now -->
-            <h4 class="fw-bold text-secondary mb-0"><i class="fa-brands fa-microsoft text-primary me-2"></i> Microsoft</h4>
-            <h4 class="fw-bold text-secondary mb-0"><i class="fa-brands fa-aws text-warning me-2"></i> AWS Partner</h4>
-            <h4 class="fw-bold text-secondary mb-0"><i class="fa-solid fa-server text-info me-2"></i> Cegid</h4>
-            <h4 class="fw-bold text-secondary mb-0"><i class="fa-solid fa-shield-halved text-success me-2"></i> Kaspersky</h4>
+        <style>
+            .partners-carousel-container {
+                overflow: hidden;
+                width: 100%;
+                white-space: nowrap;
+                position: relative;
+            }
+            .partners-carousel-container::before,
+            .partners-carousel-container::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                width: 150px;
+                height: 100%;
+                z-index: 2;
+            }
+            .partners-carousel-container::before {
+                left: 0;
+                background: linear-gradient(to right, white 0%, rgba(255, 255, 255, 0) 100%);
+            }
+            .partners-carousel-container::after {
+                right: 0;
+                background: linear-gradient(to left, white 0%, rgba(255, 255, 255, 0) 100%);
+            }
+            .partners-carousel-track {
+                display: inline-block;
+                animation: scroll-partners 15s linear infinite;
+            }
+            .partners-carousel-track:hover {
+                animation-play-state: paused;
+            }
+            .partner-logo {
+                height: 70px;
+                margin: 0 40px;
+                object-fit: contain;
+                transition: all 0.3s ease;
+            }
+            .partner-logo:hover {
+                transform: scale(1.05);
+            }
+            @keyframes scroll-partners {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+        </style>
+        <div class="partners-carousel-container">
+            <div class="partners-carousel-track">
+                <!-- Original set -->
+                <img src="{{ asset('images/partners/partner-1.png') }}" class="partner-logo" alt="Parceiro 1">
+                <img src="{{ asset('images/partners/partner-2.png') }}" class="partner-logo" alt="Parceiro 2">
+                <img src="{{ asset('images/partners/partner-3.png') }}" class="partner-logo" alt="Parceiro 3">
+                <img src="{{ asset('images/partners/partner-1.png') }}" class="partner-logo" alt="Parceiro 1">
+                <img src="{{ asset('images/partners/partner-2.png') }}" class="partner-logo" alt="Parceiro 2">
+                <img src="{{ asset('images/partners/partner-3.png') }}" class="partner-logo" alt="Parceiro 3">
+                <!-- Duplicated set for seamless scrolling -->
+                <img src="{{ asset('images/partners/partner-1.png') }}" class="partner-logo" alt="Parceiro 1">
+                <img src="{{ asset('images/partners/partner-2.png') }}" class="partner-logo" alt="Parceiro 2">
+                <img src="{{ asset('images/partners/partner-3.png') }}" class="partner-logo" alt="Parceiro 3">
+                <img src="{{ asset('images/partners/partner-1.png') }}" class="partner-logo" alt="Parceiro 1">
+                <img src="{{ asset('images/partners/partner-2.png') }}" class="partner-logo" alt="Parceiro 2">
+                <img src="{{ asset('images/partners/partner-3.png') }}" class="partner-logo" alt="Parceiro 3">
+            </div>
         </div>
     </div>
 </section>
@@ -87,70 +380,49 @@
 <section id="servicos" class="py-5" style="background-color: #f8fafc;">
     <div class="container py-5">
         <h2 class="text-center fw-bolder mb-5">Nossas Áreas de Atuação</h2>
-        <div class="row g-4">
+        <div class="row g-5 justify-content-center text-center">
             <!-- Service 1 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Software" style="height: 160px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold">Venda de Softwares de Gestão</h5>
-                        <ul class="list-unstyled mt-3 mb-0 text-muted small">
-                            <li class="mb-2"><i class="fa-solid fa-check text-primary me-2"></i> Cegid PHC</li>
-                            <li class="mb-2"><i class="fa-solid fa-check text-primary me-2"></i> Cegid Primavera</li>
-                            <li class="mb-2"><i class="fa-solid fa-check text-primary me-2"></i> Cegid Vendus</li>
-                            <li><i class="fa-solid fa-check text-primary me-2"></i> Desenvolvimento de Apps e Sites</li>
-                        </ul>
-                    </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="mb-4">
+                    <i class="fa-solid fa-laptop-code" style="font-size: 3.5rem; color: #0f172a;"></i>
                 </div>
+                <h5 class="fw-bold mb-3" style="color: #0f172a;">Venda de Softwares de Gestão</h5>
+                <p class="text-muted small" style="line-height: 1.7;">Fornecemos e implementamos as melhores soluções em software de gestão, incluindo Cegid PHC, Primavera e Vendus, além do desenvolvimento personalizado de aplicações e websites.</p>
             </div>
             
             <!-- Service 2 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Equipamentos" style="height: 160px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold">Homologação de Equipamentos de TI</h5>
-                        <ul class="list-unstyled mt-3 mb-0 text-muted small">
-                            <li class="mb-2"><i class="fa-solid fa-check text-primary me-2"></i> Emissão de Certificados</li>
-                            <li class="mb-2"><i class="fa-solid fa-check text-primary me-2"></i> Renovação de Certificados</li>
-                            <li class="mb-2"><i class="fa-solid fa-check text-primary me-2"></i> Tradução de Documentação</li>
-                            <li><i class="fa-solid fa-check text-primary me-2"></i> Entrega de certificados</li>
-                        </ul>
-                    </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="mb-4">
+                    <i class="fa-solid fa-file-contract" style="font-size: 3.5rem; color: #0f172a;"></i>
                 </div>
+                <h5 class="fw-bold mb-3" style="color: #0f172a;">Homologação de Equipamentos de TI</h5>
+                <p class="text-muted small" style="line-height: 1.7;">Cuidamos de todo o processo de emissão e renovação de certificados, além da tradução técnica e entrega de documentação necessária para os seus equipamentos.</p>
             </div>
 
             <!-- Service 3 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Redes" style="height: 160px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold">Redes e Infraestrutura</h5>
-                        <ul class="list-unstyled mt-3 mb-0 text-muted small">
-                            <li class="mb-2"><i class="fa-solid fa-check text-primary me-2"></i> CCTV</li>
-                            <li class="mb-2"><i class="fa-solid fa-check text-primary me-2"></i> Telefonia VoIP</li>
-                            <li class="mb-2"><i class="fa-solid fa-check text-primary me-2"></i> Otimização de Recursos</li>
-                            <li><i class="fa-solid fa-check text-primary me-2"></i> Segurança de Informação</li>
-                        </ul>
-                    </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="mb-4">
+                    <i class="fa-solid fa-network-wired" style="font-size: 3.5rem; color: #0f172a;"></i>
                 </div>
+                <h5 class="fw-bold mb-3" style="color: #0f172a;">Redes e Infraestrutura</h5>
+                <p class="text-muted small" style="line-height: 1.7;">Projetamos e implementamos soluções robustas de CFTV, telefonia VoIP e otimização de recursos para garantir a segurança da informação na sua empresa.</p>
             </div>
 
             <!-- Service 4 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Consultoria" style="height: 160px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold">Consultoria e Treinamento</h5>
-                        <ul class="list-unstyled mt-3 mb-0 text-muted small">
-                            <li class="mb-2"><i class="fa-solid fa-check text-primary me-2"></i> Venda de Equipamentos</li>
-                            <li class="mb-2"><i class="fa-solid fa-check text-primary me-2"></i> Venda de Licenças Microsoft</li>
-                            <li class="mb-2"><i class="fa-solid fa-check text-primary me-2"></i> OutSourcing de Serviços</li>
-                            <li><i class="fa-solid fa-check text-primary me-2"></i> Treinamento e Estágio de TI</li>
-                        </ul>
-                    </div>
+            <div class="col-md-6 col-lg-4 mt-lg-5">
+                <div class="mb-4">
+                    <i class="fa-solid fa-chalkboard-user" style="font-size: 3.5rem; color: #0f172a;"></i>
                 </div>
+                <h5 class="fw-bold mb-3" style="color: #0f172a;">Consultoria e Treinamento</h5>
+                <p class="text-muted small" style="line-height: 1.7;">Oferecemos outsourcing de serviços, venda de equipamentos e licenças Microsoft, além de programas especializados de treinamento e estágio em TI.</p>
             </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <h5 class="mb-4 text-muted">A sua empresa precisa de uma solução à medida?</h5>
+            <a href="#contactos" class="btn btn-brand btn-lg shadow px-5 py-3 rounded-pill fw-bold text-uppercase" style="letter-spacing: 0.5px;">
+                Fale com os nossos especialistas <i class="fa-solid fa-arrow-right ms-2"></i>
+            </a>
         </div>
     </div>
 </section>
@@ -185,13 +457,9 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <!-- Using a placeholder for the Google Maps iframe shown in the design -->
-                <div class="h-100 rounded-4 overflow-hidden shadow-sm" style="min-height: 400px; background-color: #e2e8f0; display: flex; align-items: center; justify-content: center;">
-                    <div class="text-center text-muted">
-                        <i class="fa-solid fa-map-location-dot fs-1 mb-3"></i>
-                        <h5>Mapa de Localização</h5>
-                        <p>Sapu 2, Casas Azuis, Rua da Uva<br>Luanda - Angola</p>
-                    </div>
+                <!-- Google Maps iframe -->
+                <div class="h-100 rounded-4 overflow-hidden shadow-sm position-relative" style="min-height: 400px; background-color: #e2e8f0;">
+                    <iframe width="100%" height="100%" frameborder="0" style="border:0; position: absolute; top: 0; left: 0;" src="https://maps.google.com/maps?q=Sapu%202,%20Luanda,%20Angola&t=&z=14&ie=UTF8&iwloc=&output=embed" allowfullscreen loading="lazy"></iframe>
                 </div>
             </div>
         </div>

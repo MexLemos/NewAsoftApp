@@ -121,6 +121,21 @@
             background-color: #1e293b;
             border-color: #334155;
         }
+
+        /* Scroll Animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
     </style>
 </head>
 <body>
@@ -128,8 +143,9 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
-                <i class="fa-solid fa-layer-group me-2" style="color: var(--asoft-accent);"></i> ASOFTMEDIA
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('home') }}">
+                <img src="{{ asset('images/logo.png') }}" alt="ASoftMedia Logo" height="55">
+                <span style="font-weight: 800; letter-spacing: 1px;">ASOFTMEDIA</span>
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
                 <i class="fa-solid fa-bars text-white fs-4"></i>
@@ -176,13 +192,16 @@
         <div class="container">
             <div class="row gy-4 mb-5">
                 <div class="col-lg-4 col-md-6">
-                    <h5 class="text-white fw-bold mb-4"><i class="fa-solid fa-layer-group me-2" style="color: var(--asoft-accent);"></i> ASOFTMEDIA</h5>
+                    <div class="mb-4 d-flex align-items-center gap-2">
+                        <img src="{{ asset('images/logo.png') }}" alt="ASoftMedia Logo" height="55">
+                        <span class="text-white fw-bold fs-4" style="letter-spacing: 1px;">ASOFTMEDIA</span>
+                    </div>
                     <p class="mb-4 text-sm">A ASoftMedia é uma empresa de tecnologia focada no desenvolvimento de soluções em software, treinamento e digitalização de negócios. Oferecemos serviços inovadores e personalizados.</p>
                     <div class="d-flex gap-3">
-                        <a href="#" class="fs-4"><i class="fa-brands fa-facebook"></i></a>
-                        <a href="#" class="fs-4"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#" class="fs-4"><i class="fa-brands fa-linkedin"></i></a>
-                        <a href="#" class="fs-4"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/asoftmedia" class="fs-4" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/asoftmedia" class="fs-4" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/company/asoftmedia" class="fs-4" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="https://www.youtube.com/@Asoftmedia-ao" class="fs-4" target="_blank"><i class="fa-brands fa-youtube"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-6">
@@ -234,7 +253,7 @@
     </a>
 
     <!-- Bootstrap 5 JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.css"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const themeToggle = document.getElementById('theme-toggle');
         const htmlElement = document.documentElement;
@@ -259,6 +278,29 @@
                 themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>';
             }
         }
+
+        // Scroll Animations Observer
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        // Stop observing once animated so it doesn't replay continuously
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+                observer.observe(el);
+            });
+        });
     </script>
 </body>
 </html>
