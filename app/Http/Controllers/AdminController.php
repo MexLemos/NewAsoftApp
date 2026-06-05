@@ -122,7 +122,9 @@ class AdminController extends Controller
         ]);
 
         if (class_exists(\Spatie\Permission\Models\Role::class)) {
-            $user->assignRole($request->role);
+            $roleName = strtolower($request->role); // Normaliza para lowercase
+            $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => $roleName]);
+            $user->assignRole($role);
         }
 
         return redirect()->back()->with('success', 'Usuário criado com sucesso!');
@@ -149,7 +151,9 @@ class AdminController extends Controller
         $user->save();
 
         if (class_exists(\Spatie\Permission\Models\Role::class)) {
-            $user->syncRoles([$request->role]);
+            $roleName = strtolower($request->role);
+            $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => $roleName]);
+            $user->syncRoles([$role]);
         }
 
         return redirect()->back()->with('success', 'Usuário atualizado com sucesso!');

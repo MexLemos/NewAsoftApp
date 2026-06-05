@@ -79,7 +79,7 @@
                 </div>
                 <div class="card-body p-4">
                     <div class="list-group list-group-flush mb-0">
-                        @forelse($partners as $partner)
+                        @foreach($partners as $partner)
                             <div class="list-group-item px-0 d-flex justify-content-between align-items-center border-bottom-0 mb-2 rounded bg-light p-2">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-white rounded p-1 shadow-sm me-3 d-flex justify-content-center align-items-center" style="width: 50px; height: 40px;">
@@ -97,7 +97,7 @@
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
-                        @endforelse
+                        @endforeach
                         @if($partners->isEmpty())
                             <div class="text-center text-muted small py-3">Nenhum parceiro cadastrado.</div>
                         @endif
