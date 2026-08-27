@@ -25,8 +25,23 @@ class AdminController extends Controller
 
     public function produtos()
     {
-        $products = \App\Models\Product::latest()->get();
-        return view('admin.produtos', compact('products'));
+        $defaultCategories = [
+            'Computadores' => 'computadores',
+            'Redes e Conectividade' => 'redes-e-conectividade',
+            'Material de Escritório' => 'material-de-escritorio',
+            'Outros' => 'outros'
+        ];
+
+        foreach ($defaultCategories as $name => $slug) {
+            \App\Models\ProductCategory::firstOrCreate(
+                ['slug' => $slug],
+                ['name' => $name]
+            );
+        }
+
+        $products = \App\Models\Product::with('category')->latest()->get();
+        $categories = \App\Models\ProductCategory::all();
+        return view('admin.produtos', compact('products', 'categories'));
     }
 
     public function servicos()
@@ -65,7 +80,8 @@ class AdminController extends Controller
     public function configuracoes()
     {
         $partners = \App\Models\Partner::latest()->get();
-        return view('admin.configuracoes', compact('partners'));
+        $settingsData = \App\Models\Setting::pluck('value', 'key')->toArray();
+        return view('admin.configuracoes', compact('partners', 'settingsData'));
     }
 
     public function storeItem(Request $request)
@@ -95,13 +111,12 @@ class AdminController extends Controller
                 'category_id' => $cat->id,
             ]);
         } elseif ($request->category === 'produto') {
-            $cat = \App\Models\ProductCategory::firstOrCreate(['name' => 'Geral', 'slug' => 'geral']);
             \App\Models\Product::create([
                 'name' => $request->name,
                 'slug' => $slug,
                 'description' => $request->description,
                 'price' => $price,
-                'product_category_id' => $cat->id,
+                'product_category_id' => $request->product_category_id,
                 'image' => $imagePath,
                 'is_featured' => $request->has('is_featured'),
             ]);
@@ -175,10 +190,23 @@ class AdminController extends Controller
     public function cursos()
     {
         $courses = \App\Models\Course::with('category')->latest()->get();
-        $categories = \App\Models\Category::all();
-        if ($categories->isEmpty()) {
-            $categories = collect([\App\Models\Category::create(['name' => 'Desenvolvimento', 'slug' => 'desenvolvimento'])]);
+        
+        $defaultCategories = [
+            'Desenvolvimento' => 'desenvolvimento',
+            'Redes' => 'redes',
+            'Gestão e Administração' => 'gestao-e-administracao',
+            'Geral' => 'geral'
+        ];
+
+        foreach ($defaultCategories as $name => $slug) {
+            \App\Models\Category::firstOrCreate(
+                ['slug' => $slug],
+                ['name' => $name]
+            );
         }
+
+        $categories = \App\Models\Category::all();
+
         return view('admin.cursos', compact('courses', 'categories'));
     }
 
@@ -206,6 +234,38 @@ class AdminController extends Controller
         return back()->with('success', 'Item cadastrado com sucesso!');
     }
 
+    public function updateCurso(Request $request, $id)
+    {
+        $course = \App\Models\Course::findOrFail($id);
+        
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'level' => 'required|in:basic,intermediate,advanced',
+            'thumbnail' => 'nullable|image',
+        ]);
+
+        $validated['is_published'] = $request->has('is_published');
+        $validated['is_free'] = $request->has('is_free');
+
+        if ($request->hasFile('thumbnail')) {
+            $validated['thumbnail'] = $request->file('thumbnail')->store('courses', 'public');
+        }
+
+        $course->update($validated);
+
+        return back()->with('success', 'Curso atualizado com sucesso!');
+    }
+
+    public function destroyCurso($id)
+    {
+        $course = \App\Models\Course::findOrFail($id);
+        $course->delete();
+        return back()->with('success', 'Curso removido com sucesso!');
+    }
+
     public function destroyProduct($id)
     {
         $product = \App\Models\Product::findOrFail($id);
@@ -220,10 +280,12 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
+            'product_category_id' => 'required|exists:product_categories,id'
         ]);
 
         $product->name = $request->name;
         $product->description = $request->description;
+        $product->product_category_id = $request->product_category_id;
         $product->price = $request->price ? (float)$request->price : 0;
         $product->is_featured = $request->has('is_featured');
         
@@ -280,6 +342,21 @@ class AdminController extends Controller
             'facebook' => $request->facebook,
             'instagram' => $request->instagram,
         ];
+        
+        for ($i=1; $i<=3; $i++) {
+            if ($request->has('banner_'.$i.'_title')) {
+                $settings['banner_'.$i.'_title'] = $request->input('banner_'.$i.'_title');
+            }
+            if ($request->has('banner_'.$i.'_subtitle')) {
+                $settings['banner_'.$i.'_subtitle'] = $request->input('banner_'.$i.'_subtitle');
+            }
+            if ($request->has('banner_'.$i.'_desc')) {
+                $settings['banner_'.$i.'_desc'] = $request->input('banner_'.$i.'_desc');
+            }
+            if ($request->hasFile('banner_'.$i.'_img')) {
+                $settings['banner_'.$i.'_img'] = $request->file('banner_'.$i.'_img')->store('banners', 'public');
+            }
+        }
 
         foreach ($settings as $key => $value) {
             \App\Models\Setting::updateOrCreate(
@@ -308,10 +385,148 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Parceiro adicionado com sucesso!');
     }
 
+    public function updatePartner(Request $request, $id)
+    {
+        $partner = \App\Models\Partner::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'logo' => 'nullable|image',
+            'website_url' => 'nullable|url',
+        ]);
+
+        $partner->name = $request->name;
+        $partner->website_url = $request->website_url;
+
+        if ($request->hasFile('logo')) {
+            $partner->logo_url = $request->file('logo')->store('partners', 'public');
+        }
+
+        $partner->save();
+
+        return redirect()->back()->with('success', 'Parceiro atualizado com sucesso!');
+    }
+
     public function destroyPartner($id)
     {
         $partner = \App\Models\Partner::findOrFail($id);
         $partner->delete();
         return redirect()->back()->with('success', 'Parceiro removido com sucesso!');
+    }
+
+    public function cursosConteudos($id)
+    {
+        $course = \App\Models\Course::with(['modules.lessons' => function($q){ $q->orderBy('order_index'); }])->findOrFail($id);
+        return view('admin.cursos_conteudos', compact('course'));
+    }
+
+    public function storeModule(Request $request, $id)
+    {
+        $request->validate(['title' => 'required|string|max:255', 'order_index' => 'nullable|integer']);
+        $course = \App\Models\Course::findOrFail($id);
+        $course->modules()->create([
+            'title' => $request->title,
+            'order_index' => $request->order_index ?? 0,
+        ]);
+        return redirect()->back()->with('success', 'Módulo adicionado com sucesso!');
+    }
+
+    public function updateModule(Request $request, $id)
+    {
+        $request->validate(['title' => 'required|string|max:255', 'order_index' => 'nullable|integer']);
+        $module = \App\Models\Module::findOrFail($id);
+        $module->update([
+            'title' => $request->title,
+            'order_index' => $request->order_index ?? 0,
+        ]);
+        return redirect()->back()->with('success', 'Módulo atualizado com sucesso!');
+    }
+
+    public function destroyModule($id)
+    {
+        $module = \App\Models\Module::findOrFail($id);
+        $module->delete();
+        return redirect()->back()->with('success', 'Módulo eliminado com sucesso!');
+    }
+
+    public function storeLesson(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255', 
+            'type' => 'nullable|string|in:video,quiz,project',
+            'description' => 'nullable|string', 
+            'video_url' => 'nullable|string', 
+            'attachment_url' => 'nullable|string', 
+            'order_index' => 'nullable|integer',
+            'duration_minutes' => 'nullable|integer'
+        ]);
+        $module = \App\Models\Module::findOrFail($id);
+        
+        $contentData = null;
+        if ($request->type === 'project') {
+            $contentData = [
+                'require_github' => $request->has('require_github'),
+                'linkedin_mention' => $request->has('linkedin_mention')
+            ];
+        } elseif ($request->type === 'quiz') {
+            $contentData = [
+                'quiz_questions' => $request->quiz_questions // Could be string or array
+            ];
+        }
+
+        $module->lessons()->create([
+            'title' => $request->title,
+            'type' => $request->type ?? 'video',
+            'description' => $request->description,
+            'video_url' => $request->video_url,
+            'attachment_url' => $request->attachment_url,
+            'order_index' => $request->order_index ?? 0,
+            'duration_minutes' => $request->duration_minutes ?? 0,
+            'content_data' => $contentData
+        ]);
+        return redirect()->back()->with('success', 'Item adicionado com sucesso!');
+    }
+
+    public function updateLesson(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255', 
+            'description' => 'nullable|string', 
+            'video_url' => 'nullable|string', 
+            'attachment_url' => 'nullable|string', 
+            'order_index' => 'nullable|integer',
+            'duration_minutes' => 'nullable|integer'
+        ]);
+        $lesson = \App\Models\Lesson::findOrFail($id);
+
+        $contentData = $lesson->content_data;
+        if ($lesson->type === 'project') {
+            $contentData = [
+                'require_github' => $request->has('require_github'),
+                'linkedin_mention' => $request->has('linkedin_mention')
+            ];
+        } elseif ($lesson->type === 'quiz') {
+            $contentData = [
+                'quiz_questions' => $request->quiz_questions
+            ];
+        }
+
+        $lesson->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'video_url' => $request->video_url,
+            'attachment_url' => $request->attachment_url,
+            'order_index' => $request->order_index ?? 0,
+            'duration_minutes' => $request->duration_minutes ?? 0,
+            'content_data' => $contentData
+        ]);
+        return redirect()->back()->with('success', 'Item atualizado com sucesso!');
+    }
+
+    public function destroyLesson($id)
+    {
+        $lesson = \App\Models\Lesson::findOrFail($id);
+        $lesson->delete();
+        return redirect()->back()->with('success', 'Aula eliminada com sucesso!');
     }
 }

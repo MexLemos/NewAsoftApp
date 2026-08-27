@@ -151,7 +151,7 @@
                         <i class="fa-solid fa-circle-user me-1 text-primary"></i> {{ Auth::user()->name }}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
-                        <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="fa-solid fa-user me-2 text-muted"></i>Perfil</a></li>
+                        <li><a class="dropdown-item py-2" href="{{ route('profile.edit') }}"><i class="fa-solid fa-user-circle me-2 text-muted"></i> O Meu Perfil</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}">

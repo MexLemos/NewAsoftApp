@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="URYYkYZoYVu2WHtwR3CFP9t0Y3qYtKxSOOXJBlOa">
+    <title>Treinamentos e Cursos - ASoftMedia</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --asoft-primary: #1e3a8a; /* Corporate Blue */
+            --asoft-secondary: #0f172a; /* Dark Navy */
+            --asoft-accent: #f59e0b; /* Amber */
+            --asoft-success: #22c55e; /* Green / WhatsApp */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+        }
+        
+        /* Navbar */
+        .navbar-custom {
+            background-color: var(--asoft-secondary);
+            padding: 15px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            z-index: 1050;
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255,255,255,0.85);
+            font-weight: 500;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .nav-link:hover, .navbar-custom .nav-link.active {
+            color: var(--asoft-accent);
+        }
+        .navbar-brand {
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        /* Buttons */
+        .btn-brand {
+            background-color: var(--asoft-accent);
+            color: #fff;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 10px 24px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .btn-brand:hover {
+            background-color: #d97706;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--asoft-secondary);
+            color: #cbd5e1;
+            padding: 60px 0 20px;
+        }
+        .footer a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer a:hover {
+            color: var(--asoft-accent);
+        }
+
+        /* Floating WhatsApp Button */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            color: #fff;
+        }
+
+        /* Dark Mode overrides */
+        [data-bs-theme="dark"] body, 
+        [data-bs-theme="dark"] .bg-white, 
+        [data-bs-theme="dark"] .bg-light,
+        [data-bs-theme="dark"] [style*="background-color: #f8fafc"] {
+            background-color: #0f172a !important;
+            color: #e2e8f0 !important;
+        }
+        [data-bs-theme="dark"] .card,
+        [data-bs-theme="dark"] .card[style*="background-color: #f8fafc"] {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+        }
+        [data-bs-theme="dark"] h1, [data-bs-theme="dark"] h2, [data-bs-theme="dark"] h3, 
+        [data-bs-theme="dark"] h4, [data-bs-theme="dark"] h5, [data-bs-theme="dark"] h6,
+        [data-bs-theme="dark"] .text-dark,
+        [data-bs-theme="dark"] [style*="color: #0f172a"],
+        [data-bs-theme="dark"] [style*="color: var(--asoft-secondary)"] {
+            color: #f8fafc !important;
+        }
+        [data-bs-theme="dark"] .text-muted {
+            color: #94a3b8 !important;
+        }
+
+        /* Scroll Animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
+    </style>
+</head>
+<body>
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <img src="/images/logo.png" alt="ASoftMedia Logo" height="55">
+                <span style="font-weight: 800; letter-spacing: 1px;">ASOFTMEDIA</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <i class="fa-solid fa-bars text-white fs-4"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link " href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="http://localhost#sobre">Sobre</a></li>
+                    <li class="nav-item"><a class="nav-link" href="http://localhost#servicos">Serviços</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="cursos.html">Treinamento</a></li>
+                    <li class="nav-item"><a class="nav-link " href="produtos.html">Loja</a></li>
+                    <li class="nav-item"><a class="nav-link" href="http://localhost#contactos">Contactos</a></li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-link text-white text-decoration-none me-3" id="theme-toggle">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <a href="http://localhost/carrinho" class="btn btn-link text-white text-decoration-none me-4 position-relative">
+                        <i class="fa-solid fa-cart-shopping fs-5"></i>
+                                            </a>
+                                            <a href="http://localhost/login" class="btn btn-outline-light me-2">Entrar</a>
+                        <a href="http://localhost/register" class="btn btn-brand">Registar</a>
+                                    </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages (Toast/Alert) -->
+    
+    <!-- Main Content -->
+    <main>
+        <!-- Page Header -->
+<div class="py-5 position-relative" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center;">
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(15, 23, 42, 0.85);"></div>
+    <div class="container py-5 text-center position-relative z-1 text-white">
+        <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill fw-bold">Melhor Plataforma de Cursos 2026</span>
+        <h1 class="display-4 fw-bolder mb-3 text-white">Transforme sua Carreira<br>com Nossos Cursos Profissionais</h1>
+        <p class="lead opacity-75 mx-auto" style="max-width: 700px; color: #fff;">Aprenda com especialistas do mercado de modo híbrido (presencial e online). Agende as suas aulas práticas e interaja com nossa comunidade.</p>
+    </div>
+</div>
+
+<div class="container py-5 mt-n5 position-relative z-2">
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-4">
+            <div class="card border-0 shadow rounded-4 text-center p-4">
+                <h2 class="fw-bolder text-primary mb-1">100+</h2>
+                <p class="text-muted mb-0 fw-semibold">Alunos Ativos</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow rounded-4 text-center p-4">
+                <h2 class="fw-bolder text-warning mb-1">15+</h2>
+                <p class="text-muted mb-0 fw-semibold">Cursos Online</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow rounded-4 text-center p-4">
+                <h2 class="fw-bolder text-success mb-1">95%</h2>
+                <p class="text-muted mb-0 fw-semibold">Satisfação</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Courses Grid -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h3 class="fw-bold mb-2">Principais Cursos</h3>
+            <p class="text-muted">Cursos selecionados para iniciar hoje mesmo</p>
+        </div>
+
+        <div class="row g-4">
+                        <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden course-card transition-all">
+                                            <img src="/storage/courses/L4BQD4ruASBeoNrOrWuVQegB6yIk1S5t0XA6HJAR.png" class="card-img-top mx-auto d-block" alt="PHP Laravel" style="height: 200px; object-fit: contain; background-color: #f8f9fa; width: 100%;">
+                                        <div class="card-body p-4 d-flex flex-column">
+                        <span class="badge bg-primary bg-opacity-10 text-primary mb-2 align-self-start">Desenvolvimento</span>
+                        <h5 class="card-title fw-bold">PHP Laravel</h5>
+                        <p class="card-text text-muted small mb-4">Aprenda a construir aplicações web modernas com PHP e Laravel 13</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                            <span class="fw-bold fs-5 text-dark">50.000,00 Kz</span>
+                                                        
+                                                            <a href="http://localhost/register" class="btn btn-outline-primary rounded-pill px-4">Inscrever-se</a>
+                                                    </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden course-card transition-all">
+                                            <img src="/storage/courses/ZWbVQ4UkigD5fMWWvFprn9Az20uscbK7N9cm2QAK.jpg" class="card-img-top mx-auto d-block" alt="Excel Avançado para Negócios" style="height: 200px; object-fit: contain; background-color: #f8f9fa; width: 100%;">
+                                        <div class="card-body p-4 d-flex flex-column">
+                        <span class="badge bg-primary bg-opacity-10 text-primary mb-2 align-self-start">Desenvolvimento</span>
+                        <h5 class="card-title fw-bold">Excel Avançado para Negócios</h5>
+                        <p class="card-text text-muted small mb-4">Aprenda tabelas dinâmicas, macros e dashboard em excel + IA</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                            <span class="fw-bold fs-5 text-dark">50.000,00 Kz</span>
+                                                        
+                                                            <a href="http://localhost/register" class="btn btn-outline-primary rounded-pill px-4">Inscrever-se</a>
+                                                    </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden course-card transition-all">
+                                            <img src="/storage/courses/paXDaBYaTQVtbcA5g2DEtfLMLif85JkifLXQVmaa.png" class="card-img-top mx-auto d-block" alt="OPNSense" style="height: 200px; object-fit: contain; background-color: #f8f9fa; width: 100%;">
+                                        <div class="card-body p-4 d-flex flex-column">
+                        <span class="badge bg-primary bg-opacity-10 text-primary mb-2 align-self-start">Desenvolvimento</span>
+                        <h5 class="card-title fw-bold">OPNSense</h5>
+                        <p class="card-text text-muted small mb-4">Segurança de dados, VPN e firewall</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                            <span class="fw-bold fs-5 text-dark">450.000,00 Kz</span>
+                                                        
+                                                            <a href="http://localhost/register" class="btn btn-outline-primary rounded-pill px-4">Inscrever-se</a>
+                                                    </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden course-card transition-all">
+                                            <img src="/storage/courses/tWbWqI86jHQa3FQc0IQL1hSudTxmENjbr5hzPtwo.png" class="card-img-top mx-auto d-block" alt="GitHub Desktop" style="height: 200px; object-fit: contain; background-color: #f8f9fa; width: 100%;">
+                                        <div class="card-body p-4 d-flex flex-column">
+                        <span class="badge bg-primary bg-opacity-10 text-primary mb-2 align-self-start">Desenvolvimento</span>
+                        <h5 class="card-title fw-bold">GitHub Desktop</h5>
+                        <p class="card-text text-muted small mb-4">Aprenda a versionar e Controlar seus repositórios</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                            <span class="badge bg-success px-3 py-2 fs-6 rounded-pill">Grátis</span>
+                                                        
+                                                            <a href="http://localhost/register" class="btn btn-outline-primary rounded-pill px-4">Inscrever-se</a>
+                                                    </div>
+                    </div>
+                </div>
+            </div>
+                    </div>
+    </div>
+</section>
+
+<!-- Pricing / Plans -->
+<section class="py-5" style="background-color: #f8fafc;">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h3 class="fw-bold mb-2">Planos de Assinatura</h3>
+            <p class="text-muted">Escolha um plano que se adapta ao seu ritmo de estudos</p>
+        </div>
+        
+        <div class="row g-4 justify-content-center">
+            <!-- Basic Plan -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 h-100 text-center p-4">
+                    <h5 class="text-muted mb-3">Básico</h5>
+                    <h2 class="fw-bold mb-4">Valor por Curso</h2>
+                    <ul class="list-unstyled text-start mb-4 mx-auto" style="max-width: 250px;">
+                        <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> Acesso ilimitado ao curso pago</li>
+                        <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> Sem práticas presenciais</li>
+                        <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> Certificado digital</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline-secondary mt-auto py-2 rounded-pill fw-bold">Começar</a>
+                </div>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="col-md-4">
+                <div class="card border-primary border-2 shadow rounded-4 h-100 text-center p-4 position-relative">
+                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary px-3 py-2">Recomendado</span>
+                    <h5 class="text-primary mb-3 mt-3">Pro</h5>
+                    <h2 class="fw-bold mb-4">Kz 50.000 <small class="fs-6 text-muted">/ Mensal</small></h2>
+                    <ul class="list-unstyled text-start mb-4 mx-auto" style="max-width: 250px;">
+                        <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> Acesso a todos os cursos</li>
+                        <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> Mentorias mensais</li>
+                        <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> Práticas presenciais</li>
+                        <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> Certificado Físico/Digital</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary mt-auto py-2 rounded-pill fw-bold" style="background-color: var(--asoft-primary);">Assinar Agora</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5 text-white text-center" style="background-color: var(--asoft-primary);">
+    <div class="container py-4">
+        <h2 class="fw-bold mb-3">Pronto para começar?</h2>
+        <p class="lead mb-4 opacity-75">Inscreva-se hoje e comece a aprender com os melhores.</p>
+        <a href="http://localhost/register" class="btn btn-light btn-lg text-primary fw-bold px-5 rounded-pill shadow">Inscrever-me</a>
+    </div>
+</section>
+
+<style>
+    .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+    }
+</style>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto">
+        <div class="container">
+            <div class="row gy-4 mb-5">
+                <div class="col-lg-4 col-md-6">
+                    <div class="mb-4 d-flex align-items-center gap-2">
+                        <img src="/images/logo.png" alt="ASoftMedia Logo" height="55">
+                        <span class="text-white fw-bold fs-4" style="letter-spacing: 1px;">ASOFTMEDIA</span>
+                    </div>
+                    <p class="mb-4 text-sm">A ASoftMedia é uma empresa de tecnologia focada no desenvolvimento de soluções em software, treinamento e digitalização de negócios. Oferecemos serviços inovadores e personalizados.</p>
+                    <div class="d-flex gap-3">
+                        <a href="https://www.facebook.com/asoftmedia" class="fs-4" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/asoftmedia" class="fs-4" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/company/asoftmedia" class="fs-4" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="https://www.youtube.com/@Asoftmedia-ao" class="fs-4" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="text-white mb-4">Links Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Sobre Nós</a></li>
+                        <li class="mb-2"><a href="#">Nossos Cursos</a></li>
+                        <li class="mb-2"><a href="#">Produtos de TI</a></li>
+                        <li class="mb-2"><a href="#">Área de Downloads</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Serviços</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Desenvolvimento de Software</a></li>
+                        <li class="mb-2"><a href="#">Consultoria em TI</a></li>
+                        <li class="mb-2"><a href="#">Redes e Infraestrutura</a></li>
+                        <li class="mb-2"><a href="#">Gestão Escolar</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Fale Connosco</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="fa-solid fa-phone mt-1 me-3 text-white"></i>
+                            <span>+244 975 824 787<br>+244 956 616 567</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="fa-solid fa-envelope mt-1 me-3 text-white"></i>
+                            <span>info@asoftmedia-ao.com</span>
+                        </li>
+                        <li class="d-flex align-items-start">
+                            <i class="fa-solid fa-location-dot mt-1 me-3 text-white"></i>
+                            <span>Sapu 2, Casas Azuis, Rua da Uva<br>Luanda - Angola</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-top border-secondary pt-4 mt-4 text-center d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <small>&copy; 2026 ASOFTMEDIA. Todos os direitos reservados.</small>
+                <small class="mt-2 mt-md-0">Desenvolvido por ASOFTMEDIA</small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/244975824787" class="whatsapp-float" target="_blank" title="Fale connosco no WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        htmlElement.setAttribute('data-bs-theme', savedTheme);
+        updateToggleIcon(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            htmlElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateToggleIcon(newTheme);
+        });
+
+        function updateToggleIcon(theme) {
+            if (theme === 'dark') {
+                themeToggle.innerHTML = '<i class="fa-solid fa-sun text-warning"></i>';
+            } else {
+                themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>';
+            }
+        }
+
+        // Scroll Animations Observer
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        // Stop observing once animated so it doesn't replay continuously
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

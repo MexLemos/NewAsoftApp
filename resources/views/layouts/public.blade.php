@@ -189,7 +189,7 @@
                         @endif
                     </a>
                     @auth
-                        <a href="{{ route('admin.dashboard') }}" class="btn btn-brand">Painel</a>
+                        <a href="{{ route('dashboard') }}" class="btn btn-brand ms-lg-3">Painel</a>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-outline-light me-2">Entrar</a>
                         <a href="{{ route('register') }}" class="btn btn-brand">Registar</a>

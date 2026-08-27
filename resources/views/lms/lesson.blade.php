@@ -37,9 +37,9 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand navbar-custom py-2 px-3" style="height: 60px;">
         <a href="{{ route('lms.dashboard') }}" class="btn btn-outline-light btn-sm me-3"><i class="fa-solid fa-arrow-left"></i> Painel</a>
-        <h5 class="mb-0 fw-bold me-auto text-truncate" style="max-width: 50%;">Front-End com ReactJS</h5>
+        <h5 class="mb-0 fw-bold me-auto text-truncate" style="max-width: 50%;">{{ $course->title }}</h5>
         <div class="d-flex align-items-center">
-            <span class="badge bg-success rounded-pill px-3 py-2 me-3"><i class="fa-solid fa-trophy text-warning me-1"></i> Progresso: 45%</span>
+            <span class="badge bg-success rounded-pill px-3 py-2 me-3"><i class="fa-solid fa-trophy text-warning me-1"></i> Progresso: {{ $enrollment->progress_percent ?? 0 }}%</span>
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle btn-sm rounded-circle" type="button" data-bs-toggle="dropdown" style="width: 35px; height: 35px;">
                     <i class="fa-solid fa-user"></i>
@@ -58,38 +58,66 @@
         </div>
     </nav>
 
+    <!-- Flash Messages (Toast/Alert) -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show border-0 position-absolute w-100 rounded-0" style="z-index: 1050;" role="alert">
+            <div class="text-center fw-bold"><i class="fa-solid fa-circle-check me-2"></i> {{ session('success') }}</div>
+            <button type="button" class="btn-close shadow-none" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
     <div class="d-flex w-100">
         <!-- Main Video Area -->
         <div class="video-container flex-grow-1">
-            <div class="iframe-wrapper">
-                <!-- YouTube iframe embedding -->
-                <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY?rel=0&modestbranding=1&autohide=1&showinfo=0&controls=1" allowfullscreen></iframe>
-            </div>
+            @if($lesson->video_url)
+                <div class="iframe-wrapper">
+                    <!-- YouTube iframe embedding -->
+                    <iframe src="{{ $lesson->video_url }}" allowfullscreen></iframe>
+                </div>
+            @else
+                <div class="bg-dark d-flex align-items-center justify-content-center border-bottom border-secondary" style="height: 400px; max-height: 56.25%;">
+                    <div class="text-center text-muted">
+                        <i class="fa-solid fa-video-slash fs-1 mb-3"></i>
+                        <h5>Nenhum vídeo disponível para esta aula.</h5>
+                    </div>
+                </div>
+            @endif
             
             <div class="p-4 p-md-5">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="fw-bold">1. Introdução ao React (Hooks)</h2>
-                    <button class="btn btn-success fw-bold px-4 rounded-pill"><i class="fa-solid fa-check me-2"></i> Concluir Aula</button>
+                    <h2 class="fw-bold">{{ $lesson->title }}</h2>
+                    @if(in_array($lesson->id, $completedLessons))
+                        <button class="btn btn-success fw-bold px-4 rounded-pill disabled"><i class="fa-solid fa-check-double me-2"></i> Aula Concluída</button>
+                    @else
+                        <form action="{{ route('lms.lesson.complete', ['course' => $course->id, 'lesson' => $lesson->id]) }}" method="POST" class="m-0">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-success fw-bold px-4 rounded-pill"><i class="fa-solid fa-check me-2"></i> Concluir Aula</button>
+                        </form>
+                    @endif
                 </div>
                 
                 <ul class="nav nav-tabs border-secondary mb-4" id="lessonTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active bg-transparent text-white border-0 border-bottom border-warning border-3" data-bs-toggle="tab" data-bs-target="#overview" type="button">Visão Geral</button>
                     </li>
+                    @if($lesson->attachment_url)
                     <li class="nav-item" role="presentation">
                         <button class="nav-link bg-transparent text-secondary border-0" data-bs-toggle="tab" data-bs-target="#resources" type="button">Recursos</button>
                     </li>
+                    @endif
                 </ul>
                 
                 <div class="tab-content" id="lessonTabsContent">
                     <div class="tab-pane fade show active text-secondary" id="overview">
-                        <p>Nesta aula abordaremos os conceitos essenciais dos React Hooks (useState, useEffect), permitindo criar componentes funcionais mais limpos e reativos. Acompanhe a documentação anexada na aba Recursos.</p>
-                        <p>Instrutor: <strong>João Silva</strong></p>
+                        <div class="text-light" style="white-space: pre-line;">
+                            {{ $lesson->description ?? 'Nenhuma descrição fornecida para esta aula.' }}
+                        </div>
                     </div>
+                    @if($lesson->attachment_url)
                     <div class="tab-pane fade" id="resources">
-                        <a href="#" class="btn btn-outline-light mb-2"><i class="fa-solid fa-file-pdf text-danger me-2"></i> Slides da Aula.pdf</a><br>
-                        <a href="#" class="btn btn-outline-light"><i class="fa-solid fa-file-code text-info me-2"></i> Codigo-Fonte.zip</a>
+                        <a href="{{ $lesson->attachment_url }}" class="btn btn-outline-light mb-2" target="_blank"><i class="fa-solid fa-download text-info me-2"></i> Baixar Anexo</a>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -100,51 +128,32 @@
                 Conteúdo do Curso
             </div>
             
-            <!-- Module 1 -->
-            <div class="bg-dark bg-opacity-50 p-3 border-bottom border-secondary text-white fw-semibold d-flex justify-content-between align-items-center" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#mod1">
-                Módulo 1: Fundamentos
+            @forelse($course->modules as $mod)
+            <!-- Module -->
+            <div class="bg-dark bg-opacity-50 p-3 border-bottom border-secondary text-white fw-semibold d-flex justify-content-between align-items-center {{ $loop->first ? '' : 'mt-1' }}" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#mod{{ $mod->id }}">
+                {{ $mod->title }}
                 <i class="fa-solid fa-chevron-down small"></i>
             </div>
-            <div class="collapse show" id="mod1">
-                <a href="#" class="lesson-link active d-flex justify-content-between align-items-center">
+            <div class="collapse {{ $mod->lessons->contains('id', $lesson->id) || $loop->first ? 'show' : '' }}" id="mod{{ $mod->id }}">
+                @foreach($mod->lessons as $l)
+                <a href="{{ route('lms.lesson', ['course' => $course->id, 'lesson' => $l->id]) }}" class="lesson-link {{ $l->id == $lesson->id ? 'active' : '' }} d-flex justify-content-between align-items-center">
                     <div>
-                        <i class="fa-solid fa-circle-play me-2 text-warning"></i> 1. Introdução ao React
+                        @if(in_array($l->id, $completedLessons))
+                            <i class="fa-solid fa-circle-check me-2 text-success"></i>
+                        @else
+                            <i class="fa-regular fa-circle-play me-2 {{ $l->id == $lesson->id ? 'text-warning' : 'text-secondary' }}"></i>
+                        @endif
+                        {{ \Illuminate\Support\Str::limit($l->title, 25) }}
                     </div>
-                    <small class="text-muted">12:45</small>
                 </a>
-                <a href="#" class="lesson-link d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="fa-regular fa-circle-play me-2 text-secondary"></i> 2. Componentes e Props
-                    </div>
-                    <small class="text-muted">18:20</small>
-                </a>
-                <a href="#" class="lesson-link d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="fa-regular fa-circle-play me-2 text-secondary"></i> 3. Estado e Ciclo de Vida
-                    </div>
-                    <small class="text-muted">22:10</small>
-                </a>
+                @endforeach
             </div>
-
-            <!-- Module 2 -->
-            <div class="bg-dark bg-opacity-50 p-3 border-bottom border-secondary text-white fw-semibold d-flex justify-content-between align-items-center mt-1" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#mod2">
-                Módulo 2: Hooks Avançados
-                <i class="fa-solid fa-chevron-down small"></i>
+            @empty
+            <div class="p-4 text-center text-muted">
+                <i class="fa-solid fa-ghost fs-3 mb-2"></i><br>
+                Nenhum módulo encontrado.
             </div>
-            <div class="collapse" id="mod2">
-                <a href="#" class="lesson-link d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="fa-solid fa-lock me-2 text-secondary"></i> 1. useContext
-                    </div>
-                    <small class="text-muted">15:00</small>
-                </a>
-                <a href="#" class="lesson-link d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="fa-solid fa-lock me-2 text-secondary"></i> 2. Custom Hooks
-                    </div>
-                    <small class="text-muted">20:45</small>
-                </a>
-            </div>
+            @endforelse
         </div>
     </div>
 

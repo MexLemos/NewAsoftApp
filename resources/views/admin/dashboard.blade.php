@@ -88,7 +88,7 @@
                 <h6 class="fw-bold mb-3 opacity-75">Crescimento de Alunos (LMS)</h6>
                 <h2 class="display-4 fw-bold mb-2">+15%</h2>
                 <p class="mb-4 opacity-75">Em relação ao mês anterior.</p>
-                <button class="btn btn-light fw-bold w-100 rounded-pill text-primary">Ver Relatório Completo</button>
+                <a href="{{ route('admin.usuarios') }}" class="btn btn-light fw-bold w-100 rounded-pill text-primary">Ver Relatório Completo</a>
             </div>
         </div>
     </div>

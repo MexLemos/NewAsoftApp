@@ -116,7 +116,7 @@
                         </li>
                     </ul>
                     
-                    <button class="btn btn-brand btn-lg w-100 shadow rounded-pill" type="submit" form="checkoutForm">
+                    <button id="btnSubmit" class="btn btn-brand btn-lg w-100 shadow rounded-pill" type="submit" form="checkoutForm">
                         Confirmar Pedido <i class="fa-solid fa-check ms-2"></i>
                     </button>
                     <p class="text-muted small text-center mt-3"><i class="fa-solid fa-lock me-1"></i> Pagamento seguro a ser processado após confirmação.</p>
@@ -128,4 +128,19 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('checkoutForm');
+        if (form) {
+            form.addEventListener('submit', function() {
+                const btn = document.getElementById('btnSubmit');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> A processar pedido...';
+                }
+            });
+        }
+    });
+</script>
 @endsection

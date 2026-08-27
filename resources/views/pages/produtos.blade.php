@@ -13,10 +13,14 @@
                 <p class="lead opacity-75">PCs, redes, periféricos e materiais de escritório com os melhores preços e garantia total.</p>
             </div>
             <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
-                <div class="input-group input-group-lg shadow-sm">
-                    <input type="text" class="form-control border-0" placeholder="Pesquisar produtos..." aria-label="Pesquisar">
-                    <button class="btn btn-brand px-4" type="button"><i class="fa-solid fa-search"></i></button>
-                </div>
+                <form action="{{ route('produtos') }}" method="GET" class="input-group input-group-lg shadow-sm">
+                    <!-- Preserve other query parameters -->
+                    @if(request('category')) <input type="hidden" name="category" value="{{ request('category') }}"> @endif
+                    @if(request('sort')) <input type="hidden" name="sort" value="{{ request('sort') }}"> @endif
+                    
+                    <input type="text" name="search" class="form-control border-0" placeholder="Pesquisar produtos..." value="{{ request('search') }}" aria-label="Pesquisar">
+                    <button class="btn btn-brand px-4" type="submit"><i class="fa-solid fa-search"></i></button>
+                </form>
             </div>
         </div>
     </div>
@@ -32,26 +36,16 @@
                 </div>
                 <div class="card-body px-4">
                     <div class="list-group list-group-flush border-0">
-                        <a href="#" class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center fw-bold" style="color: var(--asoft-primary);">
+                        <a href="{{ route('produtos', ['search' => request('search'), 'sort' => request('sort')]) }}" class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center {{ !request('category') ? 'fw-bold text-primary' : 'text-muted' }}">
                             Todos os Produtos
-                            <span class="badge bg-primary rounded-pill">120</span>
+                            <span class="badge bg-light text-dark rounded-pill">{{ $totalProducts }}</span>
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center text-muted">
-                            Computadores
-                            <span class="badge bg-light text-dark rounded-pill">24</span>
+                        @foreach($categories as $cat)
+                        <a href="{{ route('produtos', ['category' => $cat->id, 'search' => request('search'), 'sort' => request('sort')]) }}" class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center {{ request('category') == $cat->id ? 'fw-bold text-primary' : 'text-muted' }}">
+                            {{ $cat->name }}
+                            <span class="badge bg-light text-dark rounded-pill">{{ $cat->products_count }}</span>
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center text-muted">
-                            Redes e Conectividade
-                            <span class="badge bg-light text-dark rounded-pill">45</span>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center text-muted">
-                            Material de Escritório
-                            <span class="badge bg-light text-dark rounded-pill">32</span>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0 px-0 d-flex justify-content-between align-items-center text-muted">
-                            Outros
-                            <span class="badge bg-light text-dark rounded-pill">19</span>
-                        </a>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -60,12 +54,23 @@
         <!-- Products Grid -->
         <div class="col-lg-9">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="fw-bold mb-0">Todos os Produtos</h4>
-                <select class="form-select w-auto border-0 shadow-sm rounded-pill px-4">
-                    <option selected>Ordenar por Mais Recentes</option>
-                    <option value="1">Menor Preço</option>
-                    <option value="2">Maior Preço</option>
-                </select>
+                <h4 class="fw-bold mb-0">
+                    @if(request('category'))
+                        {{ $categories->firstWhere('id', request('category'))?->name ?? 'Todos os Produtos' }}
+                    @else
+                        Todos os Produtos
+                    @endif
+                </h4>
+                <form action="{{ route('produtos') }}" method="GET" class="m-0">
+                    @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
+                    @if(request('category')) <input type="hidden" name="category" value="{{ request('category') }}"> @endif
+                    
+                    <select name="sort" class="form-select w-auto border-0 shadow-sm rounded-pill px-4" onchange="this.form.submit()">
+                        <option value="recentes" {{ request('sort') == 'recentes' ? 'selected' : '' }}>Ordenar por Mais Recentes</option>
+                        <option value="menor_preco" {{ request('sort') == 'menor_preco' ? 'selected' : '' }}>Menor Preço</option>
+                        <option value="maior_preco" {{ request('sort') == 'maior_preco' ? 'selected' : '' }}>Maior Preço</option>
+                    </select>
+                </form>
             </div>
 
             <div class="row g-4">
@@ -101,21 +106,14 @@
                 </div>
                 @empty
                 <div class="col-12 text-center py-5">
-                    <p class="text-muted mb-0">Nenhum produto publicado de momento.</p>
+                    <p class="text-muted mb-0">Nenhum produto encontrado.</p>
                 </div>
                 @endforelse
             </div>
             
             <!-- Pagination -->
             <div class="d-flex justify-content-center mt-5">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination pagination-lg">
-                        <li class="page-item disabled"><a class="page-link border-0 shadow-sm rounded-start-pill" href="#">Anterior</a></li>
-                        <li class="page-item active"><a class="page-link border-0 shadow-sm" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link border-0 shadow-sm" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link border-0 shadow-sm rounded-end-pill" href="#">Próximo</a></li>
-                    </ul>
-                </nav>
+                {{ $products->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>

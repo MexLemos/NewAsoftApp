@@ -9,6 +9,14 @@
 </div>
 
 <div class="row g-4 mb-4">
+<style>
+@media print {
+    body * { visibility: hidden; }
+    .modal.show .modal-content, .modal.show .modal-content * { visibility: visible; }
+    .modal.show { position: absolute; left: 0; top: 0; margin: 0; padding: 0; width: 100%; }
+    .modal-footer { display: none !important; }
+}
+</style>
     <div class="col-12 col-md-4">
         <div class="card border-0 shadow-sm rounded-4 h-100 bg-primary bg-opacity-10">
             <div class="card-body">
@@ -96,15 +104,28 @@
                                         <label class="text-muted small fw-bold">Telemóvel</label>
                                         <p class="mb-0">{{ $lead->phone }}</p>
                                     </div>
+                                    @php
+                                        $messageDisplay = $lead->message;
+                                        $proofUrl = '';
+                                        if(preg_match('/COMPROVATIVO:\s*([^\s]+)/', $messageDisplay, $matches)) {
+                                            $proofUrl = $matches[1];
+                                            $messageDisplay = preg_replace('/COMPROVATIVO:\s*([^\s]+)/', '', $messageDisplay);
+                                        }
+                                    @endphp
                                     <div class="mb-3">
                                         <label class="text-muted small fw-bold">Mensagem / Resumo do Pedido</label>
                                         <div class="p-3 bg-light rounded mt-1 text-dark" style="white-space: pre-line; font-family: monospace;">
-                                            {!! nl2br(e($lead->message)) !!}
+                                            {!! nl2br(e(trim($messageDisplay))) !!}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
                                     <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Fechar</button>
+                                    <button type="button" class="btn btn-outline-secondary fw-bold" onclick="window.print()"><i class="fa-solid fa-download me-2"></i>Baixar Detalhes</button>
+                                    
+                                    @if($proofUrl)
+                                        <a href="{{ $proofUrl }}" target="_blank" class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;"><i class="fa-solid fa-file-invoice-dollar me-2"></i>Ver Comprovativo</a>
+                                    @endif
                                     
                                     @if(str_contains($lead->message, 'PEDIDO DE COMPRA') && $lead->status !== 'qualified')
                                         <form action="{{ route('admin.leads.approve_courses', $lead->id) }}" method="POST" class="m-0 p-0">

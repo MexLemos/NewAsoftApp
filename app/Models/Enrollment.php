@@ -11,6 +11,10 @@ class Enrollment extends Model
     
     protected $guarded = [];
 
+    protected $casts = [
+        'completed_lessons' => 'array',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

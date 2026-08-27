@@ -38,7 +38,13 @@
                             @endif
                         </td>
                         <td class="fw-medium">{{ $product->name }}</td>
-                        <td><span class="badge bg-primary bg-opacity-10 text-primary">Produto</span></td>
+                        <td>
+                            @if($product->category)
+                                <span class="badge bg-primary bg-opacity-10 text-primary">{{ $product->category->name }}</span>
+                            @else
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary">Sem Categoria</span>
+                            @endif
+                        </td>
                         <td>Kz {{ number_format($product->price, 2, ',', '.') }}</td>
                         <td><span class="badge bg-success">Ativo</span></td>
                         <td class="text-end pe-4">
@@ -65,6 +71,15 @@
                                         <div class="mb-3">
                                             <label class="form-label text-muted small fw-bold">Nome</label>
                                             <input type="text" name="name" class="form-control" value="{{ $product->name }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted small fw-bold">Categoria</label>
+                                            <select name="product_category_id" class="form-select" required>
+                                                <option value="">Selecione uma categoria...</option>
+                                                @foreach($categories as $cat)
+                                                <option value="{{ $cat->id }}" {{ $product->product_category_id == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label text-muted small fw-bold">Preço (Kz)</label>
@@ -120,6 +135,15 @@
                         <div class="col-md-12">
                             <label class="form-label text-muted small fw-bold">Nome do Produto</label>
                             <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">Categoria</label>
+                            <select name="product_category_id" class="form-select" required>
+                                <option value="">Selecione uma categoria...</option>
+                                @foreach($categories as $cat)
+                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-muted small fw-bold">Preço (Kz)</label>

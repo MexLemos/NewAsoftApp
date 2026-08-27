@@ -10,15 +10,17 @@
     </div>
     <div class="carousel-inner">
         <!-- Slide 1: Impacto/Treinamento -->
-        <div class="carousel-item active" style="background-image: url('{{ asset('images/hero-bg-new.png') }}'); background-size: cover; background-position: center; background-color: #0f172a;">
+        <div class="carousel-item active" style="background-image: url('{{ isset($settings['banner_1_img']) ? asset('storage/' . $settings['banner_1_img']) : asset('images/hero-bg-new.png') }}'); background-size: cover; background-position: center; background-color: #0f172a;">
             <!-- Dark overlay to ensure text is readable and blends well -->
             <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.9) 0%, rgba(15,23,42,0.4) 50%, rgba(15,23,42,0) 100%);"></div>
             <div class="container py-5 position-relative z-1">
                 <div class="row align-items-center min-vh-50 py-5">
                     <div class="col-lg-7 mb-5 mb-lg-0">
-                        <h2 class="fs-1 fw-bolder mb-3 text-white text-uppercase" style="letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Além de produtos e serviços,<br><span style="color: var(--asoft-accent);">causamos impacto</span></h2>
-                        <h5 class="fw-bold mb-3 text-white" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5);">Treinamento e Estágio Profissional</h5>
-                        <p class="mb-4 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">Investimos no futuro da inovação ao proporcionar programas de treinamento e estágios que aproximam estudantes do ambiente real de trabalho em TI — desde desenvolvimento de software até cloud computing e IA.</p>
+                        <h2 class="fs-1 fw-bolder mb-3 text-white text-uppercase" style="letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+                            {!! $settings['banner_1_title'] ?? 'Além de produtos e serviços,<br><span style="color: var(--asoft-accent);">causamos impacto</span>' !!}
+                        </h2>
+                        <h5 class="fw-bold mb-3 text-white" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5);">{{ $settings['banner_1_subtitle'] ?? 'Treinamento e Estágio Profissional' }}</h5>
+                        <p class="mb-4 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">{{ $settings['banner_1_desc'] ?? 'Investimos no futuro da inovação ao proporcionar programas de treinamento e estágios que aproximam estudantes do ambiente real de trabalho em TI — desde desenvolvimento de software até cloud computing e IA.' }}</p>
                         <div class="d-flex gap-3">
                             <a href="{{ route('cursos') }}" class="btn btn-brand px-4 py-2 fw-bold shadow btn-sm">Explorar Cursos</a>
                             <a href="#contactos" class="btn btn-outline-light px-4 py-2 fw-bold shadow btn-sm">Fale Connosco</a>
@@ -29,13 +31,18 @@
             </div>
         </div>
         <!-- Slide 2: Treinamentos LMS -->
-        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center; background-color: #0f172a;">
+        <div class="carousel-item" style="background-image: url('{{ isset($settings['banner_2_img']) ? asset('storage/' . $settings['banner_2_img']) : 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80' }}'); background-size: cover; background-position: center; background-color: #0f172a;">
             <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.6) 50%, rgba(15,23,42,0) 100%);"></div>
             <div class="container py-5 position-relative z-1">
                 <div class="row align-items-center min-vh-50 py-5">
                     <div class="col-lg-7 mb-5 mb-lg-0 z-1">
-                        <h2 class="fs-1 fw-bolder mb-3 text-white text-uppercase" style="letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">TRANSFORME A SUA CARREIRA COM <span style="color: var(--asoft-accent);">NOSSOS CURSOS</span></h2>
-                        <p class="mb-5 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">Aceda à nossa plataforma E-learning com aulas práticas focadas no mercado atual. Aprenda programação, gestão e redes com especialistas e alcance o próximo nível na sua carreira.</p>
+                        <h2 class="fs-1 fw-bolder mb-3 text-white text-uppercase" style="letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+                            {!! $settings['banner_2_title'] ?? 'TRANSFORME A SUA CARREIRA COM <span style="color: var(--asoft-accent);">NOSSOS CURSOS</span>' !!}
+                        </h2>
+                        @if(isset($settings['banner_2_subtitle']) && $settings['banner_2_subtitle'])
+                            <h5 class="fw-bold mb-3 text-white" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5);">{{ $settings['banner_2_subtitle'] }}</h5>
+                        @endif
+                        <p class="mb-5 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">{{ $settings['banner_2_desc'] ?? 'Aceda à nossa plataforma E-learning com aulas práticas focadas no mercado atual. Aprenda programação, gestão e redes com especialistas e alcance o próximo nível na sua carreira.' }}</p>
                         <div class="d-flex gap-3">
                             <a href="{{ route('cursos') }}" class="btn btn-brand px-4 py-2 fw-bold shadow btn-sm">Ver Catálogo de Cursos</a>
                         </div>
@@ -45,13 +52,18 @@
             </div>
         </div>
         <!-- Slide 3: Serviços Corporativos -->
-        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center; background-color: #0f172a;">
+        <div class="carousel-item" style="background-image: url('{{ isset($settings['banner_3_img']) ? asset('storage/' . $settings['banner_3_img']) : 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80' }}'); background-size: cover; background-position: center; background-color: #0f172a;">
             <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.6) 50%, rgba(15,23,42,0) 100%);"></div>
             <div class="container py-5 position-relative z-1">
                 <div class="row align-items-center min-vh-50 py-5">
                     <div class="col-lg-7 mb-5 mb-lg-0 z-1">
-                        <h2 class="fs-1 fw-bolder mb-3 text-white text-uppercase" style="letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">SOLUÇÕES INOVADORAS PARA O <span style="color: var(--asoft-accent);">SEU NEGÓCIO</span></h2>
-                        <p class="mb-5 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">Fornecemos os melhores equipamentos, venda de software de gestão avançada (Cegid), consultoria em TI e implementação de redes para otimizar os seus resultados.</p>
+                        <h2 class="fs-1 fw-bolder mb-3 text-white text-uppercase" style="letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+                            {!! $settings['banner_3_title'] ?? 'SOLUÇÕES INOVADORAS PARA O <span style="color: var(--asoft-accent);">SEU NEGÓCIO</span>' !!}
+                        </h2>
+                        @if(isset($settings['banner_3_subtitle']) && $settings['banner_3_subtitle'])
+                            <h5 class="fw-bold mb-3 text-white" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5);">{{ $settings['banner_3_subtitle'] }}</h5>
+                        @endif
+                        <p class="mb-5 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">{{ $settings['banner_3_desc'] ?? 'Fornecemos os melhores equipamentos, venda de software de gestão avançada (Cegid), consultoria em TI e implementação de redes para otimizar os seus resultados.' }}</p>
                         <div class="d-flex gap-3">
                             <a href="#servicos" class="btn btn-brand px-4 py-2 fw-bold shadow btn-sm">Conhecer Serviços</a>
                             <a href="{{ route('produtos') }}" class="btn btn-outline-light px-4 py-2 fw-bold shadow btn-sm">Ir para a Loja</a>

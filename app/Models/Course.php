@@ -19,4 +19,9 @@ class Course extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function modules()
+    {
+        return $this->hasMany(Module::class)->orderBy('order_index');
+    }
 }

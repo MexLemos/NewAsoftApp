@@ -124,7 +124,7 @@ class CartController extends Controller
         ]);
 
         try {
-            \Illuminate\Support\Facades\Mail::to('comercial@asoftmedia-ao.com')->send(new \App\Mail\OrderAdminNotification($lead));
+            \Illuminate\Support\Facades\Mail::to('info@softmedia-ao.com')->send(new \App\Mail\OrderAdminNotification($lead));
             \Illuminate\Support\Facades\Mail::to($request->email)->send(new \App\Mail\OrderClientNotification($lead));
         } catch (\Exception $e) {
             // Se falhar o email, a compra continua guardada nos leads

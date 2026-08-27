@@ -2,7 +2,7 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('login') }}" id="loginForm">
         @csrf
 
         <div class="text-center mb-4">
@@ -45,7 +45,7 @@
         </div>
 
         <div class="d-grid mb-4">
-            <button type="submit" class="btn btn-brand btn-lg">Entrar</button>
+            <button type="submit" class="btn btn-brand btn-lg" id="submitBtn">Entrar</button>
         </div>
 
         <div class="text-center small text-muted">
@@ -53,4 +53,12 @@
             <a href="{{ route('register') }}" class="text-decoration-none" style="color: var(--asoft-primary); font-weight: 700;">Registar-se</a>
         </div>
     </form>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function() {
+            let btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>A processar...';
+        });
+    </script>
 </x-guest-layout>

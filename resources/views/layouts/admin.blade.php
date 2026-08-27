@@ -74,16 +74,13 @@
                     <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><i class="fa-solid fa-gauge me-2 w-20px"></i> Dashboard</a>
                 </li>
                 
-                @hasanyrole('admin|instrutor|aluno')
+                @hasanyrole('admin|tech|instrutor')
                 <li class="nav-item">
-                    <a href="{{ route('lms.dashboard') }}" class="{{ request()->routeIs('lms.*') ? 'active' : '' }}"><i class="fa-solid fa-graduation-cap me-2 w-20px"></i> Cursos (LMS)</a>
+                    <a href="{{ route('admin.cursos') }}" class="{{ request()->routeIs('admin.cursos') ? 'active' : '' }}"><i class="fa-solid fa-chalkboard-user me-2 w-20px"></i> Gerir Cursos</a>
                 </li>
                 @endhasanyrole
-
+                
                 @hasanyrole('admin|tech')
-                <li class="nav-item">
-                    <a href="{{ route('admin.cursos') }}" class="{{ request()->routeIs('admin.cursos') ? 'active' : '' }}"><i class="fa-solid fa-graduation-cap me-2 w-20px"></i> Cursos</a>
-                </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.produtos') }}" class="{{ request()->routeIs('admin.produtos') ? 'active' : '' }}"><i class="fa-solid fa-box-open me-2 w-20px"></i> Produtos</a>
                 </li>
@@ -91,7 +88,15 @@
                     <a href="{{ route('admin.servicos') }}" class="{{ request()->routeIs('admin.servicos') ? 'active' : '' }}"><i class="fa-solid fa-network-wired me-2 w-20px"></i> Serviços</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.leads') }}" class="{{ request()->routeIs('admin.leads') ? 'active' : '' }}"><i class="fa-solid fa-bullhorn me-2 w-20px"></i> Leads / CRM</a>
+                    <a href="{{ route('admin.leads') }}" class="{{ request()->routeIs('admin.leads') ? 'active' : '' }}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div><i class="fa-solid fa-bullhorn me-2 w-20px"></i> Leads / CRM</div>
+                            @php $newLeadsCount = \App\Models\Lead::where('status', 'new')->count(); @endphp
+                            @if($newLeadsCount > 0)
+                                <span class="badge bg-danger rounded-pill">{{ $newLeadsCount }}</span>
+                            @endif
+                        </div>
+                    </a>
                 </li>
                 @endhasanyrole
 
@@ -122,7 +127,7 @@
                             <i class="fa-solid fa-user-circle me-1"></i> {{ Auth::user()->name ?? 'Admin' }}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#">Perfil</a></li>
+                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Perfil</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">

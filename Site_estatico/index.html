@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="URYYkYZoYVu2WHtwR3CFP9t0Y3qYtKxSOOXJBlOa">
+    <title>ASoftMedia Web App</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --asoft-primary: #1e3a8a; /* Corporate Blue */
+            --asoft-secondary: #0f172a; /* Dark Navy */
+            --asoft-accent: #f59e0b; /* Amber */
+            --asoft-success: #22c55e; /* Green / WhatsApp */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+        }
+        
+        /* Navbar */
+        .navbar-custom {
+            background-color: var(--asoft-secondary);
+            padding: 15px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            z-index: 1050;
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255,255,255,0.85);
+            font-weight: 500;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .nav-link:hover, .navbar-custom .nav-link.active {
+            color: var(--asoft-accent);
+        }
+        .navbar-brand {
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        /* Buttons */
+        .btn-brand {
+            background-color: var(--asoft-accent);
+            color: #fff;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 10px 24px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .btn-brand:hover {
+            background-color: #d97706;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--asoft-secondary);
+            color: #cbd5e1;
+            padding: 60px 0 20px;
+        }
+        .footer a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer a:hover {
+            color: var(--asoft-accent);
+        }
+
+        /* Floating WhatsApp Button */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            color: #fff;
+        }
+
+        /* Dark Mode overrides */
+        [data-bs-theme="dark"] body, 
+        [data-bs-theme="dark"] .bg-white, 
+        [data-bs-theme="dark"] .bg-light,
+        [data-bs-theme="dark"] [style*="background-color: #f8fafc"] {
+            background-color: #0f172a !important;
+            color: #e2e8f0 !important;
+        }
+        [data-bs-theme="dark"] .card,
+        [data-bs-theme="dark"] .card[style*="background-color: #f8fafc"] {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+        }
+        [data-bs-theme="dark"] h1, [data-bs-theme="dark"] h2, [data-bs-theme="dark"] h3, 
+        [data-bs-theme="dark"] h4, [data-bs-theme="dark"] h5, [data-bs-theme="dark"] h6,
+        [data-bs-theme="dark"] .text-dark,
+        [data-bs-theme="dark"] [style*="color: #0f172a"],
+        [data-bs-theme="dark"] [style*="color: var(--asoft-secondary)"] {
+            color: #f8fafc !important;
+        }
+        [data-bs-theme="dark"] .text-muted {
+            color: #94a3b8 !important;
+        }
+
+        /* Scroll Animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
+    </style>
+</head>
+<body>
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <img src="/images/logo.png" alt="ASoftMedia Logo" height="55">
+                <span style="font-weight: 800; letter-spacing: 1px;">ASOFTMEDIA</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <i class="fa-solid fa-bars text-white fs-4"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="http://localhost#sobre">Sobre</a></li>
+                    <li class="nav-item"><a class="nav-link" href="http://localhost#servicos">Serviços</a></li>
+                    <li class="nav-item"><a class="nav-link " href="cursos.html">Treinamento</a></li>
+                    <li class="nav-item"><a class="nav-link " href="produtos.html">Loja</a></li>
+                    <li class="nav-item"><a class="nav-link" href="http://localhost#contactos">Contactos</a></li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-link text-white text-decoration-none me-3" id="theme-toggle">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <a href="http://localhost/carrinho" class="btn btn-link text-white text-decoration-none me-4 position-relative">
+                        <i class="fa-solid fa-cart-shopping fs-5"></i>
+                                            </a>
+                                            <a href="http://localhost/login" class="btn btn-outline-light me-2">Entrar</a>
+                        <a href="http://localhost/register" class="btn btn-brand">Registar</a>
+                                    </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages (Toast/Alert) -->
+    
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Carousel Section -->
+<div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+        <!-- Slide 1: Impacto/Treinamento -->
+        <div class="carousel-item active" style="background-image: url('/images/hero-bg-new.png'); background-size: cover; background-position: center; background-color: #0f172a;">
+            <!-- Dark overlay to ensure text is readable and blends well -->
+            <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.9) 0%, rgba(15,23,42,0.4) 50%, rgba(15,23,42,0) 100%);"></div>
+            <div class="container py-5 position-relative z-1">
+                <div class="row align-items-center min-vh-50 py-5">
+                    <div class="col-lg-7 mb-5 mb-lg-0">
+                        <h2 class="fs-1 fw-bolder mb-3 text-white text-uppercase" style="letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Além de produtos e serviços,<br><span style="color: var(--asoft-accent);">causamos impacto</span></h2>
+                        <h5 class="fw-bold mb-3 text-white" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5);">Treinamento e Estágio Profissional</h5>
+                        <p class="mb-4 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">Investimos no futuro da inovação ao proporcionar programas de treinamento e estágios que aproximam estudantes do ambiente real de trabalho em TI — desde desenvolvimento de software até cloud computing e IA.</p>
+                        <div class="d-flex gap-3">
+                            <a href="cursos.html" class="btn btn-brand px-4 py-2 fw-bold shadow btn-sm">Explorar Cursos</a>
+                            <a href="#contactos" class="btn btn-outline-light px-4 py-2 fw-bold shadow btn-sm">Fale Connosco</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-5"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 2: Treinamentos LMS -->
+        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center; background-color: #0f172a;">
+            <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.6) 50%, rgba(15,23,42,0) 100%);"></div>
+            <div class="container py-5 position-relative z-1">
+                <div class="row align-items-center min-vh-50 py-5">
+                    <div class="col-lg-7 mb-5 mb-lg-0 z-1">
+                        <h2 class="fs-1 fw-bolder mb-3 text-white text-uppercase" style="letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">TRANSFORME A SUA CARREIRA COM <span style="color: var(--asoft-accent);">NOSSOS CURSOS</span></h2>
+                        <p class="mb-5 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">Aceda à nossa plataforma E-learning com aulas práticas focadas no mercado atual. Aprenda programação, gestão e redes com especialistas e alcance o próximo nível na sua carreira.</p>
+                        <div class="d-flex gap-3">
+                            <a href="cursos.html" class="btn btn-brand px-4 py-2 fw-bold shadow btn-sm">Ver Catálogo de Cursos</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-5"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 3: Serviços Corporativos -->
+        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center; background-color: #0f172a;">
+            <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.6) 50%, rgba(15,23,42,0) 100%);"></div>
+            <div class="container py-5 position-relative z-1">
+                <div class="row align-items-center min-vh-50 py-5">
+                    <div class="col-lg-7 mb-5 mb-lg-0 z-1">
+                        <h2 class="fs-1 fw-bolder mb-3 text-white text-uppercase" style="letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">SOLUÇÕES INOVADORAS PARA O <span style="color: var(--asoft-accent);">SEU NEGÓCIO</span></h2>
+                        <p class="mb-5 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">Fornecemos os melhores equipamentos, venda de software de gestão avançada (Cegid), consultoria em TI e implementação de redes para otimizar os seus resultados.</p>
+                        <div class="d-flex gap-3">
+                            <a href="#servicos" class="btn btn-brand px-4 py-2 fw-bold shadow btn-sm">Conhecer Serviços</a>
+                            <a href="produtos.html" class="btn btn-outline-light px-4 py-2 fw-bold shadow btn-sm">Ir para a Loja</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-5"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Próximo</span>
+    </button>
+</div>
+
+<!-- Statistics Section -->
+<section class="py-4 position-relative" style="background-color: #f8fafc; z-index: 10;">
+    <div class="container">
+        <!-- Negative margin to pull the cards slightly up over the hero if desired, but standard layout per image -->
+        <div class="row g-4 justify-content-center" style="margin-top: -30px;">
+            <div class="col-6 col-md-3">
+                <div class="bg-white rounded-4 shadow-sm p-4 text-center h-100 animate-on-scroll delay-100">
+                    <h2 class="fw-bolder mb-1" style="color: var(--asoft-accent); font-size: 2.5rem;">150+</h2>
+                    <p class="text-muted small fw-bold mb-0 text-uppercase" style="letter-spacing: 1px;">Clientes</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="bg-white rounded-4 shadow-sm p-4 text-center h-100 animate-on-scroll delay-200">
+                    <h2 class="fw-bolder mb-1" style="color: var(--asoft-accent); font-size: 2.5rem;">25+</h2>
+                    <p class="text-muted small fw-bold mb-0 text-uppercase" style="letter-spacing: 1px;">Cursos</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="bg-white rounded-4 shadow-sm p-4 text-center h-100 animate-on-scroll delay-300">
+                    <h2 class="fw-bolder mb-1" style="color: var(--asoft-accent); font-size: 2.5rem;">12+</h2>
+                    <p class="text-muted small fw-bold mb-0 text-uppercase" style="letter-spacing: 1px;">Produtos</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="bg-white rounded-4 shadow-sm p-4 text-center h-100 animate-on-scroll delay-400">
+                    <h2 class="fw-bolder mb-1" style="color: var(--asoft-accent); font-size: 2.5rem;">10+</h2>
+                    <p class="text-muted small fw-bold mb-0 text-uppercase" style="letter-spacing: 1px;">Anos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Courses Section -->
+<section class="pt-5 pb-3 bg-white">
+    <div class="container pt-4 pb-2">
+        <h3 class="fw-bold mb-5" style="color: var(--asoft-secondary);">Cursos em destaque</h3>
+        <div class="row g-4 justify-content-center">
+                        <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden animate-on-scroll delay-100">
+                    <img src="/storage/courses/L4BQD4ruASBeoNrOrWuVQegB6yIk1S5t0XA6HJAR.png" class="card-img-top mx-auto d-block" alt="PHP Laravel" style="height: 180px; object-fit: contain; background-color: #f8f9fa; width: 100%;">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h5 class="fw-bold mb-2">PHP Laravel</h5>
+                        <p class="text-muted small mb-4">Aprenda a construir aplicações web modernas com PHP e Laravel 13</p>
+                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                            <a href="cursos.html" class="btn btn-warning fw-bold btn-sm px-3 shadow-sm" style="background-color: var(--asoft-accent); border-color: var(--asoft-accent); color: white;">Ver curso</a>
+                                                            <span class="fw-bold text-primary small">50.000,00 Kz</span>
+                                                    </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden animate-on-scroll delay-100">
+                    <img src="/storage/courses/ZWbVQ4UkigD5fMWWvFprn9Az20uscbK7N9cm2QAK.jpg" class="card-img-top mx-auto d-block" alt="Excel Avançado para Negócios" style="height: 180px; object-fit: contain; background-color: #f8f9fa; width: 100%;">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h5 class="fw-bold mb-2">Excel Avançado para Negócios</h5>
+                        <p class="text-muted small mb-4">Aprenda tabelas dinâmicas, macros e dashboard em excel + IA</p>
+                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                            <a href="cursos.html" class="btn btn-warning fw-bold btn-sm px-3 shadow-sm" style="background-color: var(--asoft-accent); border-color: var(--asoft-accent); color: white;">Ver curso</a>
+                                                            <span class="fw-bold text-primary small">50.000,00 Kz</span>
+                                                    </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden animate-on-scroll delay-100">
+                    <img src="/storage/courses/paXDaBYaTQVtbcA5g2DEtfLMLif85JkifLXQVmaa.png" class="card-img-top mx-auto d-block" alt="OPNSense" style="height: 180px; object-fit: contain; background-color: #f8f9fa; width: 100%;">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h5 class="fw-bold mb-2">OPNSense</h5>
+                        <p class="text-muted small mb-4">Segurança de dados, VPN e firewall</p>
+                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                            <a href="cursos.html" class="btn btn-warning fw-bold btn-sm px-3 shadow-sm" style="background-color: var(--asoft-accent); border-color: var(--asoft-accent); color: white;">Ver curso</a>
+                                                            <span class="fw-bold text-primary small">450.000,00 Kz</span>
+                                                    </div>
+                    </div>
+                </div>
+            </div>
+                    </div>
+        <div class="text-center mt-5">
+            <a href="cursos.html" class="btn btn-outline-warning fw-bold px-4 py-2 rounded-pill shadow-sm" style="color: var(--asoft-accent); border-color: var(--asoft-accent);">Todos os cursos</a>
+        </div>
+    </div>
+</section>
+
+<!-- Products & Services Section -->
+<section class="pt-3 pb-5" style="background-color: #f8fafc;">
+    <div class="container pt-2 pb-4">
+        <h3 class="fw-bold mb-5" style="color: var(--asoft-secondary);">Produtos & Serviços</h3>
+        <div class="row g-4 justify-content-center">
+                        <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-100">
+                    <div class="card-body p-4 d-flex flex-column align-items-center justify-content-center">
+                        <div class="text-center mb-3 w-100 d-flex align-items-center justify-content-center" style="height: 120px;">
+                                                            <img src="/storage/produtos/Hxewlw58I731OJ8KefmFNxC4dl1p4kHPyrdZ4xKI.jpg" alt="PC Portátil" class="mx-auto d-block" style="max-height: 120px; object-fit: contain; width: 100%;">
+                                                    </div>
+                        <h6 class="fw-bold mb-3 text-center">PC Portátil</h6>
+                        <div class="mt-auto w-100 text-center">
+                            <form action="http://localhost/carrinho/add" method="POST">
+                                <input type="hidden" name="_token" value="URYYkYZoYVu2WHtwR3CFP9t0Y3qYtKxSOOXJBlOa" autocomplete="off">                                <input type="hidden" name="id" value="4">
+                                <input type="hidden" name="name" value="PC Portátil">
+                                <input type="hidden" name="price" value="250000.00">
+                                <input type="hidden" name="image" value="/storage/produtos/Hxewlw58I731OJ8KefmFNxC4dl1p4kHPyrdZ4xKI.jpg">
+                                <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-bold w-100"><i class="fa-solid fa-cart-plus me-1"></i> Adicionar ao Carrinho</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-100">
+                    <div class="card-body p-4 d-flex flex-column align-items-center justify-content-center">
+                        <div class="text-center mb-3 w-100 d-flex align-items-center justify-content-center" style="height: 120px;">
+                                                            <img src="/storage/produtos/TIMcJZ1IzLcJf1z4wTegvLBPKp2TFsRpQjShHCFW.jpg" alt="Switch Layer 3" class="mx-auto d-block" style="max-height: 120px; object-fit: contain; width: 100%;">
+                                                    </div>
+                        <h6 class="fw-bold mb-3 text-center">Switch Layer 3</h6>
+                        <div class="mt-auto w-100 text-center">
+                            <form action="http://localhost/carrinho/add" method="POST">
+                                <input type="hidden" name="_token" value="URYYkYZoYVu2WHtwR3CFP9t0Y3qYtKxSOOXJBlOa" autocomplete="off">                                <input type="hidden" name="id" value="3">
+                                <input type="hidden" name="name" value="Switch Layer 3">
+                                <input type="hidden" name="price" value="200000.00">
+                                <input type="hidden" name="image" value="/storage/produtos/TIMcJZ1IzLcJf1z4wTegvLBPKp2TFsRpQjShHCFW.jpg">
+                                <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-bold w-100"><i class="fa-solid fa-cart-plus me-1"></i> Adicionar ao Carrinho</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-100">
+                    <div class="card-body p-4 d-flex flex-column align-items-center justify-content-center">
+                        <div class="text-center mb-3 w-100 d-flex align-items-center justify-content-center" style="height: 120px;">
+                                                            <img src="/storage/produtos/pmrGzuQ6Ll1L4Z5X9vnYMV3JlEA4GCZr6IhFJ4M0.jpg" alt="Monitores Led" class="mx-auto d-block" style="max-height: 120px; object-fit: contain; width: 100%;">
+                                                    </div>
+                        <h6 class="fw-bold mb-3 text-center">Monitores Led</h6>
+                        <div class="mt-auto w-100 text-center">
+                            <form action="http://localhost/carrinho/add" method="POST">
+                                <input type="hidden" name="_token" value="URYYkYZoYVu2WHtwR3CFP9t0Y3qYtKxSOOXJBlOa" autocomplete="off">                                <input type="hidden" name="id" value="2">
+                                <input type="hidden" name="name" value="Monitores Led">
+                                <input type="hidden" name="price" value="50000.00">
+                                <input type="hidden" name="image" value="/storage/produtos/pmrGzuQ6Ll1L4Z5X9vnYMV3JlEA4GCZr6IhFJ4M0.jpg">
+                                <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-bold w-100"><i class="fa-solid fa-cart-plus me-1"></i> Adicionar ao Carrinho</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+                        <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-200">
+                    <div class="card-body p-4 d-flex flex-column align-items-center justify-content-center">
+                        <div class="text-center mb-3 w-100 d-flex align-items-center justify-content-center" style="height: 120px;">
+                                                            <img src="/storage/produtos/nxr3MySbBWLTNRNr28sUB7YpOBljjX8tIOVytV0T.jpg" alt="Licenças Windows 11 Pro" class="mx-auto d-block" style="max-height: 120px; object-fit: contain; width: 100%;">
+                                                    </div>
+                        <h6 class="fw-bold mb-2 text-center">Licenças Windows 11 Pro</h6>
+                        <p class="text-muted small mb-4 text-center">Licenças para o SO Windows 11 Pro</p>
+                        <div class="mt-auto w-100 text-center">
+                            <a href="#contactos" class="btn btn-outline-secondary btn-sm rounded-pill px-4 fw-bold w-100"><i class="fa-solid fa-envelope me-1"></i> Fale Connosco</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-200">
+                    <div class="card-body p-4 d-flex flex-column align-items-center justify-content-center">
+                        <div class="text-center mb-3 w-100 d-flex align-items-center justify-content-center" style="height: 120px;">
+                                                            <img src="/storage/produtos/tzCLwY3k2PoSM5Mxu2naNYljuGye3BaLFO7Migct.png" alt="Licenças Office 365" class="mx-auto d-block" style="max-height: 120px; object-fit: contain; width: 100%;">
+                                                    </div>
+                        <h6 class="fw-bold mb-2 text-center">Licenças Office 365</h6>
+                        <p class="text-muted small mb-4 text-center">Licença Definitiva do pacote Office 365</p>
+                        <div class="mt-auto w-100 text-center">
+                            <a href="#contactos" class="btn btn-outline-secondary btn-sm rounded-pill px-4 fw-bold w-100"><i class="fa-solid fa-envelope me-1"></i> Fale Connosco</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 animate-on-scroll delay-200">
+                    <div class="card-body p-4 d-flex flex-column align-items-center justify-content-center">
+                        <div class="text-center mb-3 w-100 d-flex align-items-center justify-content-center" style="height: 120px;">
+                                                            <img src="/storage/produtos/hCk0Heb2FJ8nfj5kgFqJaEIYrpMrqEmOTRW46M6t.png" alt="2Funges" class="mx-auto d-block" style="max-height: 120px; object-fit: contain; width: 100%;">
+                                                    </div>
+                        <h6 class="fw-bold mb-2 text-center">2Funges</h6>
+                        <p class="text-muted small mb-4 text-center">Gestão Inteligente da Cesta básica</p>
+                        <div class="mt-auto w-100 text-center">
+                            <a href="#contactos" class="btn btn-outline-secondary btn-sm rounded-pill px-4 fw-bold w-100"><i class="fa-solid fa-envelope me-1"></i> Fale Connosco</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    </div>
+    </div>
+</section>
+
+
+<!-- About Section (Mission, Vision, Values) -->
+<section id="sobre" class="pt-5 pb-2" style="background-color: #f8fafc;">
+    <div class="container pt-5 pb-0">
+        <div class="row g-4 align-items-center mb-5">
+            <div class="col-lg-5">
+                <div class="mb-4 mb-lg-0">
+                    <div class="d-flex align-items-center bg-white p-4 rounded-4 shadow-sm mb-4 border-start border-4 animate-on-scroll delay-100" style="border-color: var(--asoft-primary) !important;">
+                        <div class="me-4 rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="fa-solid fa-eye fs-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-1">Visão</h4>
+                            <p class="text-muted mb-0">Ser referência em inovação tecnológica em Angola.</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center bg-white p-4 rounded-4 shadow-sm mb-4 border-start border-4 animate-on-scroll delay-200" style="border-color: var(--asoft-primary) !important;">
+                        <div class="me-4 rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="fa-solid fa-bullseye fs-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-1">Missão</h4>
+                            <p class="text-muted mb-0">Oferecer soluções e treinamentos digitais que empoderem comunidades e organizações.</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center bg-white p-4 rounded-4 shadow-sm border-start border-4 animate-on-scroll delay-300" style="border-color: var(--asoft-primary) !important;">
+                        <div class="me-4 rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="fa-solid fa-heart fs-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-1">Valores</h4>
+                            <p class="text-muted mb-0">Transparência, Inovação, Sustentabilidade.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7 px-lg-5 animate-on-scroll delay-400">
+                <img src="/images/asoftmedia-team.jpg" alt="Equipa Asoftmedia" class="img-fluid rounded-4 shadow-sm w-100" style="object-fit: cover; max-height: 400px;">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <h3 class="fw-bold mb-4 text-center">Sobre a ASOFTMEDIA</h3>
+                <p class="mb-4 text-muted" style="line-height: 1.8; text-align: justify;">A ASOFTMEDIA é uma empresa de tecnologia fundada em 2018, com o objetivo de desenvolver soluções em software e proporcionar a digitalização de empresas. Com uma equipa qualificada, oferece serviços de desenvolvimento de software sob medida para empresas de todos os tamanhos.</p>
+                <p class="text-muted" style="line-height: 1.8; text-align: justify;">Além disso, oferece serviços de consultoria em tecnologia, implementação de soluções e gerenciamento de ambientes de T.I. das pequenas e médias empresas, ajudando a garantir continuidade, produtividade e redução de custos.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Partners Section -->
+<section class="pt-2 pb-5 bg-white">
+    <div class="container pt-2 pb-4 text-center">
+        <h3 class="fw-bold mb-5">Nossos Parceiros</h3>
+        <style>
+            .partners-carousel-container {
+                overflow: hidden;
+                width: 100%;
+                white-space: nowrap;
+                position: relative;
+            }
+            .partners-carousel-container::before,
+            .partners-carousel-container::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                width: 150px;
+                height: 100%;
+                z-index: 2;
+            }
+            .partners-carousel-container::before {
+                left: 0;
+                background: linear-gradient(to right, white 0%, rgba(255, 255, 255, 0) 100%);
+            }
+            .partners-carousel-container::after {
+                right: 0;
+                background: linear-gradient(to left, white 0%, rgba(255, 255, 255, 0) 100%);
+            }
+            .partners-carousel-track {
+                display: inline-block;
+                animation: scroll-partners 15s linear infinite;
+            }
+            .partners-carousel-track:hover {
+                animation-play-state: paused;
+            }
+            .partner-logo {
+                height: 70px;
+                margin: 0 40px;
+                object-fit: contain;
+                transition: all 0.3s ease;
+            }
+            .partner-logo:hover {
+                transform: scale(1.05);
+            }
+            @keyframes scroll-partners {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+        </style>
+        <div class="partners-carousel-container">
+            <div class="partners-carousel-track">
+                <!-- Loop over the dynamic partners twice for seamless scrolling if needed -->
+                                    <img src="/storage/partners/ubnuBcL2pVYiXJi48roTShKf9Kx7B36fFEOF5gZ3.png" class="partner-logo" alt="Cegid" title="Cegid">
+                                    <img src="/storage/partners/cTOLuakcYlhTWcrbCPOXzu7UqcXmetlHPNvpwFUu.png" class="partner-logo" alt="KIWA" title="KIWA">
+                                    <img src="/storage/partners/vDy4ZVi626UGAOIqKXb4S1R5Q1ydbwTCsMSvHyY9.png" class="partner-logo" alt="JNM Global" title="JNM Global">
+                                    <img src="/storage/partners/UVD9zkTr6asIYjLUDRUvxLvLWPMdIT4rbCFILjaq.png" class="partner-logo" alt="Envia Express" title="Envia Express">
+                                    <img src="/storage/partners/kMXyEN07AClzkpj45JBm4DoIUZL4hMH5ojvehzeb.png" class="partner-logo" alt="InWinteck" title="InWinteck">
+                                    <img src="/storage/partners/J4NyBJlUyLeDhln9zX5D3uKwo5xZk7bdqEfkUyTa.png" class="partner-logo" alt="UniSaúde" title="UniSaúde">
+                                <!-- Duplicated set for seamless scrolling if there are at least some partners -->
+                                                            <img src="/storage/partners/ubnuBcL2pVYiXJi48roTShKf9Kx7B36fFEOF5gZ3.png" class="partner-logo" alt="Cegid" title="Cegid">
+                                            <img src="/storage/partners/cTOLuakcYlhTWcrbCPOXzu7UqcXmetlHPNvpwFUu.png" class="partner-logo" alt="KIWA" title="KIWA">
+                                            <img src="/storage/partners/vDy4ZVi626UGAOIqKXb4S1R5Q1ydbwTCsMSvHyY9.png" class="partner-logo" alt="JNM Global" title="JNM Global">
+                                            <img src="/storage/partners/UVD9zkTr6asIYjLUDRUvxLvLWPMdIT4rbCFILjaq.png" class="partner-logo" alt="Envia Express" title="Envia Express">
+                                            <img src="/storage/partners/kMXyEN07AClzkpj45JBm4DoIUZL4hMH5ojvehzeb.png" class="partner-logo" alt="InWinteck" title="InWinteck">
+                                            <img src="/storage/partners/J4NyBJlUyLeDhln9zX5D3uKwo5xZk7bdqEfkUyTa.png" class="partner-logo" alt="UniSaúde" title="UniSaúde">
+                                                                <img src="/storage/partners/ubnuBcL2pVYiXJi48roTShKf9Kx7B36fFEOF5gZ3.png" class="partner-logo" alt="Cegid" title="Cegid">
+                                            <img src="/storage/partners/cTOLuakcYlhTWcrbCPOXzu7UqcXmetlHPNvpwFUu.png" class="partner-logo" alt="KIWA" title="KIWA">
+                                            <img src="/storage/partners/vDy4ZVi626UGAOIqKXb4S1R5Q1ydbwTCsMSvHyY9.png" class="partner-logo" alt="JNM Global" title="JNM Global">
+                                            <img src="/storage/partners/UVD9zkTr6asIYjLUDRUvxLvLWPMdIT4rbCFILjaq.png" class="partner-logo" alt="Envia Express" title="Envia Express">
+                                            <img src="/storage/partners/kMXyEN07AClzkpj45JBm4DoIUZL4hMH5ojvehzeb.png" class="partner-logo" alt="InWinteck" title="InWinteck">
+                                            <img src="/storage/partners/J4NyBJlUyLeDhln9zX5D3uKwo5xZk7bdqEfkUyTa.png" class="partner-logo" alt="UniSaúde" title="UniSaúde">
+                                                </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Overview -->
+<section id="servicos" class="pt-5 pb-2" style="background-color: #f8fafc;">
+    <div class="container pt-5 pb-2">
+        <h2 class="text-center fw-bolder mb-5">Nossas Áreas de Atuação</h2>
+        <div class="row g-5 justify-content-center text-center">
+            <!-- Service 1 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="mb-4">
+                    <i class="fa-solid fa-laptop-code" style="font-size: 3.5rem; color: #0f172a;"></i>
+                </div>
+                <h5 class="fw-bold mb-3" style="color: #0f172a;">Venda de Softwares de Gestão</h5>
+                <p class="text-muted small" style="line-height: 1.7;">Fornecemos e implementamos as melhores soluções em software de gestão, incluindo Cegid PHC, Primavera e Vendus, além do desenvolvimento personalizado de aplicações e websites.</p>
+            </div>
+            
+            <!-- Service 2 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="mb-4">
+                    <i class="fa-solid fa-file-contract" style="font-size: 3.5rem; color: #0f172a;"></i>
+                </div>
+                <h5 class="fw-bold mb-3" style="color: #0f172a;">Homologação de Equipamentos de TI</h5>
+                <p class="text-muted small" style="line-height: 1.7;">Cuidamos de todo o processo de emissão e renovação de certificados, além da tradução técnica e entrega de documentação necessária para os seus equipamentos.</p>
+            </div>
+
+            <!-- Service 3 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="mb-4">
+                    <i class="fa-solid fa-network-wired" style="font-size: 3.5rem; color: #0f172a;"></i>
+                </div>
+                <h5 class="fw-bold mb-3" style="color: #0f172a;">Redes e Infraestrutura</h5>
+                <p class="text-muted small" style="line-height: 1.7;">Projetamos e implementamos soluções robustas de CFTV, telefonia VoIP e otimização de recursos para garantir a segurança da informação na sua empresa.</p>
+            </div>
+
+            <!-- Service 4 -->
+            <div class="col-md-6 col-lg-4 mt-lg-5">
+                <div class="mb-4">
+                    <i class="fa-solid fa-chalkboard-user" style="font-size: 3.5rem; color: #0f172a;"></i>
+                </div>
+                <h5 class="fw-bold mb-3" style="color: #0f172a;">Consultoria e Treinamento</h5>
+                <p class="text-muted small" style="line-height: 1.7;">Oferecemos outsourcing de serviços, venda de equipamentos e licenças Microsoft, além de programas especializados de treinamento e estágio em TI.</p>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <h5 class="mb-4 text-muted">A sua empresa precisa de uma solução à medida?</h5>
+            <a href="#contactos" class="btn btn-brand btn-lg shadow px-5 py-3 rounded-pill fw-bold text-uppercase" style="letter-spacing: 0.5px;">
+                Fale com os nossos especialistas <i class="fa-solid fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="pt-2 pb-5 bg-white">
+    <div class="container pt-2 pb-5 text-center">
+        <h3 class="fw-bold mb-5" style="color: var(--asoft-secondary);">O que dizem os nossos clientes</h3>
+        <div class="row justify-content-center g-4 text-start">
+            <div class="col-md-6 col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 animate-on-scroll delay-100" style="background-color: #f8fafc;">
+                    <div class="card-body">
+                        <p class="fst-italic text-muted mb-4">"O curso de Excel Avançado aumentou a minha produtividade em 40%."</p>
+                        <h6 class="fw-bold mb-1">Ana Paula</h6>
+                        <p class="text-muted small mb-0">Analista Financeira</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 animate-on-scroll delay-200" style="background-color: #f8fafc;">
+                    <div class="card-body">
+                        <p class="fst-italic text-muted mb-4">"A formação em Laravel transformou a nossa equipa de desenvolvimento."</p>
+                        <h6 class="fw-bold mb-1">João Manuel</h6>
+                        <p class="text-muted small mb-0">Director de TI, Empresa XYZ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form Section (Leads) -->
+<section id="contactos" class="py-5 bg-light">
+    <div class="container py-5">
+        <div class="row g-5">
+            <div class="col-lg-6">
+                <h3 class="fw-bold mb-4">Contacte-nos</h3>
+                <p class="text-muted mb-5">Envie-nos uma mensagem e a nossa equipe entrará em contacto o mais breve possível.</p>
+                
+                <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5" style="background-color: #f8fafc;">
+                    <form action="#" method="POST">
+                        <input type="hidden" name="_token" value="URYYkYZoYVu2WHtwR3CFP9t0Y3qYtKxSOOXJBlOa" autocomplete="off">                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Nome Completo</label>
+                            <input type="text" name="name" class="form-control form-control-lg" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">E-mail</label>
+                            <input type="email" name="email" class="form-control form-control-lg" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Mensagem</label>
+                            <textarea name="message" class="form-control" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100" style="background-color: var(--asoft-primary); border: none;">
+                            <i class="fa-solid fa-paper-plane me-2"></i> Enviar Mensagem
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <!-- Google Maps iframe -->
+                <div class="h-100 rounded-4 overflow-hidden shadow-sm position-relative" style="min-height: 400px; background-color: #e2e8f0;">
+                    <iframe width="100%" height="100%" frameborder="0" style="border:0; position: absolute; top: 0; left: 0;" src="https://maps.google.com/maps?q=Sapu%202,%20Luanda,%20Angola&t=&z=14&ie=UTF8&iwloc=&output=embed" allowfullscreen loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto">
+        <div class="container">
+            <div class="row gy-4 mb-5">
+                <div class="col-lg-4 col-md-6">
+                    <div class="mb-4 d-flex align-items-center gap-2">
+                        <img src="/images/logo.png" alt="ASoftMedia Logo" height="55">
+                        <span class="text-white fw-bold fs-4" style="letter-spacing: 1px;">ASOFTMEDIA</span>
+                    </div>
+                    <p class="mb-4 text-sm">A ASoftMedia é uma empresa de tecnologia focada no desenvolvimento de soluções em software, treinamento e digitalização de negócios. Oferecemos serviços inovadores e personalizados.</p>
+                    <div class="d-flex gap-3">
+                        <a href="https://www.facebook.com/asoftmedia" class="fs-4" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/asoftmedia" class="fs-4" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/company/asoftmedia" class="fs-4" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="https://www.youtube.com/@Asoftmedia-ao" class="fs-4" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="text-white mb-4">Links Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Sobre Nós</a></li>
+                        <li class="mb-2"><a href="#">Nossos Cursos</a></li>
+                        <li class="mb-2"><a href="#">Produtos de TI</a></li>
+                        <li class="mb-2"><a href="#">Área de Downloads</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Serviços</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Desenvolvimento de Software</a></li>
+                        <li class="mb-2"><a href="#">Consultoria em TI</a></li>
+                        <li class="mb-2"><a href="#">Redes e Infraestrutura</a></li>
+                        <li class="mb-2"><a href="#">Gestão Escolar</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Fale Connosco</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="fa-solid fa-phone mt-1 me-3 text-white"></i>
+                            <span>+244 975 824 787<br>+244 956 616 567</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="fa-solid fa-envelope mt-1 me-3 text-white"></i>
+                            <span>info@asoftmedia-ao.com</span>
+                        </li>
+                        <li class="d-flex align-items-start">
+                            <i class="fa-solid fa-location-dot mt-1 me-3 text-white"></i>
+                            <span>Sapu 2, Casas Azuis, Rua da Uva<br>Luanda - Angola</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-top border-secondary pt-4 mt-4 text-center d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <small>&copy; 2026 ASOFTMEDIA. Todos os direitos reservados.</small>
+                <small class="mt-2 mt-md-0">Desenvolvido por ASOFTMEDIA</small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/244975824787" class="whatsapp-float" target="_blank" title="Fale connosco no WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        htmlElement.setAttribute('data-bs-theme', savedTheme);
+        updateToggleIcon(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            htmlElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateToggleIcon(newTheme);
+        });
+
+        function updateToggleIcon(theme) {
+            if (theme === 'dark') {
+                themeToggle.innerHTML = '<i class="fa-solid fa-sun text-warning"></i>';
+            } else {
+                themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>';
+            }
+        }
+
+        // Scroll Animations Observer
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        // Stop observing once animated so it doesn't replay continuously
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
