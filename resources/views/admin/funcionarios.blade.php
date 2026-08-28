@@ -3,11 +3,11 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h2 class="h3 mb-1 fw-bold">Clientes e Alunos</h2>
-        <p class="text-muted mb-0">Gestão de clientes finais e empresas.</p>
+        <h2 class="h3 mb-1 fw-bold">Funcionários (Equipa Interna)</h2>
+        <p class="text-muted mb-0">Gestão de administradores, formadores e técnicos.</p>
     </div>
     <button class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;" data-bs-toggle="modal" data-bs-target="#modalUsuario">
-        <i class="fa-solid fa-user-plus me-1"></i> Novo Cliente/Aluno
+        <i class="fa-solid fa-user-plus me-1"></i> Adicionar Membro da Equipa
     </button>
 </div>
 
@@ -58,8 +58,7 @@
                             @endif
                         </td>
                         <td class="text-end pe-4">
-                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalCertificado{{ $user->id }}" title="Emitir Certificado"><i class="fa-solid fa-certificate"></i></button>
-                            <button class="btn btn-sm btn-light ms-1" data-bs-toggle="modal" data-bs-target="#modalEditUsuario{{ $user->id }}" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#modalEditUsuario{{ $user->id }}"><i class="fa-solid fa-pen"></i></button>
                         </td>
                     </tr>
                     
@@ -84,14 +83,12 @@
                                                 <input type="email" name="email" class="form-control" value="{{ $user->email }}" required>
                                             </div>
                                             <div class="col-12">
-                                                <label class="form-label text-muted small fw-bold">Contacto (Telefone)</label>
-                                                <input type="text" name="phone" class="form-control" value="{{ $user->phone }}">
-                                            </div>
-                                            <div class="col-12">
                                                 <label class="form-label text-muted small fw-bold">Perfil de Acesso (Role)</label>
                                                 <select name="role" class="form-select fw-medium" required>
-                                                    <option value="Aluno" {{ $role == 'Aluno' ? 'selected' : '' }}>Aluno / Cliente Individual</option>
-                                                    <option value="Empresa" {{ $role == 'Empresa' ? 'selected' : '' }}>Cliente Empresa (B2B)</option>
+                                                    <option value="Admin" {{ strtolower($role) == 'admin' ? 'selected' : '' }}>Administrador (Acesso Total)</option>
+                                                    <option value="Formador" {{ strtolower($role) == 'formador' ? 'selected' : '' }}>Formador (Cursos)</option>
+                                                    <option value="Instrutor" {{ strtolower($role) == 'instrutor' ? 'selected' : '' }}>Instrutor Adjunto</option>
+                                                    <option value="Tech" {{ strtolower($role) == 'tech' ? 'selected' : '' }}>Técnico (Tech)</option>
                                                 </select>
                                             </div>
                                             <div class="col-12">
@@ -111,40 +108,6 @@
                                 <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
                                     <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Cancelar</button>
                                     <button type="submit" form="formEditUsuario{{ $user->id }}" class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;">Guardar Alterações</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Modal Emitir Certificado -->
-                    <div class="modal fade" id="modalCertificado{{ $user->id }}" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content border-0 rounded-4 shadow">
-                                <div class="modal-header border-bottom-0 pb-0">
-                                    <h5 class="modal-title fw-bold">Emitir Certificado Manual</h5>
-                                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body p-4">
-                                    <div class="alert alert-info border-0 rounded-3 small">
-                                        <i class="fa-solid fa-circle-info me-1"></i>
-                                        Selecione o curso para o qual deseja gerar o certificado de <b>{{ $user->name }}</b>. O aluno não precisa ter comprado online, a geração é imediata.
-                                    </div>
-                                    <form action="{{ route('admin.certificados.emitir', $user->id) }}" method="GET" id="formCert{{ $user->id }}" target="_blank">
-                                        <div class="mb-3">
-                                            <label class="form-label text-muted small fw-bold">Selecione o Curso</label>
-                                            <select name="course_id" class="form-select" required>
-                                                <option value="" disabled selected>Escolha um curso...</option>
-                                                @php $allCourses = \App\Models\Course::latest()->get(); @endphp
-                                                @foreach($allCourses as $c)
-                                                    <option value="{{ $c->id }}">{{ $c->title }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
-                                    <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="submit" form="formCert{{ $user->id }}" class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;"><i class="fa-solid fa-download me-1"></i> Gerar e Baixar PDF</button>
                                 </div>
                             </div>
                         </div>
@@ -182,20 +145,17 @@
                         <div class="col-12">
                             <label class="form-label text-muted small fw-bold">Perfil de Acesso (Role)</label>
                             <select name="role" class="form-select fw-medium" required>
-                                <option value="Aluno" selected>Aluno / Cliente Individual</option>
-                                <option value="Empresa">Cliente Empresa (B2B)</option>
+                                <option value="Admin">Administrador (Acesso Total)</option>
+                                <option value="Formador">Formador (Cursos)</option>
+                                <option value="Instrutor">Instrutor Adjunto</option>
+                                <option value="Tech">Técnico (Tech)</option>
                             </select>
                             @error('role')<div class="invalid-feedback fw-bold">{{ $message }}</div>@enderror
                         </div>
                         <div class="col-12">
-                            <label class="form-label text-muted small fw-bold">Contacto (Telefone)</label>
-                            <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone') }}">
-                            @error('phone')<div class="invalid-feedback fw-bold">{{ $message }}</div>@enderror
-                        </div>
-                        <div class="col-12">
-                            <div class="alert alert-info border-0 rounded-3 small mb-0">
-                                <i class="fa-solid fa-key me-1"></i> A senha padrão será definida automaticamente como <b>1a2b3c4d</b>. O sistema forçará a troca no primeiro login.
-                            </div>
+                            <label class="form-label text-muted small fw-bold">Senha Inicial</label>
+                            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                            @error('password')<div class="invalid-feedback fw-bold">{{ $message }}</div>@enderror
                         </div>
                     </div>
                 </form>

@@ -10,7 +10,9 @@ class AdminController extends Controller
     {
         $metrics = [
             'cursos_vendidos' => \App\Models\Enrollment::where('status', 'active')->count(),
-            'alunos_ativos' => \App\Models\User::count(),
+            'alunos_ativos' => \App\Models\User::whereHas('roles', function($q){
+                $q->whereIn('name', ['aluno', 'cliente', 'empresa']);
+            })->orWhereDoesntHave('roles')->count(),
             'produtos_catalogo' => \App\Models\Product::count(),
             'parceiros' => \App\Models\Partner::count(),
         ];
@@ -52,8 +54,46 @@ class AdminController extends Controller
 
     public function usuarios()
     {
-        $users = \App\Models\User::latest()->get();
+        $users = \App\Models\User::whereHas('roles', function($q){
+            $q->whereIn('name', ['aluno', 'cliente', 'empresa']);
+        })->orWhereDoesntHave('roles')->latest()->get();
         return view('admin.usuarios', compact('users'));
+    }
+
+    public function funcionarios()
+    {
+        $users = \App\Models\User::whereHas('roles', function($q){
+            $q->whereNotIn('name', ['aluno', 'cliente', 'empresa']);
+        })->latest()->get();
+        return view('admin.funcionarios', compact('users'));
+    }
+
+    public function emitirCertificadoManual($userId, Request $request)
+    {
+        $request->validate(['course_id' => 'required|exists:courses,id']);
+        
+        $user = \App\Models\User::findOrFail($userId);
+        
+        // Ensure user is enrolled (manually)
+        $enrollment = \App\Models\Enrollment::firstOrCreate([
+            'user_id' => $user->id,
+            'course_id' => $request->course_id,
+        ], [
+            'status' => 'active',
+            'progress_percent' => 100
+        ]);
+        
+        // Se já existia, podemos forçar o progresso a 100% (assumindo que o Admin confirmou)
+        if ($enrollment->progress_percent < 100) {
+            $enrollment->update(['progress_percent' => 100]);
+        }
+
+        $certificado = \App\Models\Certificate::firstOrCreate(
+            ['user_id' => $user->id, 'course_id' => $request->course_id],
+            ['certificate_code' => strtoupper(\Illuminate\Support\Str::random(12))]
+        );
+
+        return redirect()->route('lms.certificados.show', $certificado->certificate_code);
     }
 
     public function leads()
@@ -138,18 +178,32 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
+            'password' => 'nullable|string|min:8',
+            'phone' => 'nullable|string|max:20',
             'role' => 'required|string'
         ]);
+
+        $roleName = strtolower($request->role);
+        
+        $passwordToUse = $request->password;
+        $requirePasswordChange = false;
+
+        if (!$passwordToUse && in_array($roleName, ['aluno', 'empresa', 'cliente'])) {
+            $passwordToUse = '1a2b3c4d';
+            $requirePasswordChange = true;
+        } elseif (!$passwordToUse) {
+            $passwordToUse = '1a2b3c4d'; // Fallback
+        }
 
         $user = \App\Models\User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'phone' => $request->phone,
+            'password' => \Illuminate\Support\Facades\Hash::make($passwordToUse),
+            'require_password_change' => $requirePasswordChange,
         ]);
 
         if (class_exists(\Spatie\Permission\Models\Role::class)) {
-            $roleName = strtolower($request->role); // Normaliza para lowercase
             $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => $roleName]);
             $user->assignRole($role);
         }
@@ -165,11 +219,13 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$id,
             'password' => 'nullable|string|min:8',
+            'phone' => 'nullable|string|max:20',
             'role' => 'required|string'
         ]);
 
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->phone = $request->phone;
         $user->is_active = $request->has('is_active');
         
         if ($request->filled('password')) {

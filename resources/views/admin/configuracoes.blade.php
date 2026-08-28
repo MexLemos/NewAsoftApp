@@ -103,6 +103,32 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Secção Sobre -->
+            <div class="card border-0 shadow-sm rounded-4 mt-4">
+                <div class="card-header bg-transparent border-bottom-0 pt-4 pb-0 px-4">
+                    <h5 class="fw-bold mb-0">Secção "Sobre a ASOFTMEDIA"</h5>
+                    <p class="text-muted small">Altere o texto de apresentação e a imagem associada.</p>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label text-muted small fw-bold">Texto Principal</label>
+                            <textarea name="about_text" class="form-control" rows="6">{{ $settingsData['about_text'] ?? "A ASOFTMEDIA é uma empresa de tecnologia fundada em 2018, com o objetivo de desenvolver soluções em software e proporcionar a digitalização de empresas. Com uma equipa qualificada, oferece serviços de desenvolvimento de software sob medida para empresas de todos os tamanhos.\n\nAlém disso, oferece serviços de consultoria em tecnologia, implementação de soluções e gerenciamento de ambientes de T.I. das pequenas e médias empresas, ajudando a garantir continuidade, produtividade e redução de custos." }}</textarea>
+                            <small class="text-muted">Use quebras de linha para formar novos parágrafos.</small>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label text-muted small fw-bold">Imagem Ilustrativa</label>
+                            <input type="file" name="about_img" class="form-control" accept="image/*">
+                            @if(isset($settingsData['about_img']))
+                                <div class="mt-2">
+                                    <img src="{{ asset('storage/' . $settingsData['about_img']) }}" class="img-thumbnail" style="max-height: 100px;">
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-12 col-lg-4">
             <div class="card border-0 shadow-sm rounded-4 mb-4">

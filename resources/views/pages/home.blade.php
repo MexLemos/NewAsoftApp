@@ -256,15 +256,23 @@
                 </div>
             </div>
             <div class="col-lg-7 px-lg-5 animate-on-scroll delay-400">
-                <img src="{{ asset('images/asoftmedia-team.jpg') }}" alt="Equipa Asoftmedia" class="img-fluid rounded-4 shadow-sm w-100" style="object-fit: cover; max-height: 400px;">
+                <img src="{{ isset($settings['about_img']) ? asset('storage/' . $settings['about_img']) : 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }}" alt="Tecnologia Asoftmedia" class="img-fluid rounded-4 shadow-sm w-100" style="object-fit: cover; max-height: 400px;">
             </div>
         </div>
 
         <div class="row">
             <div class="col-12">
                 <h3 class="fw-bold mb-4 text-center">Sobre a ASOFTMEDIA</h3>
-                <p class="mb-4 text-muted fs-6 fs-md-5" style="line-height: 1.8; text-align: justify;">A ASOFTMEDIA é uma empresa de tecnologia fundada em 2018, com o objetivo de desenvolver soluções em software e proporcionar a digitalização de empresas. Com uma equipa qualificada, oferece serviços de desenvolvimento de software sob medida para empresas de todos os tamanhos.</p>
-                <p class="text-muted fs-6 fs-md-5" style="line-height: 1.8; text-align: justify;">Além disso, oferece serviços de consultoria em tecnologia, implementação de soluções e gerenciamento de ambientes de T.I. das pequenas e médias empresas, ajudando a garantir continuidade, produtividade e redução de custos.</p>
+                @php
+                    $aboutText = $settings['about_text'] ?? "A ASOFTMEDIA é uma empresa de tecnologia fundada em 2018, com o objetivo de desenvolver soluções em software e proporcionar a digitalização de empresas. Com uma equipa qualificada, oferece serviços de desenvolvimento de software sob medida para empresas de todos os tamanhos.\n\nAlém disso, oferece serviços de consultoria em tecnologia, implementação de soluções e gerenciamento de ambientes de T.I. das pequenas e médias empresas, ajudando a garantir continuidade, produtividade e redução de custos.";
+                    $paragraphs = explode("\n", $aboutText);
+                @endphp
+                
+                @foreach($paragraphs as $paragraph)
+                    @if(trim($paragraph))
+                        <p class="mb-4 text-muted fs-6 fs-md-5" style="line-height: 1.8; text-align: justify;">{{ trim($paragraph) }}</p>
+                    @endif
+                @endforeach
             </div>
         </div>
     </div>
@@ -415,33 +423,6 @@
             <a href="#contactos" class="btn btn-brand btn-lg shadow px-5 py-3 rounded-pill fw-bold text-uppercase" style="letter-spacing: 0.5px;">
                 Fale com os nossos especialistas <i class="fa-solid fa-arrow-right ms-2"></i>
             </a>
-        </div>
-    </div>
-</section>
-
-<!-- Testimonials Section -->
-<section class="pt-2 pb-5 bg-white">
-    <div class="container pt-2 pb-5 text-center">
-        <h3 class="fw-bold mb-5" style="color: var(--asoft-secondary);">O que dizem os nossos clientes</h3>
-        <div class="row justify-content-center g-4 text-start">
-            <div class="col-md-6 col-lg-5">
-                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 animate-on-scroll delay-100" style="background-color: #f8fafc;">
-                    <div class="card-body">
-                        <p class="fst-italic text-muted mb-4">"O curso de Excel Avançado aumentou a minha produtividade em 40%."</p>
-                        <h6 class="fw-bold mb-1">Ana Paula</h6>
-                        <p class="text-muted small mb-0">Analista Financeira</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-5">
-                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 animate-on-scroll delay-200" style="background-color: #f8fafc;">
-                    <div class="card-body">
-                        <p class="fst-italic text-muted mb-4">"A formação em Laravel transformou a nossa equipa de desenvolvimento."</p>
-                        <h6 class="fw-bold mb-1">João Manuel</h6>
-                        <p class="text-muted small mb-0">Director de TI, Empresa XYZ</p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </section>

@@ -11,15 +11,23 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --asoft-primary: #1e3a8a; /* Dark Blue */
-            --asoft-accent: #f59e0b; /* Amber */
+            --asoft-primary: #1e3a8a;
+            --asoft-accent: #f59e0b;
+        }
+        *, body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
+            background-color: #f0f2f5;
+            font-size: 0.875rem;
         }
         .sidebar {
             min-height: 100vh;
@@ -27,21 +35,34 @@
             color: #fff;
         }
         .sidebar a {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.75);
             text-decoration: none;
-            padding: 12px 20px;
-            display: block;
+            padding: 7px 14px;
+            display: flex;
+            align-items: center;
             border-radius: 6px;
-            margin-bottom: 5px;
-            transition: all 0.3s;
+            margin-bottom: 2px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            transition: all 0.2s;
         }
         .sidebar a:hover, .sidebar a.active {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.12);
             color: #fff;
         }
+        .sidebar a.active {
+            background-color: rgba(255, 255, 255, 0.18);
+            font-weight: 600;
+        }
+        .sidebar .nav-item.border-top {
+            margin-top: 10px !important;
+            padding-top: 10px !important;
+        }
         .w-20px {
-            width: 25px;
+            width: 22px;
             text-align: center;
+            flex-shrink: 0;
         }
         .navbar-top {
             background-color: #fff;
@@ -100,10 +121,45 @@
                 </li>
                 @endhasanyrole
 
-                @hasrole('admin')
-                <li class="nav-item">
-                    <a href="{{ route('admin.usuarios') }}" class="{{ request()->routeIs('admin.usuarios') ? 'active' : '' }}"><i class="fa-solid fa-users me-2 w-20px"></i> Usuários</a>
+                @hasanyrole('admin|tech|formador|instrutor')
+                <li class="nav-item border-top mt-3 pt-3 border-secondary border-opacity-25">
+                    <a href="{{ route('admin.ponto') }}" class="{{ request()->routeIs('admin.ponto') ? 'active' : '' }}"><i class="fa-solid fa-clock me-2 w-20px"></i> Registo de Ponto</a>
                 </li>
+                @endhasanyrole
+
+                @hasrole('admin')
+                <li class="nav-item border-top mt-3 pt-3 border-secondary border-opacity-25">
+                    <a href="{{ route('admin.cursos') }}" class="{{ request()->routeIs('admin.cursos') ? 'active' : '' }}"><i class="fa-solid fa-book-open me-2 w-20px"></i> Cursos</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.turmas') }}" class="{{ request()->routeIs('admin.turmas*') ? 'active' : '' }}"><i class="fa-solid fa-chalkboard-user me-2 w-20px"></i> Turmas</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.servicos') }}" class="{{ request()->routeIs('admin.servicos') ? 'active' : '' }}"><i class="fa-solid fa-briefcase me-2 w-20px"></i> Serviços</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.produtos') }}" class="{{ request()->routeIs('admin.produtos') ? 'active' : '' }}"><i class="fa-solid fa-box me-2 w-20px"></i> Loja</a>
+                </li>
+
+                <li class="nav-item border-top mt-3 pt-3 border-secondary border-opacity-25">
+                    <a href="{{ route('admin.pagamentos') }}" class="{{ request()->routeIs('admin.pagamentos') ? 'active' : '' }}"><i class="fa-solid fa-money-bill-transfer me-2 w-20px"></i> Pagamentos</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.propinas') }}" class="{{ request()->routeIs('admin.propinas') ? 'active' : '' }}"><i class="fa-solid fa-file-invoice-dollar me-2 w-20px"></i> Propinas Mensais</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.funcionarios') }}" class="{{ request()->routeIs('admin.funcionarios') ? 'active' : '' }}"><i class="fa-solid fa-user-tie me-2 w-20px"></i> Funcionários</a>
+                </li>
+                <li class="nav-item border-top mt-3 pt-3 border-secondary border-opacity-25">
+                    <a href="{{ route('admin.usuarios') }}" class="{{ request()->routeIs('admin.usuarios') ? 'active' : '' }}"><i class="fa-solid fa-users me-2 w-20px"></i> Clientes / Alunos</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.caixa') }}" class="{{ request()->routeIs('admin.caixa') ? 'active' : '' }}"><i class="fa-solid fa-cash-register me-2 w-20px"></i> Movimentos de Caixa</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.relatorios') }}" class="{{ request()->routeIs('admin.relatorios') ? 'active' : '' }}"><i class="fa-solid fa-chart-line me-2 w-20px"></i> Relatórios Financeiros</a>
+                </li>
+
                 <li class="nav-item border-top mt-3 pt-3 border-secondary border-opacity-25">
                     <a href="{{ route('admin.configuracoes') }}" class="{{ request()->routeIs('admin.configuracoes') ? 'active' : '' }}"><i class="fa-solid fa-gear me-2 w-20px"></i> Configurações</a>
                 </li>

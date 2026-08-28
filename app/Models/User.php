@@ -25,6 +25,7 @@ class User extends Authenticatable
         'is_active',
         'phone',
         'photo',
+        'require_password_change',
     ];
 
     /**

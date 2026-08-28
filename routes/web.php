@@ -82,6 +82,33 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/admin/usuarios', [\App\Http\Controllers\AdminController::class, 'storeUser'])->name('admin.usuarios.store');
         Route::post('/admin/usuarios/store', [\App\Http\Controllers\AdminController::class, 'storeUser'])->name('admin.store.user');
         Route::post('/admin/usuarios/{id}/update', [\App\Http\Controllers\AdminController::class, 'updateUser'])->name('admin.usuarios.update');
+        Route::get('/admin/usuarios/{id}/certificado', [\App\Http\Controllers\AdminController::class, 'emitirCertificadoManual'])->name('admin.certificados.emitir');
+
+        Route::get('/admin/funcionarios', [\App\Http\Controllers\AdminController::class, 'funcionarios'])->name('admin.funcionarios');
+        // We reuse the same storeUser and updateUser methods, the view form action can stay admin.usuarios.store / update.
+        
+        // HR Routes
+        Route::get('/admin/ponto', [\App\Http\Controllers\Admin\HrController::class, 'ponto'])->name('admin.ponto');
+        Route::post('/admin/ponto/registrar', [\App\Http\Controllers\Admin\HrController::class, 'registrarPonto'])->name('admin.ponto.registrar');
+        
+        // CRM / Finance Routes
+        Route::get('/admin/pagamentos', [\App\Http\Controllers\Admin\CrmController::class, 'pagamentos'])->name('admin.pagamentos');
+        Route::post('/admin/pagamentos', [\App\Http\Controllers\Admin\CrmController::class, 'registrarPagamento'])->name('admin.pagamentos.store');
+        
+        Route::get('/admin/propinas', [\App\Http\Controllers\Admin\CrmController::class, 'propinas'])->name('admin.propinas');
+        Route::post('/admin/propinas/gerar', [\App\Http\Controllers\Admin\CrmController::class, 'gerarPropinas'])->name('admin.propinas.gerar');
+        
+        // Turmas (Classes) Routes
+        Route::get('/admin/turmas', [\App\Http\Controllers\Admin\TurmaController::class, 'index'])->name('admin.turmas');
+        Route::post('/admin/turmas', [\App\Http\Controllers\Admin\TurmaController::class, 'store'])->name('admin.turmas.store');
+        Route::get('/admin/turmas/{id}', [\App\Http\Controllers\Admin\TurmaController::class, 'show'])->name('admin.turmas.show');
+        Route::post('/admin/turmas/{id}/alunos', [\App\Http\Controllers\Admin\TurmaController::class, 'addStudent'])->name('admin.turmas.add_student');
+        Route::delete('/admin/turmas/{id}/alunos/{user_id}', [\App\Http\Controllers\Admin\TurmaController::class, 'removeStudent'])->name('admin.turmas.remove_student');
+        
+        Route::get('/admin/caixa', [\App\Http\Controllers\Admin\CrmController::class, 'caixa'])->name('admin.caixa');
+        Route::post('/admin/caixa', [\App\Http\Controllers\Admin\CrmController::class, 'registrarMovimentoCaixa'])->name('admin.caixa.store');
+        
+        Route::get('/admin/relatorios', [\App\Http\Controllers\Admin\CrmController::class, 'relatorios'])->name('admin.relatorios');
         
         Route::get('/admin/configuracoes', [\App\Http\Controllers\AdminController::class, 'configuracoes'])->name('admin.configuracoes');
         Route::post('/admin/configuracoes', [\App\Http\Controllers\AdminController::class, 'updateConfiguracoes'])->name('admin.configuracoes.update');
