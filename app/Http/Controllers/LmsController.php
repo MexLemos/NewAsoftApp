@@ -86,6 +86,26 @@ class LmsController extends Controller
                         ['certificate_code' => strtoupper(\Illuminate\Support\Str::random(12))]
                     );
                 }
+                // Registo de submissão de projeto no CRM
+                if ($request->has('github_link') || $request->has('comments')) {
+                    $lesson = \App\Models\Lesson::find($lesson_id);
+                    $user = \Illuminate\Support\Facades\Auth::user();
+                    $msg = "SUBMISSÃO DE PROJECTO\nCurso: " . $course->title . "\nAula: " . $lesson->title . "\n\n";
+                    if ($request->github_link) {
+                        $msg .= "GitHub Link: " . $request->github_link . "\n\n";
+                    }
+                    if ($request->comments) {
+                        $msg .= "Comentários do Aluno:\n" . $request->comments;
+                    }
+                    
+                    \App\Models\Lead::create([
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'phone' => 'N/A (LMS)',
+                        'message' => $msg,
+                        'status' => 'new'
+                    ]);
+                }
             }
         }
         return redirect()->back()->with('success', 'Aula concluída com sucesso!');

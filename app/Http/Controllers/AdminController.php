@@ -470,7 +470,7 @@ class AdminController extends Controller
             ];
         } elseif ($request->type === 'quiz') {
             $contentData = [
-                'quiz_questions' => $request->quiz_questions // Could be string or array
+                'quiz' => $request->quiz // Array com as perguntas e respostas
             ];
         }
 
@@ -507,7 +507,7 @@ class AdminController extends Controller
             ];
         } elseif ($lesson->type === 'quiz') {
             $contentData = [
-                'quiz_questions' => $request->quiz_questions
+                'quiz' => $request->quiz // Array com as perguntas e respostas
             ];
         }
 

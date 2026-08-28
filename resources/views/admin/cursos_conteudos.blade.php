@@ -130,28 +130,53 @@
                                             @csrf @method('PUT')
                                             <input type="hidden" name="type" value="quiz">
                                             <div class="modal-header">
-                                                <h5 class="modal-title fw-bold">Editar Avaliação</h5>
+                                                <h5 class="modal-title fw-bold">Editar Avaliação (Até 5 Perguntas)</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
-                                            <div class="modal-body">
+                                            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                                                 <div class="mb-3">
                                                     <label class="form-label fw-bold">Título da Avaliação</label>
                                                     <input type="text" name="title" class="form-control" value="{{ $l->title }}" required>
                                                 </div>
-                                                <div class="mb-3">
+                                                <div class="mb-4">
                                                     <label class="form-label fw-bold">Instruções Gerais</label>
                                                     <textarea name="description" class="form-control" rows="2">{{ $l->description }}</textarea>
                                                 </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label fw-bold">Perguntas da Avaliação (Pode ser um link de um formulário no anexo ou texto aqui)</label>
-                                                    <textarea name="quiz_questions" class="form-control" rows="5" placeholder="1. O que é...&#10;2. Como funciona...">{{ $l->content_data['quiz_questions'] ?? '' }}</textarea>
-                                                </div>
-                                                <div class="row g-3 mb-3">
-                                                    <div class="col-md-6">
-                                                        <label class="form-label fw-bold">URL do Formulário Externo (Opcional)</label>
-                                                        <input type="url" name="attachment_url" class="form-control" value="{{ $l->attachment_url }}">
+                                                
+                                                <hr>
+                                                <h6 class="fw-bold mb-3 text-primary">Perguntas da Avaliação</h6>
+                                                
+                                                @php $qData = $l->content_data['quiz'] ?? []; @endphp
+                                                @for($i = 1; $i <= 5; $i++)
+                                                <div class="card mb-3 border-0 bg-light">
+                                                    <div class="card-body p-3">
+                                                        <h6 class="fw-bold mb-2">Pergunta {{ $i }}</h6>
+                                                        <input type="text" name="quiz[{{ $i }}][question]" class="form-control mb-2" value="{{ $qData[$i]['question'] ?? '' }}" placeholder="Escreva a pergunta {{ $i }} aqui...">
+                                                        
+                                                        <div class="row g-2 mb-2">
+                                                            <div class="col-md-6"><input type="text" name="quiz[{{ $i }}][opt_a]" class="form-control form-control-sm" value="{{ $qData[$i]['opt_a'] ?? '' }}" placeholder="Opção A"></div>
+                                                            <div class="col-md-6"><input type="text" name="quiz[{{ $i }}][opt_b]" class="form-control form-control-sm" value="{{ $qData[$i]['opt_b'] ?? '' }}" placeholder="Opção B"></div>
+                                                            <div class="col-md-6"><input type="text" name="quiz[{{ $i }}][opt_c]" class="form-control form-control-sm" value="{{ $qData[$i]['opt_c'] ?? '' }}" placeholder="Opção C"></div>
+                                                            <div class="col-md-6"><input type="text" name="quiz[{{ $i }}][opt_d]" class="form-control form-control-sm" value="{{ $qData[$i]['opt_d'] ?? '' }}" placeholder="Opção D"></div>
+                                                        </div>
+                                                        
+                                                        <div class="d-flex align-items-center">
+                                                            <label class="form-label fw-bold small me-2 mb-0">Resposta Correta:</label>
+                                                            @php $corr = $qData[$i]['correct'] ?? ''; @endphp
+                                                            <select name="quiz[{{ $i }}][correct]" class="form-select form-select-sm" style="width: auto;">
+                                                                <option value="">Selecione...</option>
+                                                                <option value="A" {{ $corr == 'A' ? 'selected' : '' }}>A</option>
+                                                                <option value="B" {{ $corr == 'B' ? 'selected' : '' }}>B</option>
+                                                                <option value="C" {{ $corr == 'C' ? 'selected' : '' }}>C</option>
+                                                                <option value="D" {{ $corr == 'D' ? 'selected' : '' }}>D</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                </div>
+                                                @endfor
+
+                                                <div class="row g-3 mt-2">
+                                                    <div class="col-md-12">
                                                         <label class="form-label fw-bold">Ordem</label>
                                                         <input type="number" name="order_index" class="form-control" value="{{ $l->order_index }}">
                                                     </div>
@@ -278,28 +303,51 @@
                         @csrf
                         <input type="hidden" name="type" value="quiz">
                         <div class="modal-header">
-                            <h5 class="modal-title fw-bold">Nova Avaliação: {{ $mod->title }}</h5>
+                            <h5 class="modal-title fw-bold">Nova Avaliação (Até 5 Perguntas): {{ $mod->title }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Título da Avaliação</label>
                                 <input type="text" name="title" class="form-control" placeholder="Ex: Teste Final do Módulo 1" required>
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <label class="form-label fw-bold">Instruções Gerais</label>
                                 <textarea name="description" class="form-control" rows="2" placeholder="Descreva o que o aluno deve fazer..."></textarea>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Perguntas da Avaliação</label>
-                                <textarea name="quiz_questions" class="form-control" rows="5" placeholder="1. O que é...&#10;2. Como funciona..."></textarea>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">URL do Formulário Externo (Opcional)</label>
-                                    <input type="url" name="attachment_url" class="form-control" placeholder="Ex: link do Google Forms">
+                            
+                            <hr>
+                            <h6 class="fw-bold mb-3 text-primary">Perguntas da Avaliação (Preencha apenas as que desejar)</h6>
+                            
+                            @for($i = 1; $i <= 5; $i++)
+                            <div class="card mb-3 border-0 bg-light">
+                                <div class="card-body p-3">
+                                    <h6 class="fw-bold mb-2">Pergunta {{ $i }}</h6>
+                                    <input type="text" name="quiz[{{ $i }}][question]" class="form-control mb-2" placeholder="Escreva a pergunta {{ $i }} aqui...">
+                                    
+                                    <div class="row g-2 mb-2">
+                                        <div class="col-md-6"><input type="text" name="quiz[{{ $i }}][opt_a]" class="form-control form-control-sm" placeholder="Opção A"></div>
+                                        <div class="col-md-6"><input type="text" name="quiz[{{ $i }}][opt_b]" class="form-control form-control-sm" placeholder="Opção B"></div>
+                                        <div class="col-md-6"><input type="text" name="quiz[{{ $i }}][opt_c]" class="form-control form-control-sm" placeholder="Opção C"></div>
+                                        <div class="col-md-6"><input type="text" name="quiz[{{ $i }}][opt_d]" class="form-control form-control-sm" placeholder="Opção D"></div>
+                                    </div>
+                                    
+                                    <div class="d-flex align-items-center">
+                                        <label class="form-label fw-bold small me-2 mb-0">Resposta Correta:</label>
+                                        <select name="quiz[{{ $i }}][correct]" class="form-select form-select-sm" style="width: auto;">
+                                            <option value="">Selecione...</option>
+                                            <option value="A">A</option>
+                                            <option value="B">B</option>
+                                            <option value="C">C</option>
+                                            <option value="D">D</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+                            @endfor
+
+                            <div class="row g-3 mt-2">
+                                <div class="col-md-12">
                                     <label class="form-label fw-bold">Ordem</label>
                                     <input type="number" name="order_index" class="form-control" value="0">
                                 </div>

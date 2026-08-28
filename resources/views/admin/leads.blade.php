@@ -133,6 +133,8 @@
                                             <button type="submit" class="btn btn-success fw-bold"><i class="fa-solid fa-check me-2"></i>Aprovar Pagamento e Liberar Cursos</button>
                                         </form>
                                     @endif
+
+                                    <a href="mailto:{{ $lead->email }}?subject=Contacto%20ASoftMedia:%20Referente%20ao%20seu%20pedido/submissão" class="btn btn-info fw-bold text-white shadow-sm"><i class="fa-solid fa-reply me-2"></i>Responder por Email</a>
                                 </div>
                             </div>
                         </div>
