@@ -129,8 +129,8 @@
             <div class="col-md-4">
                 <div class="card border-primary border-2 shadow rounded-4 h-100 text-center p-4 position-relative">
                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary px-3 py-2">Recomendado</span>
-                    <h5 class="text-primary mb-3 mt-3">Pro (Anual)</h5>
-                    <h2 class="fw-bold mb-4">Kz 50.000 <small class="fs-6 text-muted">/ Ano</small></h2>
+                    <h5 class="text-primary mb-3 mt-3">Pro (Assinatura)</h5>
+                    <h2 class="fw-bold mb-4" id="planPriceDisplay">Kz 50.000 <small class="fs-6 text-muted">/ Trimestre</small></h2>
                     <ul class="list-unstyled text-start mb-4 mx-auto" style="max-width: 250px;">
                         <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> <strong>Acesso a todos os cursos</strong></li>
                         <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> Mentorias mensais</li>
@@ -139,9 +139,14 @@
                     </ul>
                     <form action="{{ route('carrinho.add') }}" method="POST" class="mt-auto">
                         @csrf
-                        <input type="hidden" name="id" value="plan_pro_anual">
-                        <input type="hidden" name="name" value="Assinatura Pro (Anual) - Acesso total">
-                        <input type="hidden" name="price" value="50000">
+                        <select class="form-select mb-3" onchange="updatePlanDetails(this)">
+                            <option value="trimestral" data-price="50000" data-name="Assinatura Pro (Trimestral) - Acesso total" data-id="plan_pro_trimestral">Trimestral (Kz 50.000)</option>
+                            <option value="anual" data-price="200000" data-name="Assinatura Pro (Anual) - Acesso total" data-id="plan_pro_anual">Anual (Kz 200.000)</option>
+                        </select>
+                        
+                        <input type="hidden" name="id" id="planId" value="plan_pro_trimestral">
+                        <input type="hidden" name="name" id="planName" value="Assinatura Pro (Trimestral) - Acesso total">
+                        <input type="hidden" name="price" id="planPrice" value="50000">
                         <input type="hidden" name="image" value="">
                         <button type="submit" class="btn btn-primary py-2 w-100 rounded-pill fw-bold" style="background-color: var(--asoft-primary);">Assinar Agora</button>
                     </form>
@@ -150,6 +155,22 @@
         </div>
     </div>
 </section>
+
+<script>
+    function updatePlanDetails(select) {
+        const option = select.options[select.selectedIndex];
+        document.getElementById('planId').value = option.getAttribute('data-id');
+        document.getElementById('planName').value = option.getAttribute('data-name');
+        document.getElementById('planPrice').value = option.getAttribute('data-price');
+        
+        const priceDisplay = document.getElementById('planPriceDisplay');
+        if (select.value === 'trimestral') {
+            priceDisplay.innerHTML = 'Kz 50.000 <small class="fs-6 text-muted">/ Trimestre</small>';
+        } else {
+            priceDisplay.innerHTML = 'Kz 200.000 <small class="fs-6 text-muted">/ Ano</small>';
+        }
+    }
+</script>
 
 <!-- CTA -->
 <section class="py-5 text-white text-center" style="background-color: var(--asoft-primary);">

@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('app.name', 'ASoftMedia'))</title>
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -342,6 +342,46 @@
             document.querySelectorAll('.animate-on-scroll').forEach((el) => {
                 observer.observe(el);
             });
+        });
+    </script>
+    
+    <!-- Global Loading Overlay -->
+    <div id="global-page-loader" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.85); z-index: 10000; justify-content: center; align-items: center; flex-direction: column;">
+        <div class="spinner-border" style="width: 3.5rem; height: 3.5rem; color: var(--asoft-primary);" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <h5 class="mt-4 fw-bold" style="color: var(--asoft-primary);">Processando...</h5>
+    </div>
+    
+    <script>
+        // Intercept form submissions and link clicks to show loader
+        document.addEventListener('submit', function () {
+            document.getElementById('global-page-loader').style.display = 'flex';
+        });
+
+        document.addEventListener('click', function(e) {
+            let target = e.target.closest('a');
+            if(target && target.href) {
+                // Ignore JS, empty links, or target="_blank"
+                if(target.getAttribute('href').startsWith('javascript:') || target.getAttribute('href') === '#') return;
+                if(target.getAttribute('target') === '_blank') return;
+                if(target.getAttribute('data-bs-toggle') !== null) return;
+                if(target.hasAttribute('download')) return;
+
+                // Ignore if it's the exact same page (only the hash # is changing)
+                if (target.hostname === window.location.hostname && 
+                    target.pathname === window.location.pathname && 
+                    target.search === window.location.search) {
+                    return;
+                }
+
+                document.getElementById('global-page-loader').style.display = 'flex';
+            }
+        });
+        
+        // Hide loader on page load (handles back/forward cache)
+        window.addEventListener('pageshow', function() {
+            document.getElementById('global-page-loader').style.display = 'none';
         });
     </script>
 </body>

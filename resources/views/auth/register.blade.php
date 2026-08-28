@@ -36,6 +36,13 @@
             <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
         </div>
 
+        <div class="mb-4 form-check text-start">
+            <input type="checkbox" class="form-check-input" id="consentCheckReg" required>
+            <label class="form-check-label small text-muted" for="consentCheckReg" style="line-height: 1.4; font-size: 0.8rem;">
+                Declaro que concordo com a recolha e tratamento dos meus dados (Lei n.º 22/11 de Angola) para efeitos de gestão da conta, emissão de certificados e aceito a eventual captação de imagens em formações presenciais.
+            </label>
+        </div>
+
         <div class="d-grid mb-4">
             <button type="submit" class="btn btn-brand btn-lg">Registar</button>
         </div>

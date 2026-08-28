@@ -124,14 +124,17 @@
                         </li>
                         @endif
 
+                        @if($hasProducts)
                         <li class="list-group-item d-flex justify-content-between lh-sm bg-transparent px-0 pt-3 border-top">
                             <div>
                                 <h6 class="my-0 text-muted">Taxa de Entrega / Deslocação</h6>
                             </div>
                             <span class="text-muted" id="taxDisplay">
-                                @if($hasProducts) 3.000,00 Kz @else 0,00 Kz @endif
+                                3.000,00 Kz
                             </span>
                         </li>
+                        @endif
+
                         <li class="list-group-item d-flex justify-content-between bg-transparent px-0 py-3 mt-2 border-top border-dark border-opacity-10">
                             <strong class="fs-5">Total</strong>
                             <strong class="fs-5 text-primary" id="totalDisplay">

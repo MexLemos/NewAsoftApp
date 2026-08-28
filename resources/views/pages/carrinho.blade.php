@@ -41,7 +41,7 @@
                                     @foreach(session('cart') as $id => $details)
                                         @php 
                                             $total += $details['price'] * $details['quantity']; 
-                                            if (!str_starts_with((string)$id, 'course_')) {
+                                            if (!str_starts_with((string)$id, 'course_') && !str_starts_with((string)$id, 'plan_')) {
                                                 $hasProducts = true;
                                             }
                                         @endphp
@@ -93,15 +93,21 @@
                         <span class="text-muted">Subtotal</span>
                         <span class="fw-semibold">Kz {{ number_format($total, 2, ',', '.') }}</span>
                     </div>
+                    
+                    @if($hasProducts)
                     <div class="d-flex justify-content-between mb-3">
                         <span class="text-muted">Taxa de Entrega / Deslocação</span>
-                        @php $tax = $hasProducts ? 3000 : 0; @endphp
+                        @php $tax = 3000; @endphp
                         <span class="fw-semibold">Kz {{ number_format($tax, 2, ',', '.') }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-4 pb-4 border-bottom">
                         <span class="text-muted">Data de Entrega</span>
                         <span class="text-success fw-semibold text-end" style="font-size: 0.85rem;">1 a 2 dias após<br>o pagamento</span>
                     </div>
+                    @else
+                        @php $tax = 0; @endphp
+                        <div class="mb-4 pb-4 border-bottom"></div>
+                    @endif
                     
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <span class="fw-bold fs-5">Total</span>

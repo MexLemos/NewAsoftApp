@@ -1,6 +1,11 @@
 @extends('layouts.public')
 
 @section('content')
+<style>
+    #heroCarousel .carousel-item {
+        min-height: 75vh;
+    }
+</style>
 <!-- Hero Carousel Section -->
 <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
     <div class="carousel-indicators">
@@ -20,7 +25,7 @@
                             {!! $settings['banner_1_title'] ?? 'Além de produtos e serviços,<br><span style="color: var(--asoft-accent);">causamos impacto</span>' !!}
                         </h2>
                         <h5 class="fw-bold mb-3 text-white" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5);">{{ $settings['banner_1_subtitle'] ?? 'Treinamento e Estágio Profissional' }}</h5>
-                        <p class="mb-4 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">{{ $settings['banner_1_desc'] ?? 'Investimos no futuro da inovação ao proporcionar programas de treinamento e estágios que aproximam estudantes do ambiente real de trabalho em TI — desde desenvolvimento de software até cloud computing e IA.' }}</p>
+                        <p class="mb-4 fs-6 fs-md-5" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">{{ $settings['banner_1_desc'] ?? 'Investimos no futuro da inovação ao proporcionar programas de treinamento e estágios que aproximam estudantes do ambiente real de trabalho em TI — desde desenvolvimento de software até cloud computing e IA.' }}</p>
                         <div class="d-flex gap-3">
                             <a href="{{ route('cursos') }}" class="btn btn-brand px-4 py-2 fw-bold shadow btn-sm">Explorar Cursos</a>
                             <a href="#contactos" class="btn btn-outline-light px-4 py-2 fw-bold shadow btn-sm">Fale Connosco</a>
@@ -42,7 +47,7 @@
                         @if(isset($settings['banner_2_subtitle']) && $settings['banner_2_subtitle'])
                             <h5 class="fw-bold mb-3 text-white" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5);">{{ $settings['banner_2_subtitle'] }}</h5>
                         @endif
-                        <p class="mb-5 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">{{ $settings['banner_2_desc'] ?? 'Aceda à nossa plataforma E-learning com aulas práticas focadas no mercado atual. Aprenda programação, gestão e redes com especialistas e alcance o próximo nível na sua carreira.' }}</p>
+                        <p class="mb-5 fs-6 fs-md-5" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">{{ $settings['banner_2_desc'] ?? 'Aceda à nossa plataforma E-learning com aulas práticas focadas no mercado atual. Aprenda programação, gestão e redes com especialistas e alcance o próximo nível na sua carreira.' }}</p>
                         <div class="d-flex gap-3">
                             <a href="{{ route('cursos') }}" class="btn btn-brand px-4 py-2 fw-bold shadow btn-sm">Ver Catálogo de Cursos</a>
                         </div>
@@ -63,7 +68,7 @@
                         @if(isset($settings['banner_3_subtitle']) && $settings['banner_3_subtitle'])
                             <h5 class="fw-bold mb-3 text-white" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5);">{{ $settings['banner_3_subtitle'] }}</h5>
                         @endif
-                        <p class="mb-5 small" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">{{ $settings['banner_3_desc'] ?? 'Fornecemos os melhores equipamentos, venda de software de gestão avançada (Cegid), consultoria em TI e implementação de redes para otimizar os seus resultados.' }}</p>
+                        <p class="mb-5 fs-6 fs-md-5" style="color: rgba(255,255,255,0.9); line-height: 1.8; max-width: 650px;">{{ $settings['banner_3_desc'] ?? 'Fornecemos os melhores equipamentos, venda de software de gestão avançada (Cegid), consultoria em TI e implementação de redes para otimizar os seus resultados.' }}</p>
                         <div class="d-flex gap-3">
                             <a href="#servicos" class="btn btn-brand px-4 py-2 fw-bold shadow btn-sm">Conhecer Serviços</a>
                             <a href="{{ route('produtos') }}" class="btn btn-outline-light px-4 py-2 fw-bold shadow btn-sm">Ir para a Loja</a>
@@ -258,8 +263,8 @@
         <div class="row">
             <div class="col-12">
                 <h3 class="fw-bold mb-4 text-center">Sobre a ASOFTMEDIA</h3>
-                <p class="mb-4 text-muted" style="line-height: 1.8; text-align: justify;">A ASOFTMEDIA é uma empresa de tecnologia fundada em 2018, com o objetivo de desenvolver soluções em software e proporcionar a digitalização de empresas. Com uma equipa qualificada, oferece serviços de desenvolvimento de software sob medida para empresas de todos os tamanhos.</p>
-                <p class="text-muted" style="line-height: 1.8; text-align: justify;">Além disso, oferece serviços de consultoria em tecnologia, implementação de soluções e gerenciamento de ambientes de T.I. das pequenas e médias empresas, ajudando a garantir continuidade, produtividade e redução de custos.</p>
+                <p class="mb-4 text-muted fs-6 fs-md-5" style="line-height: 1.8; text-align: justify;">A ASOFTMEDIA é uma empresa de tecnologia fundada em 2018, com o objetivo de desenvolver soluções em software e proporcionar a digitalização de empresas. Com uma equipa qualificada, oferece serviços de desenvolvimento de software sob medida para empresas de todos os tamanhos.</p>
+                <p class="text-muted fs-6 fs-md-5" style="line-height: 1.8; text-align: justify;">Além disso, oferece serviços de consultoria em tecnologia, implementação de soluções e gerenciamento de ambientes de T.I. das pequenas e médias empresas, ajudando a garantir continuidade, produtividade e redução de custos.</p>
             </div>
         </div>
     </div>
@@ -347,7 +352,7 @@
                     <i class="fa-solid fa-laptop-code" style="font-size: 3.5rem; color: #0f172a;"></i>
                 </div>
                 <h5 class="fw-bold mb-3" style="color: #0f172a;">Venda de Softwares de Gestão</h5>
-                <p class="text-muted small" style="line-height: 1.7;">Fornecemos e implementamos as melhores soluções em software de gestão, incluindo Cegid PHC, Primavera e Vendus, além do desenvolvimento personalizado de aplicações e websites.</p>
+                <p class="text-muted fs-6" style="line-height: 1.7;">Fornecemos e implementamos as melhores soluções em software de gestão, incluindo Cegid PHC, Primavera e Vendus, além do desenvolvimento personalizado de aplicações e websites.</p>
             </div>
             
             <!-- Service 2 -->
@@ -356,7 +361,7 @@
                     <i class="fa-solid fa-file-contract" style="font-size: 3.5rem; color: #0f172a;"></i>
                 </div>
                 <h5 class="fw-bold mb-3" style="color: #0f172a;">Homologação de Equipamentos de TI</h5>
-                <p class="text-muted small" style="line-height: 1.7;">Cuidamos de todo o processo de emissão e renovação de certificados, além da tradução técnica e entrega de documentação necessária para os seus equipamentos.</p>
+                <p class="text-muted fs-6" style="line-height: 1.7;">Cuidamos de todo o processo de emissão e renovação de certificados, além da tradução técnica e entrega de documentação necessária para os seus equipamentos.</p>
             </div>
 
             <!-- Service 3 -->
@@ -365,16 +370,43 @@
                     <i class="fa-solid fa-network-wired" style="font-size: 3.5rem; color: #0f172a;"></i>
                 </div>
                 <h5 class="fw-bold mb-3" style="color: #0f172a;">Redes e Infraestrutura</h5>
-                <p class="text-muted small" style="line-height: 1.7;">Projetamos e implementamos soluções robustas de CFTV, telefonia VoIP e otimização de recursos para garantir a segurança da informação na sua empresa.</p>
+                <p class="text-muted fs-6" style="line-height: 1.7;">Projetamos e implementamos soluções robustas de CFTV, telefonia VoIP e otimização de recursos para garantir a segurança da informação na sua empresa.</p>
             </div>
 
             <!-- Service 4 -->
-            <div class="col-md-6 col-lg-4 mt-lg-5">
+            <div class="col-md-6 col-lg-4 mt-lg-4">
                 <div class="mb-4">
                     <i class="fa-solid fa-chalkboard-user" style="font-size: 3.5rem; color: #0f172a;"></i>
                 </div>
                 <h5 class="fw-bold mb-3" style="color: #0f172a;">Consultoria e Treinamento</h5>
-                <p class="text-muted small" style="line-height: 1.7;">Oferecemos outsourcing de serviços, venda de equipamentos e licenças Microsoft, além de programas especializados de treinamento e estágio em TI.</p>
+                <p class="text-muted fs-6" style="line-height: 1.7;">Oferecemos outsourcing de serviços e consultoria especializada, além de programas práticos de treinamento e estágio em TI focados nas necessidades do mercado.</p>
+            </div>
+
+            <!-- Service 5 -->
+            <div class="col-md-6 col-lg-4 mt-lg-4">
+                <div class="mb-4">
+                    <i class="fa-solid fa-computer" style="font-size: 3.5rem; color: #0f172a;"></i>
+                </div>
+                <h5 class="fw-bold mb-3" style="color: #0f172a;">Vendas de Equipamentos</h5>
+                <p class="text-muted fs-6" style="line-height: 1.7;">Fornecemos hardware com garantia, desde computadores e servidores novos a opções recondicionadas, adaptando-nos ao orçamento e exigências da sua organização.</p>
+            </div>
+
+            <!-- Service 6 -->
+            <div class="col-md-6 col-lg-4 mt-lg-4">
+                <div class="mb-4">
+                    <i class="fa-brands fa-microsoft" style="font-size: 3.5rem; color: #0f172a;"></i>
+                </div>
+                <h5 class="fw-bold mb-3" style="color: #0f172a;">Licenças Microsoft</h5>
+                <p class="text-muted fs-6" style="line-height: 1.7;">Comercializamos licenças oficiais de software Microsoft (Windows, Office 365, Windows Server) essenciais para a produtividade e conformidade legal do seu negócio.</p>
+            </div>
+
+            <!-- Service 7 -->
+            <div class="col-md-6 col-lg-4 mt-lg-4">
+                <div class="mb-4">
+                    <i class="fa-solid fa-headset" style="font-size: 3.5rem; color: #0f172a;"></i>
+                </div>
+                <h5 class="fw-bold mb-3" style="color: #0f172a;">Suporte de TI</h5>
+                <p class="text-muted fs-6" style="line-height: 1.7;">Garantimos a manutenção preventiva e corretiva da sua infraestrutura, oferecendo assistência técnica rápida e eficiente para que o seu trabalho nunca pare.</p>
             </div>
         </div>
 
@@ -437,6 +469,12 @@
                             <label class="form-label fw-semibold">Mensagem</label>
                             <textarea name="message" class="form-control" rows="4" required></textarea>
                         </div>
+                        <div class="mb-4 form-check">
+                            <input type="checkbox" class="form-check-input" id="consentCheck" required>
+                            <label class="form-check-label small text-muted" for="consentCheck" style="line-height: 1.4;">
+                                Declaro que li e compreendi, e dou o meu consentimento para o tratamento dos meus dados pessoais nos termos da Lei da Proteção de Dados Pessoais (Lei n.º 22/11). Os dados destinam-se exclusivamente para contacto, emissão de certificados e, caso participe presencialmente, consinto a eventual captação de imagens para fins pedagógicos/institucionais.
+                            </label>
+                        </div>
                         <button type="submit" class="btn btn-primary btn-lg w-100" style="background-color: var(--asoft-primary); border: none;">
                             <i class="fa-solid fa-paper-plane me-2"></i> Enviar Mensagem
                         </button>
@@ -445,8 +483,9 @@
             </div>
             <div class="col-lg-6">
                 <!-- Google Maps iframe -->
-                <div class="h-100 rounded-4 overflow-hidden shadow-sm position-relative" style="min-height: 400px; background-color: #e2e8f0;">
-                    <iframe width="100%" height="100%" frameborder="0" style="border:0; position: absolute; top: 0; left: 0;" src="https://maps.google.com/maps?q=Sapu%202,%20Luanda,%20Angola&t=&z=14&ie=UTF8&iwloc=&output=embed" allowfullscreen loading="lazy"></iframe>
+                <div class="h-100 rounded-4 overflow-hidden shadow position-relative" style="min-height: 400px; background: #eaeaea;">
+                    <!-- Insert a real map embed here -->
+                    <iframe width="100%" height="100%" frameborder="0" style="border:0; position: absolute; top: 0; left: 0;" src="https://maps.google.com/maps?q=3884%2B57%20Luanda&t=&z=14&ie=UTF8&iwloc=&output=embed" allowfullscreen loading="lazy"></iframe>
                 </div>
             </div>
         </div>

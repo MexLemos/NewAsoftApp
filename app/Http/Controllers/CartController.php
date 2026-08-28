@@ -106,12 +106,23 @@ class CartController extends Controller
 
         // Se o utilizador comprou um plano de assinatura, adicioná-lo a TODOS os cursos publicados
         if ($hasPlan && auth()->check()) {
+            // Find which plan duration was purchased
+            $durationMonths = 12; // Default to Anual
+            foreach($cart as $id => $item) {
+                if ($id === 'plan_pro_trimestral') {
+                    $durationMonths = 3;
+                }
+            }
+
             $allCourses = \App\Models\Course::where('is_published', true)->get();
             foreach($allCourses as $c) {
-                \App\Models\Enrollment::firstOrCreate(
-                    ['user_id' => auth()->id(), 'course_id' => $c->id],
-                    ['status' => 'pending', 'progress_percent' => 0]
+                $enrollment = \App\Models\Enrollment::firstOrNew(
+                    ['user_id' => auth()->id(), 'course_id' => $c->id]
                 );
+                $enrollment->status = 'pending';
+                $enrollment->progress_percent = $enrollment->progress_percent ?? 0;
+                $enrollment->expires_at = now()->addMonths($durationMonths);
+                $enrollment->save();
             }
         }
         

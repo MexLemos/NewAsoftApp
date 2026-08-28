@@ -9,7 +9,14 @@ class LmsController extends Controller
     public function dashboard()
     {
         $user = \Illuminate\Support\Facades\Auth::user();
-        $enrolledCourses = $user->courses()->wherePivot('status', 'active')->withPivot('progress_percent')->get();
+        $enrolledCourses = $user->courses()
+            ->wherePivot('status', 'active')
+            ->where(function ($query) {
+                $query->whereNull('enrollments.expires_at')
+                      ->orWhere('enrollments.expires_at', '>', now());
+            })
+            ->withPivot('progress_percent', 'expires_at')
+            ->get();
         return view('lms.dashboard', compact('enrolledCourses'));
     }
 
@@ -57,6 +64,10 @@ class LmsController extends Controller
         }
         
         $enrollment = \Illuminate\Support\Facades\Auth::user()->enrollments()->where('course_id', $course_id)->first();
+        if (!$enrollment || ($enrollment->expires_at && $enrollment->expires_at < now())) {
+            return redirect()->route('lms.dashboard')->with('error', 'Acesso negado. A sua assinatura para este curso expirou.');
+        }
+
         $completedLessons = $enrollment->completed_lessons ?? [];
         
         return view('lms.lesson', compact('course', 'lesson', 'enrollment', 'completedLessons'));

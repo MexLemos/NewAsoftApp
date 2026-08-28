@@ -119,17 +119,17 @@
             font-size: 80px;
             color: #1b3d87;
             margin: 0;
-            line-height: 1;
-            padding-bottom: 15px;
+            line-height: 0.85;
+            padding: 0 40px;
             border-bottom: 1px solid #1b3d87;
             display: inline-block;
-            min-width: 60%;
+            align-self: center;
         }
         
         .description {
             font-size: 22px;
             color: #000;
-            margin: 30px auto;
+            margin: 10px auto;
             max-width: 80%;
             line-height: 1.5;
         }
@@ -138,7 +138,7 @@
         }
 
         .footer {
-            margin-top: 50px;
+            margin-top: 25px;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
@@ -177,6 +177,7 @@
 
         .qr-code {
             text-align: center;
+            margin-bottom: -15px; /* Pull it slightly down to align visually */
         }
         .qr-code img {
             width: 90px;
@@ -186,12 +187,12 @@
         /* Faint Background Watermark Logo */
         .watermark {
             position: absolute;
-            top: 50%;
+            top: 48%;
             left: 50%;
             transform: translate(-50%, -50%);
-            opacity: 0.05;
-            font-size: 400px;
-            color: #1b3d87;
+            opacity: 0.15;
+            height: 580px;
+            width: auto;
             z-index: 0;
             pointer-events: none;
         }
@@ -227,7 +228,7 @@
 
     <div class="certificate-container">
         <!-- Background Logo Watermark -->
-        <i class="fa-solid fa-graduation-cap watermark"></i>
+        <img src="{{ asset('images/logo.png') }}" class="watermark" alt="ASoftMedia Watermark">
 
         <div class="border-outer"></div>
         <div class="border-inner">
@@ -254,23 +255,23 @@
 
             <div class="footer">
                 <div class="signature">
-                    <!-- Simulando a assinatura esquerda -->
-                    <div class="signature-img" style="transform: rotate(-10deg);">Magalhães</div>
-                    <div class="signature-line"></div>
-                    <p>Magalhães Lemos</p>
-                    <span>Asoftmedia</span>
+                    <!-- Assinatura esquerda real -->
+                    <img src="{{ asset('assets/images/cert/assinatura2.png') }}" alt="Assinatura Magalhães" style="height: 85px; object-fit: contain; margin-bottom: -20px; position: relative; z-index: 5;">
+                    <div class="signature-line" style="position: relative; z-index: 2;"></div>
+                    <p style="margin-bottom: 2px;">Magalhães de Lemos</p>
+                    <span style="font-style: italic; display: block;">Asoftmedia Training Admin</span>
                 </div>
                 
                 <div class="qr-code">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode(route('lms.certificados.show', $certificado->certificate_code)) }}" alt="QR Code">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data={{ urlencode(route('lms.certificados.show', $certificado->certificate_code)) }}" alt="QR Code" style="width: 100px; height: 100px;">
                 </div>
                 
                 <div class="signature">
-                    <!-- Simulando a assinatura direita -->
-                    <div class="signature-img" style="transform: rotate(-15deg);">Pinheiro</div>
-                    <div class="signature-line"></div>
-                    <p>Laurindo Pinheiro</p>
-                    <span>Asoftmedia</span>
+                    <!-- Assinatura direita real -->
+                    <img src="{{ asset('assets/images/cert/assinatura1.png') }}" alt="Assinatura Pinheiro" style="height: 85px; object-fit: contain; margin-bottom: -20px; position: relative; z-index: 5;">
+                    <div class="signature-line" style="position: relative; z-index: 2;"></div>
+                    <p style="margin-bottom: 2px;">Laurindo Pinheiro</p>
+                    <span style="font-style: italic; display: block;">Asoftmedia Tech. Coordinator</span>
                 </div>
             </div>
         </div>
