@@ -91,7 +91,7 @@
                         @foreach(session('cart') as $id => $item)
                             @php 
                                 $total += $item['price'] * $item['quantity']; 
-                                if (!str_starts_with((string)$id, 'course_')) {
+                                if (!str_starts_with((string)$id, 'course_') && !str_starts_with((string)$id, 'plan_')) {
                                     $hasProducts = true;
                                 }
                             @endphp
@@ -103,16 +103,40 @@
                                 <span class="text-muted">{{ number_format($item['price'] * $item['quantity'], 2, ',', '.') }} Kz</span>
                             </li>
                         @endforeach
-                        @php $tax = $hasProducts ? 3000 : 0; @endphp
+                        
+                        @if($hasProducts)
+                        <li class="list-group-item bg-transparent px-0 pt-4 pb-2 border-top border-dark border-opacity-10 mt-3">
+                            <h6 class="fw-bold mb-3">Modo de Entrega</h6>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input delivery-radio" type="radio" name="delivery_mode" id="deliveryYes" value="delivery" form="checkoutForm" checked>
+                                <label class="form-check-label w-100 d-flex justify-content-between" for="deliveryYes">
+                                    <span>Entrega ao domicílio</span>
+                                    <span>3.000,00 Kz</span>
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input delivery-radio" type="radio" name="delivery_mode" id="deliveryNo" value="pickup" form="checkoutForm">
+                                <label class="form-check-label w-100 d-flex justify-content-between" for="deliveryNo">
+                                    <span>Levantamento Presencial (Loja)</span>
+                                    <span class="text-success">Grátis</span>
+                                </label>
+                            </div>
+                        </li>
+                        @endif
+
                         <li class="list-group-item d-flex justify-content-between lh-sm bg-transparent px-0 pt-3 border-top">
                             <div>
                                 <h6 class="my-0 text-muted">Taxa de Entrega / Deslocação</h6>
                             </div>
-                            <span class="text-muted">{{ number_format($tax, 2, ',', '.') }} Kz</span>
+                            <span class="text-muted" id="taxDisplay">
+                                @if($hasProducts) 3.000,00 Kz @else 0,00 Kz @endif
+                            </span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between bg-transparent px-0 py-3 mt-2 border-top border-dark border-opacity-10">
                             <strong class="fs-5">Total</strong>
-                            <strong class="fs-5 text-primary">{{ number_format($total + $tax, 2, ',', '.') }} Kz</strong>
+                            <strong class="fs-5 text-primary" id="totalDisplay">
+                                {{ number_format($total + ($hasProducts ? 3000 : 0), 2, ',', '.') }} Kz
+                            </strong>
                         </li>
                     </ul>
                     
@@ -139,6 +163,27 @@
                     btn.disabled = true;
                     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> A processar pedido...';
                 }
+            });
+        }
+
+        // Logic for dynamic pricing update
+        const deliveryRadios = document.querySelectorAll('.delivery-radio');
+        const taxDisplay = document.getElementById('taxDisplay');
+        const totalDisplay = document.getElementById('totalDisplay');
+        const baseTotal = {{ $total ?? 0 }};
+        const hasProducts = {{ isset($hasProducts) && $hasProducts ? 'true' : 'false' }};
+        
+        function formatMoney(amount) {
+            return amount.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Kz';
+        }
+
+        if (hasProducts && deliveryRadios.length > 0) {
+            deliveryRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    let tax = this.value === 'delivery' ? 3000 : 0;
+                    taxDisplay.innerHTML = formatMoney(tax);
+                    totalDisplay.innerHTML = formatMoney(baseTotal + tax);
+                });
             });
         }
     });
