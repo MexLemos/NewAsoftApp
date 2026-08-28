@@ -82,24 +82,51 @@ class CartController extends Controller
         $total = 0;
         $hasProducts = false;
         $itemsList = "";
+        $hasPlan = false;
         
         foreach($cart as $id => $item) {
             $total += $item['price'] * $item['quantity'];
             $itemsList .= "- " . $item['quantity'] . "x " . $item['name'] . " (Kz " . number_format($item['price'], 2, ',', '.') . ")\n";
-            if (!str_starts_with((string)$id, 'course_')) {
+            if (!str_starts_with((string)$id, 'course_') && !str_starts_with((string)$id, 'plan_')) {
                 $hasProducts = true;
             } else {
                 if (auth()->check()) {
-                    $courseId = str_replace('course_', '', (string)$id);
-                    \App\Models\Enrollment::firstOrCreate(
-                        ['user_id' => auth()->id(), 'course_id' => $courseId],
-                        ['status' => 'pending', 'progress_percent' => 0]
-                    );
+                    if (str_starts_with((string)$id, 'course_')) {
+                        $courseId = str_replace('course_', '', (string)$id);
+                        \App\Models\Enrollment::firstOrCreate(
+                            ['user_id' => auth()->id(), 'course_id' => $courseId],
+                            ['status' => 'pending', 'progress_percent' => 0]
+                        );
+                    } elseif (str_starts_with((string)$id, 'plan_')) {
+                        $hasPlan = true;
+                    }
                 }
             }
         }
+
+        // Se o utilizador comprou um plano de assinatura, adicioná-lo a TODOS os cursos publicados
+        if ($hasPlan && auth()->check()) {
+            $allCourses = \App\Models\Course::where('is_published', true)->get();
+            foreach($allCourses as $c) {
+                \App\Models\Enrollment::firstOrCreate(
+                    ['user_id' => auth()->id(), 'course_id' => $c->id],
+                    ['status' => 'pending', 'progress_percent' => 0]
+                );
+            }
+        }
         
-        $tax = $hasProducts ? 3000 : 0;
+        $tax = 0;
+        $deliveryText = "N/A (Apenas produtos digitais)";
+        if ($hasProducts) {
+            $deliveryMode = $request->input('delivery_mode', 'delivery');
+            if ($deliveryMode === 'delivery') {
+                $tax = 3000;
+                $deliveryText = "Entrega ao Domicílio";
+            } else {
+                $deliveryText = "Levantamento Presencial (Loja)";
+            }
+        }
+        
         $grandTotal = $total + $tax;
 
         $fullName = $request->first_name . ' ' . $request->last_name;
@@ -107,6 +134,7 @@ class CartController extends Controller
         $msg = "--- NOVO PEDIDO DE COMPRA ---\n";
         $msg .= "Cliente: " . $fullName . " (NIF: " . ($request->nif ?? 'N/A') . ")\n";
         $msg .= "Morada: " . $request->address . "\n";
+        $msg .= "Modo de Entrega: " . $deliveryText . "\n";
         $msg .= "Forma de Pagamento: " . $request->payment_method . "\n";
         $msg .= "\nITENS:\n" . $itemsList;
         $msg .= "\nRESUMO:\n";

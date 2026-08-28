@@ -37,7 +37,7 @@
 </div>
 
 <!-- Courses Grid -->
-<section class="py-5 bg-white">
+<section class="py-5 bg-white" id="cursos-grid">
     <div class="container">
         <div class="text-center mb-5">
             <h3 class="fw-bold mb-2">Principais Cursos</h3>
@@ -103,7 +103,7 @@
 </section>
 
 <!-- Pricing / Plans -->
-<section class="py-5" style="background-color: #f8fafc;">
+<section class="py-5" style="background-color: #f8fafc;" id="planos">
     <div class="container py-5">
         <div class="text-center mb-5">
             <h3 class="fw-bold mb-2">Planos de Assinatura</h3>
@@ -121,7 +121,7 @@
                         <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> Sem práticas presenciais</li>
                         <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> Certificado digital</li>
                     </ul>
-                    <a href="#" class="btn btn-outline-secondary mt-auto py-2 rounded-pill fw-bold">Começar</a>
+                    <a href="#cursos-grid" class="btn btn-outline-secondary mt-auto py-2 rounded-pill fw-bold">Escolher um Curso</a>
                 </div>
             </div>
 
@@ -129,15 +129,22 @@
             <div class="col-md-4">
                 <div class="card border-primary border-2 shadow rounded-4 h-100 text-center p-4 position-relative">
                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary px-3 py-2">Recomendado</span>
-                    <h5 class="text-primary mb-3 mt-3">Pro</h5>
-                    <h2 class="fw-bold mb-4">Kz 50.000 <small class="fs-6 text-muted">/ Mensal</small></h2>
+                    <h5 class="text-primary mb-3 mt-3">Pro (Anual)</h5>
+                    <h2 class="fw-bold mb-4">Kz 50.000 <small class="fs-6 text-muted">/ Ano</small></h2>
                     <ul class="list-unstyled text-start mb-4 mx-auto" style="max-width: 250px;">
-                        <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> Acesso a todos os cursos</li>
+                        <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> <strong>Acesso a todos os cursos</strong></li>
                         <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> Mentorias mensais</li>
                         <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> Práticas presenciais</li>
                         <li class="mb-3"><i class="fa-solid fa-check text-success me-2"></i> Certificado Físico/Digital</li>
                     </ul>
-                    <a href="#" class="btn btn-primary mt-auto py-2 rounded-pill fw-bold" style="background-color: var(--asoft-primary);">Assinar Agora</a>
+                    <form action="{{ route('carrinho.add') }}" method="POST" class="mt-auto">
+                        @csrf
+                        <input type="hidden" name="id" value="plan_pro_anual">
+                        <input type="hidden" name="name" value="Assinatura Pro (Anual) - Acesso total">
+                        <input type="hidden" name="price" value="50000">
+                        <input type="hidden" name="image" value="">
+                        <button type="submit" class="btn btn-primary py-2 w-100 rounded-pill fw-bold" style="background-color: var(--asoft-primary);">Assinar Agora</button>
+                    </form>
                 </div>
             </div>
         </div>
