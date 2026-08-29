@@ -6,9 +6,12 @@
         <h2 class="h3 mb-1 fw-bold">Pagamentos (CRM)</h2>
         <p class="text-muted mb-0">Gestão de recebimentos, mensalidades e faturas.</p>
     </div>
-    <button class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;" data-bs-toggle="modal" data-bs-target="#modalPagamento">
-        <i class="fa-solid fa-plus me-1"></i> Registar Pagamento
-    </button>
+    <div class="d-flex gap-2 align-items-center">
+        <x-export-buttons list="pagamentos" />
+        <button class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;" data-bs-toggle="modal" data-bs-target="#modalPagamento">
+            <i class="fa-solid fa-plus me-1"></i> Registar Pagamento
+        </button>
+    </div>
 </div>
 
 @if(session('success'))

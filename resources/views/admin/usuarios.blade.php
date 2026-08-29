@@ -6,9 +6,12 @@
         <h2 class="h3 mb-1 fw-bold">Clientes e Alunos</h2>
         <p class="text-muted mb-0">Gestão de clientes finais e empresas.</p>
     </div>
-    <button class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;" data-bs-toggle="modal" data-bs-target="#modalUsuario">
-        <i class="fa-solid fa-user-plus me-1"></i> Novo Cliente/Aluno
-    </button>
+    <div class="d-flex gap-2 align-items-center">
+        <x-export-buttons list="alunos" />
+        <button class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;" data-bs-toggle="modal" data-bs-target="#modalUsuario">
+            <i class="fa-solid fa-user-plus me-1"></i> Novo Cliente/Aluno
+        </button>
+    </div>
 </div>
 
 @if(session('success'))

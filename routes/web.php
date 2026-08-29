@@ -76,6 +76,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/admin/leads/{id}/approve-courses', [\App\Http\Controllers\AdminController::class, 'approveLeadCourses'])->name('admin.leads.approve_courses');
     });
 
+    // HR Ponto - All staff roles (admin, tech, formador, instrutor)
+    Route::middleware(['role:admin|tech|formador|instrutor'])->group(function () {
+        Route::get('/admin/ponto', [\App\Http\Controllers\Admin\HrController::class, 'ponto'])->name('admin.ponto');
+        Route::post('/admin/ponto/registrar', [\App\Http\Controllers\Admin\HrController::class, 'registrarPonto'])->name('admin.ponto.registrar');
+    });
+
     // Admin Only Routes
     Route::middleware(['role:admin'])->group(function () {
         Route::get('/admin/usuarios', [\App\Http\Controllers\AdminController::class, 'usuarios'])->name('admin.usuarios');
@@ -86,10 +92,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/admin/funcionarios', [\App\Http\Controllers\AdminController::class, 'funcionarios'])->name('admin.funcionarios');
         // We reuse the same storeUser and updateUser methods, the view form action can stay admin.usuarios.store / update.
-        
-        // HR Routes
-        Route::get('/admin/ponto', [\App\Http\Controllers\Admin\HrController::class, 'ponto'])->name('admin.ponto');
-        Route::post('/admin/ponto/registrar', [\App\Http\Controllers\Admin\HrController::class, 'registrarPonto'])->name('admin.ponto.registrar');
         
         // CRM / Finance Routes
         Route::get('/admin/pagamentos', [\App\Http\Controllers\Admin\CrmController::class, 'pagamentos'])->name('admin.pagamentos');
@@ -117,6 +119,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/admin/parceiros/store', [\App\Http\Controllers\AdminController::class, 'storePartner'])->name('admin.parceiros.store');
         Route::put('/admin/parceiros/{id}', [\App\Http\Controllers\AdminController::class, 'updatePartner'])->name('admin.parceiros.update');
         Route::delete('/admin/parceiros/{id}', [\App\Http\Controllers\AdminController::class, 'destroyPartner'])->name('admin.parceiros.destroy');
+    });
+
+    // Export Routes (PDF & Excel) - accessible by admin and tech
+    Route::middleware(['role:admin|tech'])->group(function () {
+        Route::get('/admin/export/{list}/pdf',   [\App\Http\Controllers\Admin\ExportController::class, 'exportPdf'])->name('admin.export.pdf');
+        Route::get('/admin/export/{list}/excel', [\App\Http\Controllers\Admin\ExportController::class, 'exportExcel'])->name('admin.export.excel');
+    });
+
+    // Audit & Security Routes - Admin only
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/admin/auditoria',           [\App\Http\Controllers\Admin\AuditController::class, 'index'])->name('admin.auditoria');
+        Route::get('/admin/auditoria/seguranca', [\App\Http\Controllers\Admin\AuditController::class, 'seguranca'])->name('admin.auditoria.seguranca');
     });
     
     // LMS Routes

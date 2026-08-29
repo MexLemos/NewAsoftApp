@@ -61,6 +61,8 @@
             justify-content: center;
             margin: 0 auto 1.5rem;
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            overflow: hidden;
+            padding: 4px;
         }
         .form-control {
             padding: 0.8rem 1.2rem;
@@ -98,9 +100,9 @@
         <div class="w-100 d-flex flex-column align-items-center">
             <a href="/" class="text-decoration-none text-white text-center mb-4">
                 <div class="auth-logo">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo" style="width: 45px; height: 45px; object-fit: contain;">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain; display: block;">
                 </div>
-                <h2 class="fw-bolder tracking-wide m-0" style="letter-spacing: 2px;">ASOFT<span style="color: var(--asoft-accent);">MEDIA</span></h2>
+                <h2 class="fw-bolder m-0" style="letter-spacing: 2px; color: white;">ASOFTMEDIA</h2>
             </a>
 
             <div class="auth-card">

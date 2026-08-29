@@ -6,9 +6,12 @@
         <h2 class="h3 mb-1 fw-bold">Serviços</h2>
         <p class="text-muted mb-0">Gerencie os serviços prestados pela sua empresa.</p>
     </div>
-    <button class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;" data-bs-toggle="modal" data-bs-target="#modalCadastrar">
-        <i class="fa-solid fa-plus me-1"></i> Novo Serviço
-    </button>
+    <div class="d-flex gap-2 align-items-center">
+        <x-export-buttons list="servicos" />
+        <button class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;" data-bs-toggle="modal" data-bs-target="#modalCadastrar">
+            <i class="fa-solid fa-plus me-1"></i> Novo Serviço
+        </button>
+    </div>
 </div>
 
 <div class="card border-0 shadow-sm rounded-4">

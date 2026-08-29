@@ -161,6 +161,13 @@
                 </li>
 
                 <li class="nav-item border-top mt-3 pt-3 border-secondary border-opacity-25">
+                    <a href="{{ route('admin.auditoria') }}" class="{{ request()->routeIs('admin.auditoria') ? 'active' : '' }}"><i class="fa-solid fa-shield-halved me-2 w-20px"></i> Logs de Auditoria</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.auditoria.seguranca') }}" class="{{ request()->routeIs('admin.auditoria.seguranca') ? 'active' : '' }}"><i class="fa-solid fa-triangle-exclamation me-2 w-20px"></i> Segurança</a>
+                </li>
+
+                <li class="nav-item border-top mt-3 pt-3 border-secondary border-opacity-25">
                     <a href="{{ route('admin.configuracoes') }}" class="{{ request()->routeIs('admin.configuracoes') ? 'active' : '' }}"><i class="fa-solid fa-gear me-2 w-20px"></i> Configurações</a>
                 </li>
                 @endhasrole

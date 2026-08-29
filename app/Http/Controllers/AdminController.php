@@ -93,6 +93,18 @@ class AdminController extends Controller
             ['certificate_code' => strtoupper(\Illuminate\Support\Str::random(12))]
         );
 
+        $course = \App\Models\Course::find($request->course_id);
+        activity('certificados')
+            ->causedBy(auth()->user())
+            ->withProperties([
+                'ip'           => request()->ip(),
+                'aluno_id'     => $user->id,
+                'aluno_nome'   => $user->name,
+                'curso'        => $course->title ?? 'N/D',
+                'codigo'       => $certificado->certificate_code,
+            ])
+            ->log('Certificado emitido manualmente para: ' . $user->name . ' — Curso: ' . ($course->title ?? 'N/D'));
+
         return redirect()->route('lms.certificados.show', $certificado->certificate_code);
     }
 
@@ -208,6 +220,11 @@ class AdminController extends Controller
             $user->assignRole($role);
         }
 
+        activity('utilizadores')
+            ->causedBy(auth()->user())
+            ->withProperties(['ip' => request()->ip(), 'novo_user' => $user->email, 'role' => $roleName])
+            ->log('Novo utilizador criado: ' . $user->name . ' (' . $roleName . ')');
+
         return redirect()->back()->with('success', 'Usuário criado com sucesso!');
     }
 
@@ -216,14 +233,14 @@ class AdminController extends Controller
         $user = \App\Models\User::findOrFail($id);
         
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:users,email,'.$id,
             'password' => 'nullable|string|min:8',
-            'phone' => 'nullable|string|max:20',
-            'role' => 'required|string'
+            'phone'    => 'nullable|string|max:20',
+            'role'     => 'required|string'
         ]);
 
-        $user->name = $request->name;
+        $user->name  = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
         $user->is_active = $request->has('is_active');
@@ -239,6 +256,11 @@ class AdminController extends Controller
             $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => $roleName]);
             $user->syncRoles([$role]);
         }
+
+        activity('utilizadores')
+            ->causedBy(auth()->user())
+            ->withProperties(['ip' => request()->ip(), 'user_editado' => $user->email])
+            ->log('Utilizador editado: ' . $user->name);
 
         return redirect()->back()->with('success', 'Usuário atualizado com sucesso!');
     }

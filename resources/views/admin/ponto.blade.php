@@ -24,78 +24,124 @@
 
 <div class="row g-4 mb-4">
     <div class="col-lg-5">
-        <div class="card border-0 shadow-sm rounded-4 h-100 text-center p-4">
-            <h5 class="fw-bold mb-4 text-muted">O Meu Ponto (Hoje)</h5>
-            
-            <div class="mb-4">
-                <div class="d-flex justify-content-center gap-4 mb-3">
-                    <div class="p-3 bg-light rounded-3 text-center" style="width: 120px;">
-                        <span class="d-block small text-muted fw-bold mb-1">Entrada</span>
-                        <h4 class="mb-0 fw-bold text-success">{{ $attendance && $attendance->check_in_time ? \Carbon\Carbon::parse($attendance->check_in_time)->format('H:i') : '--:--' }}</h4>
+        <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
+            <h5 class="fw-bold mb-1">O Meu Ponto (Hoje)</h5>
+            <p class="text-muted small mb-4">{{ now()->translatedFormat('l, d \d\e F \d\e Y') }} &mdash; {{ now()->format('H:i') }}</p>
+
+            {{-- STATUS CARDS --}}
+            <div class="row g-3 mb-4">
+                <div class="col-6">
+                    <div class="rounded-4 p-3 text-center border {{ $attendance && $attendance->check_in_time ? 'border-success bg-success bg-opacity-10' : 'bg-light border-0' }}">
+                        <div class="mb-2">
+                            <i class="fa-solid fa-right-to-bracket fa-lg {{ $attendance && $attendance->check_in_time ? 'text-success' : 'text-muted' }}"></i>
+                        </div>
+                        <span class="d-block small fw-bold {{ $attendance && $attendance->check_in_time ? 'text-success' : 'text-muted' }}">Entrada</span>
+                        <h3 class="fw-bold mb-0 {{ $attendance && $attendance->check_in_time ? 'text-success' : 'text-muted' }}">
+                            {{ $attendance && $attendance->check_in_time ? \Carbon\Carbon::parse($attendance->check_in_time)->format('H:i') : '08:00' }}
+                        </h3>
+                        @if($attendance && $attendance->check_in_time)
+                            <span class="badge bg-success mt-1"><i class="fa-solid fa-check me-1"></i>Registado</span>
+                        @else
+                            <span class="badge bg-secondary bg-opacity-25 text-secondary mt-1">Pendente</span>
+                        @endif
                     </div>
-                    <div class="p-3 bg-light rounded-3 text-center" style="width: 120px;">
-                        <span class="d-block small text-muted fw-bold mb-1">Saída</span>
-                        <h4 class="mb-0 fw-bold text-danger">{{ $attendance && $attendance->check_out_time ? \Carbon\Carbon::parse($attendance->check_out_time)->format('H:i') : '--:--' }}</h4>
+                </div>
+                <div class="col-6">
+                    <div class="rounded-4 p-3 text-center border {{ $attendance && $attendance->check_out_time ? 'border-danger bg-danger bg-opacity-10' : 'bg-light border-0' }}">
+                        <div class="mb-2">
+                            <i class="fa-solid fa-right-from-bracket fa-lg {{ $attendance && $attendance->check_out_time ? 'text-danger' : 'text-muted' }}"></i>
+                        </div>
+                        <span class="d-block small fw-bold {{ $attendance && $attendance->check_out_time ? 'text-danger' : 'text-muted' }}">Saída</span>
+                        <h3 class="fw-bold mb-0 {{ $attendance && $attendance->check_out_time ? 'text-danger' : 'text-muted' }}">
+                            {{ $attendance && $attendance->check_out_time ? \Carbon\Carbon::parse($attendance->check_out_time)->format('H:i') : '17:00' }}
+                        </h3>
+                        @if($attendance && $attendance->check_out_time)
+                            <span class="badge bg-danger mt-1"><i class="fa-solid fa-check me-1"></i>Registado</span>
+                        @else
+                            <span class="badge bg-secondary bg-opacity-25 text-secondary mt-1">Pendente</span>
+                        @endif
                     </div>
                 </div>
             </div>
 
-            @if(!$attendance || !$attendance->check_out_time)
+            {{-- BOTÕES DE AÇÃO --}}
+            @if($attendance && $attendance->check_out_time)
+                {{-- Ambos registados --}}
+                <div class="alert alert-success border-0 rounded-3 text-center mb-0">
+                    <i class="fa-solid fa-circle-check fa-lg me-2"></i>
+                    <strong>Ponto completo!</strong> Bom descanso.
+                </div>
+            @else
                 <form action="{{ route('admin.ponto.registrar') }}" method="POST" id="pontoForm">
                     @csrf
                     <input type="hidden" name="latitude" id="latInput">
                     <input type="hidden" name="longitude" id="lngInput">
-                    
-                    <button type="button" id="btnMarcarPonto" class="btn btn-primary btn-lg shadow rounded-pill px-5 fw-bold" style="background-color: var(--asoft-primary); border: none;">
-                        <i class="fa-solid fa-location-dot me-2"></i> 
-                        {{ !$attendance ? 'Registar Entrada' : 'Registar Saída' }}
-                    </button>
-                    <p id="geoStatus" class="small text-muted mt-3 mb-0"></p>
+                    <input type="hidden" name="type" id="pontoType" value="{{ !$attendance ? 'entrada' : 'saida' }}">
+
+                    @if(!$attendance)
+                        {{-- Entrada ainda não feita --}}
+                        <button type="button" id="btnMarcarPonto"
+                            class="btn btn-success btn-lg w-100 fw-bold rounded-pill shadow-sm mb-2">
+                            <i class="fa-solid fa-right-to-bracket me-2"></i> Registar Entrada
+                        </button>
+                        <p class="small text-muted text-center mb-0"><i class="fa-solid fa-clock me-1"></i> Horário previsto: <b>08:00</b></p>
+                    @elseif(!$attendance->check_out_time)
+                        {{-- Entrada feita, saída pendente --}}
+                        <div class="alert alert-warning border-0 rounded-3 small text-center mb-3 py-2">
+                            <i class="fa-solid fa-triangle-exclamation me-1"></i>
+                            Entrada registada às <b>{{ \Carbon\Carbon::parse($attendance->check_in_time)->format('H:i') }}</b>
+                        </div>
+                        <button type="button" id="btnMarcarPonto"
+                            class="btn btn-danger btn-lg w-100 fw-bold rounded-pill shadow-sm mb-2">
+                            <i class="fa-solid fa-right-from-bracket me-2"></i> Registar Saída
+                        </button>
+                        <p class="small text-muted text-center mb-0"><i class="fa-solid fa-clock me-1"></i> Horário previsto: <b>17:00</b></p>
+                    @endif
+
+                    <p id="geoStatus" class="small text-muted mt-3 mb-0 text-center"></p>
                 </form>
-            @else
-                <div class="alert alert-info border-0 rounded-3 mb-0">
-                    <i class="fa-solid fa-thumbs-up me-2"></i> Ponto concluído por hoje. Bom descanso!
-                </div>
             @endif
         </div>
     </div>
-    
+
     @hasrole('admin')
     <div class="col-lg-7">
         <div class="card border-0 shadow-sm rounded-4 h-100">
             <div class="card-header bg-transparent border-bottom-0 pt-4 pb-0 px-4">
-                <h5 class="fw-bold mb-0">Histórico Recente (Visão Admin)</h5>
+                <h5 class="fw-bold mb-0">Historial Recente da Equipa</h5>
             </div>
-            <div class="card-body p-4">
+            <div class="card-body px-0 pb-0 mt-2">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0 small">
                         <thead class="table-light">
                             <tr>
-                                <th>Funcionário</th>
+                                <th class="ps-4">Funcionário</th>
                                 <th>Data</th>
-                                <th>Entrada</th>
-                                <th>Saída</th>
+                                <th class="text-success">Entrada</th>
+                                <th class="text-danger">Saída</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($allAttendances as $att)
                             <tr>
-                                <td class="fw-medium">{{ $att->employee->name ?? 'N/D' }}</td>
+                                <td class="ps-4 fw-medium">{{ $att->employee->name ?? 'N/D' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($att->date)->format('d/m/Y') }}</td>
                                 <td class="text-success fw-bold">{{ $att->check_in_time ? \Carbon\Carbon::parse($att->check_in_time)->format('H:i') : '-' }}</td>
                                 <td class="text-danger fw-bold">{{ $att->check_out_time ? \Carbon\Carbon::parse($att->check_out_time)->format('H:i') : '-' }}</td>
                                 <td>
-                                    @if($att->location_status == 'valid')
-                                        <span class="badge bg-success bg-opacity-10 text-success"><i class="fa-solid fa-check me-1"></i>Válido</span>
+                                    @if($att->check_out_time)
+                                        <span class="badge bg-success bg-opacity-10 text-success"><i class="fa-solid fa-check-double me-1"></i>Completo</span>
+                                    @elseif($att->check_in_time)
+                                        <span class="badge bg-warning bg-opacity-10 text-warning text-dark"><i class="fa-solid fa-clock me-1"></i>No escritório</span>
                                     @else
-                                        <span class="badge bg-warning bg-opacity-10 text-warning text-dark"><i class="fa-solid fa-triangle-exclamation me-1"></i>Irregular</span>
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary">Ausente</span>
                                     @endif
                                 </td>
                             </tr>
                             @endforeach
                             @if(count($allAttendances) === 0)
-                            <tr><td colspan="5" class="text-center text-muted">Nenhum registo encontrado.</td></tr>
+                            <tr><td colspan="5" class="text-center py-5 text-muted">Nenhum registo encontrado.</td></tr>
                             @endif
                         </tbody>
                     </table>

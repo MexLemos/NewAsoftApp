@@ -53,18 +53,24 @@ class HrController extends Controller
             
         if (!$attendance) {
             HrAttendance::create([
-                'employee_id' => auth()->id(),
-                'date' => $today,
-                'check_in_time' => $now,
-                'latitude' => $lat,
-                'longitude' => $lon,
+                'employee_id'     => auth()->id(),
+                'date'            => $today,
+                'check_in_time'   => $now,
+                'latitude'        => $lat,
+                'longitude'       => $lon,
                 'location_status' => 'valid'
             ]);
+            activity('ponto')
+                ->causedBy(auth()->user())
+                ->withProperties(['ip' => $request->ip(), 'tipo' => 'entrada', 'hora' => $now, 'lat' => $lat, 'lon' => $lon])
+                ->log('Marcação de ponto — Entrada às ' . $now);
             return back()->with('success', 'Entrada registada com sucesso às ' . $now . '!');
         } elseif (!$attendance->check_out_time) {
-            $attendance->update([
-                'check_out_time' => $now,
-            ]);
+            $attendance->update(['check_out_time' => $now]);
+            activity('ponto')
+                ->causedBy(auth()->user())
+                ->withProperties(['ip' => $request->ip(), 'tipo' => 'saida', 'hora' => $now])
+                ->log('Marcação de ponto — Saída às ' . $now);
             return back()->with('success', 'Saída registada com sucesso às ' . $now . '!');
         } else {
             return back()->with('error', 'O seu ponto de entrada e saída já foi registado na totalidade para o dia de hoje.');

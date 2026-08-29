@@ -6,12 +6,15 @@
         <h2 class="h3 mb-1 fw-bold">Propinas Mensais</h2>
         <p class="text-muted mb-0">Gestão e faturação de mensalidades recorrentes por turma.</p>
     </div>
-    <form action="{{ route('admin.propinas.gerar') }}" method="POST" onsubmit="return confirm('Tem a certeza que deseja gerar as faturas de propinas para o mês atual ({{ date('m/Y') }}) em todas as turmas ativas?')">
-        @csrf
-        <button type="submit" class="btn btn-warning text-dark fw-bold shadow-sm">
-            <i class="fa-solid fa-bolt me-1"></i> Gerar Propinas (Mês Atual)
-        </button>
-    </form>
+    <div class="d-flex gap-2 align-items-center flex-wrap">
+        <x-export-buttons list="propinas" :extra-params="'?mes=' . $mesFiltro" />
+        <form action="{{ route('admin.propinas.gerar') }}" method="POST" onsubmit="return confirm('Tem a certeza que deseja gerar as faturas de propinas para o mês atual ({{ date('m/Y') }}) em todas as turmas ativas?')">
+            @csrf
+            <button type="submit" class="btn btn-warning text-dark fw-bold shadow-sm">
+                <i class="fa-solid fa-bolt me-1"></i> Gerar Propinas (Mês Atual)
+            </button>
+        </form>
+    </div>
 </div>
 
 @if(session('success'))

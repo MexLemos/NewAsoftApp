@@ -3,9 +3,12 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="h3 mb-0">Gestão de Cursos (LMS)</h2>
-    <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#addCursoModal">
-        <i class="fa-solid fa-plus me-1"></i> Novo Curso
-    </button>
+    <div class="d-flex gap-2 align-items-center">
+        <x-export-buttons list="cursos" />
+        <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#addCursoModal">
+            <i class="fa-solid fa-plus me-1"></i> Novo Curso
+        </button>
+    </div>
 </div>
 
 @if(session('success'))

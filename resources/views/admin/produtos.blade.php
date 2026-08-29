@@ -6,9 +6,12 @@
         <h2 class="h3 mb-1 fw-bold">Produtos</h2>
         <p class="text-muted mb-0">Gerencie os produtos do seu e-commerce.</p>
     </div>
-    <button class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;" data-bs-toggle="modal" data-bs-target="#modalCadastrar">
-        <i class="fa-solid fa-plus me-1"></i> Novo Produto
-    </button>
+    <div class="d-flex gap-2 align-items-center">
+        <x-export-buttons list="produtos" />
+        <button class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;" data-bs-toggle="modal" data-bs-target="#modalCadastrar">
+            <i class="fa-solid fa-plus me-1"></i> Novo Produto
+        </button>
+    </div>
 </div>
 
 <div class="card border-0 shadow-sm rounded-4">

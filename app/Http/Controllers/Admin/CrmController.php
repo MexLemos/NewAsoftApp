@@ -72,6 +72,19 @@ class CrmController extends Controller
             }
         }
 
+        activity('financeiro')
+            ->causedBy(auth()->user())
+            ->withProperties([
+                'ip'           => $request->ip(),
+                'referencia'   => $payment->reference,
+                'valor'        => $payment->amount,
+                'cliente_id'   => $payment->client_id,
+                'item'         => $payment->item_consumed,
+                'metodo'       => $payment->method,
+                'status'       => $payment->status,
+            ])
+            ->log('Pagamento registado: ' . $payment->reference . ' — ' . number_format($payment->amount, 2, ',', '.') . ' Kz');
+
         return back()->with('success', 'Pagamento registado com sucesso!');
     }
 
@@ -97,13 +110,18 @@ class CrmController extends Controller
         ]);
 
         CrmCashMovement::create([
-            'date' => $request->date,
-            'type' => $request->type,
-            'amount' => $request->amount,
+            'date'        => $request->date,
+            'type'        => $request->type,
+            'amount'      => $request->amount,
             'description' => $request->description,
-            'reference' => $request->reference,
+            'reference'   => $request->reference,
             'employee_id' => auth()->id()
         ]);
+
+        activity('financeiro')
+            ->causedBy(auth()->user())
+            ->withProperties(['ip' => $request->ip(), 'tipo' => $request->type, 'valor' => $request->amount])
+            ->log('Movimento de caixa: ' . ($request->type === 'in' ? 'Entrada' : 'Saída') . ' de ' . number_format($request->amount, 2, ',', '.') . ' Kz — ' . $request->description);
 
         return back()->with('success', 'Movimento de caixa registado com sucesso!');
     }
