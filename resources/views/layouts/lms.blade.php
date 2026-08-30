@@ -122,6 +122,12 @@
                 </a>
             </li>
             @endhasanyrole
+
+            <li class="nav-item mt-4 pt-3 border-top border-secondary border-opacity-25">
+                <a href="{{ function_exists('subdomain_url') ? subdomain_url('', '/') : route('home') }}" class="nav-link text-white-50">
+                    <i class="fa-solid fa-arrow-left"></i> Voltar ao Site
+                </a>
+            </li>
         </ul>
     </div>
 
@@ -137,7 +143,11 @@
             </div>
             
             <div class="d-flex align-items-center gap-3">
-                <a href="{{ route('carrinho.index') }}" class="btn btn-light position-relative rounded-circle p-2 shadow-sm border" style="width: 40px; height: 40px;">
+                <a href="{{ function_exists('subdomain_url') ? subdomain_url('', '/') : route('home') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3 d-none d-md-inline-flex align-items-center">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Voltar ao Site
+                </a>
+
+                <a href="{{ function_exists('subdomain_url') ? subdomain_url('loja', '/carrinho') : route('carrinho.index') }}" class="btn btn-light position-relative rounded-circle p-2 shadow-sm border" style="width: 40px; height: 40px;">
                     <i class="fa-solid fa-cart-shopping text-dark"></i>
                     @if(count(session('cart', [])) > 0)
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">

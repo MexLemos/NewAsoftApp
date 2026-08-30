@@ -1,30 +1,106 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\LmsController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\HrController;
+use App\Http\Controllers\Admin\CrmController;
+use App\Http\Controllers\Admin\TurmaController;
+use App\Http\Controllers\Admin\ExportController;
+use App\Http\Controllers\Admin\AuditController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Web Routes & Subdomain Routing (ASoftMedia Ecosystem)
 |--------------------------------------------------------------------------
 |
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
+| - Site Principal:  asoftmedia.test / asoftmedia.com
+| - Loja Online:     loja.asoftmedia.test / loja.asoftmedia.com
+| - Treinamento LMS: treinamento.asoftmedia.test / treinamento.asoftmedia.com
 |
 */
 
-Route::get('/', [\App\Http\Controllers\PageController::class, 'home'])->name('home');
-Route::get('/treinamento', [\App\Http\Controllers\PageController::class, 'cursos'])->name('cursos');
-Route::get('/produtos', [\App\Http\Controllers\PageController::class, 'produtos'])->name('produtos');
+$baseDomain = config('app.domain') ?: env('APP_DOMAIN', 'softmedia-ao.com');
 
-Route::get('/carrinho', [\App\Http\Controllers\CartController::class, 'index'])->name('carrinho.index');
-Route::post('/carrinho/add', [\App\Http\Controllers\CartController::class, 'add'])->name('carrinho.add');
-Route::post('/carrinho/remove', [\App\Http\Controllers\CartController::class, 'remove'])->name('carrinho.remove');
-Route::post('/carrinho/update', [\App\Http\Controllers\CartController::class, 'update'])->name('carrinho.update');
-Route::get('/checkout', [\App\Http\Controllers\CartController::class, 'checkout'])->name('checkout');
-Route::post('/checkout/process', [\App\Http\Controllers\CartController::class, 'process'])->name('checkout.process');
+// =========================================================================
+// SUBDOMÍNIO: LOJA ONLINE (loja.softmedia-ao.com)
+// =========================================================================
+Route::domain("loja.{$baseDomain}")->group(function () {
+    Route::get('/', [PageController::class, 'produtos'])->name('loja.home');
+    Route::get('/produtos', [PageController::class, 'produtos'])->name('loja.produtos');
+    Route::get('/carrinho', [CartController::class, 'index'])->name('loja.carrinho.index');
+    Route::post('/carrinho/add', [CartController::class, 'add'])->name('loja.carrinho.add');
+    Route::post('/carrinho/remove', [CartController::class, 'remove'])->name('loja.carrinho.remove');
+    Route::post('/carrinho/update', [CartController::class, 'update'])->name('loja.carrinho.update');
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('loja.checkout');
+    Route::post('/checkout/process', [CartController::class, 'process'])->name('loja.checkout.process');
+});
 
+// =========================================================================
+// SUBDOMÍNIO: TREINAMENTO LMS (treinamento.softmedia-ao.com)
+// =========================================================================
+Route::domain("treinamento.{$baseDomain}")->group(function () {
+    Route::get('/', function () {
+        if (auth()->check()) {
+            return redirect()->route('lms.dashboard');
+        }
+        return redirect()->route('treinamento.cursos');
+    })->name('treinamento.home');
+
+    Route::get('/catalogo', [PageController::class, 'cursos'])->name('treinamento.cursos');
+    Route::get('/treinamento', [PageController::class, 'cursos']);
+    Route::get('/cursos', [PageController::class, 'cursos']);
+
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::get('/dashboard', [LmsController::class, 'dashboard'])->name('treinamento.dashboard');
+        Route::get('/certificados', [LmsController::class, 'certificados'])->name('treinamento.certificados');
+        Route::get('/certificados/{code}', [LmsController::class, 'showCertificado'])->name('treinamento.certificados.show');
+        Route::get('/historico', [LmsController::class, 'historico'])->name('treinamento.historico');
+        Route::get('/curso/{course}/aula/{lesson}', [LmsController::class, 'lesson'])->name('treinamento.lesson');
+        Route::post('/curso/{course}/aula/{lesson}/concluir', [LmsController::class, 'completeLesson'])->name('treinamento.lesson.complete');
+        Route::post('/curso/{course}/comprar', [LmsController::class, 'enroll'])->name('treinamento.enroll');
+    });
+});
+
+// =========================================================================
+// SUBDOMÍNIO: SYSADMIN (sysadmin.softmedia-ao.com)
+// =========================================================================
+Route::domain("sysadmin.{$baseDomain}")->group(function () {
+    Route::get('/', function () {
+        if (auth()->check()) {
+            if (auth()->user()->hasAnyRole(['admin', 'tech', 'formador', 'instrutor'])) {
+                return redirect()->route('admin.dashboard');
+            }
+            return redirect()->route('lms.dashboard');
+        }
+        return redirect()->route('login');
+    })->name('sysadmin.home');
+});
+
+// =========================================================================
+// SITE PRINCIPAL / ROTAS GLOBAIS (asoftmedia.test, softmedia-ao.com e fallback)
+// =========================================================================
+
+// Landing Page Principal
+Route::get('/', [PageController::class, 'home'])->name('home');
+
+// Páginas Públicas Globais
+Route::get('/treinamento', [PageController::class, 'cursos'])->name('cursos');
+Route::get('/cursos', [PageController::class, 'cursos']);
+Route::get('/produtos', [PageController::class, 'produtos'])->name('produtos');
+
+// Carrinho & Checkout Globais
+Route::get('/carrinho', [CartController::class, 'index'])->name('carrinho.index');
+Route::post('/carrinho/add', [CartController::class, 'add'])->name('carrinho.add');
+Route::post('/carrinho/remove', [CartController::class, 'remove'])->name('carrinho.remove');
+Route::post('/carrinho/update', [CartController::class, 'update'])->name('carrinho.update');
+Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+Route::post('/checkout/process', [CartController::class, 'process'])->name('checkout.process');
+
+// Dashboard Central com Redirecionamento Inteligente por Papel
 Route::get('/dashboard', function () {
     $user = auth()->user();
     
@@ -35,112 +111,114 @@ Route::get('/dashboard', function () {
     return redirect()->route('lms.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Perfil de Utilizador
 Route::middleware('auth')->group(function () {
     Route::get('/lms/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/lms/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/lms/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Área Administrativa & LMS
 Route::middleware(['auth', 'verified'])->group(function () {
-    // General Admin & Tech Routes
+    
+    // Gestão de Conteúdos & Cursos (Admin, Tech, Instrutor)
     Route::middleware(['role:admin|tech|instrutor'])->group(function () {
-        Route::get('/admin/dashboard', [\App\Http\Controllers\AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         
-        Route::get('/admin/cursos', [\App\Http\Controllers\AdminController::class, 'cursos'])->name('admin.cursos');
-        Route::post('/admin/cursos', [\App\Http\Controllers\AdminController::class, 'storeCurso'])->name('admin.cursos.store');
-        Route::put('/admin/cursos/{id}', [\App\Http\Controllers\AdminController::class, 'updateCurso'])->name('admin.cursos.update');
-        Route::delete('/admin/cursos/{id}', [\App\Http\Controllers\AdminController::class, 'destroyCurso'])->name('admin.cursos.destroy');
+        Route::get('/admin/cursos', [AdminController::class, 'cursos'])->name('admin.cursos');
+        Route::post('/admin/cursos', [AdminController::class, 'storeCurso'])->name('admin.cursos.store');
+        Route::put('/admin/cursos/{id}', [AdminController::class, 'updateCurso'])->name('admin.cursos.update');
+        Route::delete('/admin/cursos/{id}', [AdminController::class, 'destroyCurso'])->name('admin.cursos.destroy');
         
-        Route::get('/admin/cursos/{id}/conteudos', [\App\Http\Controllers\AdminController::class, 'cursosConteudos'])->name('admin.cursos.conteudos');
-        Route::post('/admin/cursos/{id}/modules', [\App\Http\Controllers\AdminController::class, 'storeModule'])->name('admin.modules.store');
-        Route::put('/admin/modules/{id}', [\App\Http\Controllers\AdminController::class, 'updateModule'])->name('admin.modules.update');
-        Route::delete('/admin/modules/{id}', [\App\Http\Controllers\AdminController::class, 'destroyModule'])->name('admin.modules.destroy');
+        Route::get('/admin/cursos/{id}/conteudos', [AdminController::class, 'cursosConteudos'])->name('admin.cursos.conteudos');
+        Route::post('/admin/cursos/{id}/modules', [AdminController::class, 'storeModule'])->name('admin.modules.store');
+        Route::put('/admin/modules/{id}', [AdminController::class, 'updateModule'])->name('admin.modules.update');
+        Route::delete('/admin/modules/{id}', [AdminController::class, 'destroyModule'])->name('admin.modules.destroy');
         
-        Route::post('/admin/modules/{id}/lessons', [\App\Http\Controllers\AdminController::class, 'storeLesson'])->name('admin.lessons.store');
-        Route::put('/admin/lessons/{id}', [\App\Http\Controllers\AdminController::class, 'updateLesson'])->name('admin.lessons.update');
-        Route::delete('/admin/lessons/{id}', [\App\Http\Controllers\AdminController::class, 'destroyLesson'])->name('admin.lessons.destroy');
+        Route::post('/admin/modules/{id}/lessons', [AdminController::class, 'storeLesson'])->name('admin.lessons.store');
+        Route::put('/admin/lessons/{id}', [AdminController::class, 'updateLesson'])->name('admin.lessons.update');
+        Route::delete('/admin/lessons/{id}', [AdminController::class, 'destroyLesson'])->name('admin.lessons.destroy');
     });
 
+    // Produtos, Serviços e Leads (Admin, Tech)
     Route::middleware(['role:admin|tech'])->group(function () {
-        Route::get('/admin/produtos', [\App\Http\Controllers\AdminController::class, 'produtos'])->name('admin.produtos');
-        Route::post('/admin/produtos', [\App\Http\Controllers\AdminController::class, 'storeItem'])->name('admin.produtos.store');
-        Route::delete('/admin/produtos/{id}', [\App\Http\Controllers\AdminController::class, 'destroyProduct'])->name('admin.produtos.destroy');
-        Route::put('/admin/produtos/{id}', [\App\Http\Controllers\AdminController::class, 'updateProduct'])->name('admin.produtos.update');
-        Route::post('/admin/produtos/store', [\App\Http\Controllers\AdminController::class, 'storeItem'])->name('admin.store.item');
+        Route::get('/admin/produtos', [AdminController::class, 'produtos'])->name('admin.produtos');
+        Route::post('/admin/produtos', [AdminController::class, 'storeItem'])->name('admin.produtos.store');
+        Route::delete('/admin/produtos/{id}', [AdminController::class, 'destroyProduct'])->name('admin.produtos.destroy');
+        Route::put('/admin/produtos/{id}', [AdminController::class, 'updateProduct'])->name('admin.produtos.update');
+        Route::post('/admin/produtos/store', [AdminController::class, 'storeItem'])->name('admin.store.item');
         
-        Route::get('/admin/servicos', [\App\Http\Controllers\AdminController::class, 'servicos'])->name('admin.servicos');
-        Route::delete('/admin/servicos/{id}', [\App\Http\Controllers\AdminController::class, 'destroyService'])->name('admin.servicos.destroy');
-        Route::put('/admin/servicos/{id}', [\App\Http\Controllers\AdminController::class, 'updateService'])->name('admin.servicos.update');
+        Route::get('/admin/servicos', [AdminController::class, 'servicos'])->name('admin.servicos');
+        Route::delete('/admin/servicos/{id}', [AdminController::class, 'destroyService'])->name('admin.servicos.destroy');
+        Route::put('/admin/servicos/{id}', [AdminController::class, 'updateService'])->name('admin.servicos.update');
         
-        Route::get('/admin/leads', [\App\Http\Controllers\AdminController::class, 'leads'])->name('admin.leads');
-        Route::post('/admin/leads/{id}/approve-courses', [\App\Http\Controllers\AdminController::class, 'approveLeadCourses'])->name('admin.leads.approve_courses');
+        Route::get('/admin/leads', [AdminController::class, 'leads'])->name('admin.leads');
+        Route::post('/admin/leads/{id}/approve-courses', [AdminController::class, 'approveLeadCourses'])->name('admin.leads.approve_courses');
     });
 
-    // HR Ponto - All staff roles (admin, tech, formador, instrutor)
+    // Recursos Humanos / Marcação de Ponto (Todos os funcionários)
     Route::middleware(['role:admin|tech|formador|instrutor'])->group(function () {
-        Route::get('/admin/ponto', [\App\Http\Controllers\Admin\HrController::class, 'ponto'])->name('admin.ponto');
-        Route::post('/admin/ponto/registrar', [\App\Http\Controllers\Admin\HrController::class, 'registrarPonto'])->name('admin.ponto.registrar');
+        Route::get('/admin/ponto', [HrController::class, 'ponto'])->name('admin.ponto');
+        Route::post('/admin/ponto/registrar', [HrController::class, 'registrarPonto'])->name('admin.ponto.registrar');
     });
 
-    // Admin Only Routes
+    // Gestão Administrativa & Financeira (Apenas Admin)
     Route::middleware(['role:admin'])->group(function () {
-        Route::get('/admin/usuarios', [\App\Http\Controllers\AdminController::class, 'usuarios'])->name('admin.usuarios');
-        Route::post('/admin/usuarios', [\App\Http\Controllers\AdminController::class, 'storeUser'])->name('admin.usuarios.store');
-        Route::post('/admin/usuarios/store', [\App\Http\Controllers\AdminController::class, 'storeUser'])->name('admin.store.user');
-        Route::post('/admin/usuarios/{id}/update', [\App\Http\Controllers\AdminController::class, 'updateUser'])->name('admin.usuarios.update');
-        Route::get('/admin/usuarios/{id}/certificado', [\App\Http\Controllers\AdminController::class, 'emitirCertificadoManual'])->name('admin.certificados.emitir');
+        Route::get('/admin/usuarios', [AdminController::class, 'usuarios'])->name('admin.usuarios');
+        Route::post('/admin/usuarios', [AdminController::class, 'storeUser'])->name('admin.usuarios.store');
+        Route::post('/admin/usuarios/store', [AdminController::class, 'storeUser'])->name('admin.store.user');
+        Route::post('/admin/usuarios/{id}/update', [AdminController::class, 'updateUser'])->name('admin.usuarios.update');
+        Route::get('/admin/usuarios/{id}/certificado', [AdminController::class, 'emitirCertificadoManual'])->name('admin.certificados.emitir');
 
-        Route::get('/admin/funcionarios', [\App\Http\Controllers\AdminController::class, 'funcionarios'])->name('admin.funcionarios');
-        // We reuse the same storeUser and updateUser methods, the view form action can stay admin.usuarios.store / update.
+        Route::get('/admin/funcionarios', [AdminController::class, 'funcionarios'])->name('admin.funcionarios');
         
-        // CRM / Finance Routes
-        Route::get('/admin/pagamentos', [\App\Http\Controllers\Admin\CrmController::class, 'pagamentos'])->name('admin.pagamentos');
-        Route::post('/admin/pagamentos', [\App\Http\Controllers\Admin\CrmController::class, 'registrarPagamento'])->name('admin.pagamentos.store');
+        // CRM / Financeiro
+        Route::get('/admin/pagamentos', [CrmController::class, 'pagamentos'])->name('admin.pagamentos');
+        Route::post('/admin/pagamentos', [CrmController::class, 'registrarPagamento'])->name('admin.pagamentos.store');
         
-        Route::get('/admin/propinas', [\App\Http\Controllers\Admin\CrmController::class, 'propinas'])->name('admin.propinas');
-        Route::post('/admin/propinas/gerar', [\App\Http\Controllers\Admin\CrmController::class, 'gerarPropinas'])->name('admin.propinas.gerar');
+        Route::get('/admin/propinas', [CrmController::class, 'propinas'])->name('admin.propinas');
+        Route::post('/admin/propinas/gerar', [CrmController::class, 'gerarPropinas'])->name('admin.propinas.gerar');
         
-        // Turmas (Classes) Routes
-        Route::get('/admin/turmas', [\App\Http\Controllers\Admin\TurmaController::class, 'index'])->name('admin.turmas');
-        Route::post('/admin/turmas', [\App\Http\Controllers\Admin\TurmaController::class, 'store'])->name('admin.turmas.store');
-        Route::get('/admin/turmas/{id}', [\App\Http\Controllers\Admin\TurmaController::class, 'show'])->name('admin.turmas.show');
-        Route::post('/admin/turmas/{id}/alunos', [\App\Http\Controllers\Admin\TurmaController::class, 'addStudent'])->name('admin.turmas.add_student');
-        Route::delete('/admin/turmas/{id}/alunos/{user_id}', [\App\Http\Controllers\Admin\TurmaController::class, 'removeStudent'])->name('admin.turmas.remove_student');
+        // Turmas
+        Route::get('/admin/turmas', [TurmaController::class, 'index'])->name('admin.turmas');
+        Route::post('/admin/turmas', [TurmaController::class, 'store'])->name('admin.turmas.store');
+        Route::get('/admin/turmas/{id}', [TurmaController::class, 'show'])->name('admin.turmas.show');
+        Route::post('/admin/turmas/{id}/alunos', [TurmaController::class, 'addStudent'])->name('admin.turmas.add_student');
+        Route::delete('/admin/turmas/{id}/alunos/{user_id}', [TurmaController::class, 'removeStudent'])->name('admin.turmas.remove_student');
         
-        Route::get('/admin/caixa', [\App\Http\Controllers\Admin\CrmController::class, 'caixa'])->name('admin.caixa');
-        Route::post('/admin/caixa', [\App\Http\Controllers\Admin\CrmController::class, 'registrarMovimentoCaixa'])->name('admin.caixa.store');
+        Route::get('/admin/caixa', [CrmController::class, 'caixa'])->name('admin.caixa');
+        Route::post('/admin/caixa', [CrmController::class, 'registrarMovimentoCaixa'])->name('admin.caixa.store');
         
-        Route::get('/admin/relatorios', [\App\Http\Controllers\Admin\CrmController::class, 'relatorios'])->name('admin.relatorios');
+        Route::get('/admin/relatorios', [CrmController::class, 'relatorios'])->name('admin.relatorios');
         
-        Route::get('/admin/configuracoes', [\App\Http\Controllers\AdminController::class, 'configuracoes'])->name('admin.configuracoes');
-        Route::post('/admin/configuracoes', [\App\Http\Controllers\AdminController::class, 'updateConfiguracoes'])->name('admin.configuracoes.update');
-        Route::post('/admin/configuracoes/update', [\App\Http\Controllers\AdminController::class, 'updateConfiguracoes'])->name('admin.configuracoes.update');
+        Route::get('/admin/configuracoes', [AdminController::class, 'configuracoes'])->name('admin.configuracoes');
+        Route::post('/admin/configuracoes', [AdminController::class, 'updateConfiguracoes'])->name('admin.configuracoes.update');
         
-        Route::post('/admin/parceiros/store', [\App\Http\Controllers\AdminController::class, 'storePartner'])->name('admin.parceiros.store');
-        Route::put('/admin/parceiros/{id}', [\App\Http\Controllers\AdminController::class, 'updatePartner'])->name('admin.parceiros.update');
-        Route::delete('/admin/parceiros/{id}', [\App\Http\Controllers\AdminController::class, 'destroyPartner'])->name('admin.parceiros.destroy');
+        Route::post('/admin/parceiros/store', [AdminController::class, 'storePartner'])->name('admin.parceiros.store');
+        Route::put('/admin/parceiros/{id}', [AdminController::class, 'updatePartner'])->name('admin.parceiros.update');
+        Route::delete('/admin/parceiros/{id}', [AdminController::class, 'destroyPartner'])->name('admin.parceiros.destroy');
     });
 
-    // Export Routes (PDF & Excel) - accessible by admin and tech
+    // Exportação PDF & Excel (Admin e Tech)
     Route::middleware(['role:admin|tech'])->group(function () {
-        Route::get('/admin/export/{list}/pdf',   [\App\Http\Controllers\Admin\ExportController::class, 'exportPdf'])->name('admin.export.pdf');
-        Route::get('/admin/export/{list}/excel', [\App\Http\Controllers\Admin\ExportController::class, 'exportExcel'])->name('admin.export.excel');
+        Route::get('/admin/export/{list}/pdf',   [ExportController::class, 'exportPdf'])->name('admin.export.pdf');
+        Route::get('/admin/export/{list}/excel', [ExportController::class, 'exportExcel'])->name('admin.export.excel');
     });
 
-    // Audit & Security Routes - Admin only
+    // Auditoria e Segurança (Apenas Admin)
     Route::middleware(['role:admin'])->group(function () {
-        Route::get('/admin/auditoria',           [\App\Http\Controllers\Admin\AuditController::class, 'index'])->name('admin.auditoria');
-        Route::get('/admin/auditoria/seguranca', [\App\Http\Controllers\Admin\AuditController::class, 'seguranca'])->name('admin.auditoria.seguranca');
+        Route::get('/admin/auditoria',           [AuditController::class, 'index'])->name('admin.auditoria');
+        Route::get('/admin/auditoria/seguranca', [AuditController::class, 'seguranca'])->name('admin.auditoria.seguranca');
     });
     
-    // LMS Routes
-    Route::get('/lms/dashboard', [\App\Http\Controllers\LmsController::class, 'dashboard'])->name('lms.dashboard');
-    Route::get('/lms/certificados', [\App\Http\Controllers\LmsController::class, 'certificados'])->name('lms.certificados');
-    Route::get('/lms/certificados/{code}', [\App\Http\Controllers\LmsController::class, 'showCertificado'])->name('lms.certificados.show');
-    Route::get('/lms/historico', [\App\Http\Controllers\LmsController::class, 'historico'])->name('lms.historico');
-    Route::get('/lms/curso/{course}/aula/{lesson}', [\App\Http\Controllers\LmsController::class, 'lesson'])->name('lms.lesson');
-    Route::post('/lms/curso/{course}/aula/{lesson}/concluir', [\App\Http\Controllers\LmsController::class, 'completeLesson'])->name('lms.lesson.complete');
-    Route::post('/lms/curso/{course}/comprar', [\App\Http\Controllers\LmsController::class, 'enroll'])->name('lms.enroll');
+    // Rotas LMS
+    Route::get('/lms/dashboard', [LmsController::class, 'dashboard'])->name('lms.dashboard');
+    Route::get('/lms/certificados', [LmsController::class, 'certificados'])->name('lms.certificados');
+    Route::get('/lms/certificados/{code}', [LmsController::class, 'showCertificado'])->name('lms.certificados.show');
+    Route::get('/lms/historico', [LmsController::class, 'historico'])->name('lms.historico');
+    Route::get('/lms/curso/{course}/aula/{lesson}', [LmsController::class, 'lesson'])->name('lms.lesson');
+    Route::post('/lms/curso/{course}/aula/{lesson}/concluir', [LmsController::class, 'completeLesson'])->name('lms.lesson.complete');
+    Route::post('/lms/curso/{course}/comprar', [LmsController::class, 'enroll'])->name('lms.enroll');
 });
 
 require __DIR__.'/auth.php';

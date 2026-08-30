@@ -5,6 +5,42 @@
     #heroCarousel .carousel-item {
         min-height: 75vh;
     }
+    .pillar-card {
+        background: #ffffff;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        transition: all 0.35s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+    .pillar-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 35px -10px rgba(15, 23, 42, 0.12);
+    }
+    .pillar-img-wrapper {
+        height: 170px;
+        position: relative;
+        overflow: hidden;
+        background-color: #0f172a;
+    }
+    .pillar-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+    .pillar-card:hover .pillar-img-wrapper img {
+        transform: scale(1.06);
+    }
+    .pillar-body {
+        padding: 1.8rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: space-between;
+    }
 </style>
 <!-- Hero Carousel Section -->
 <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
@@ -122,6 +158,231 @@
     </div>
 </section>
 
+<!-- OS 3 PILARES DO ECOSSISTEMA -->
+<section class="py-5 bg-white border-bottom">
+    <div class="container py-3">
+        <div class="text-center mx-auto mb-5" style="max-width: 700px;">
+            <h2 class="fw-bold mb-2" style="color: var(--asoft-secondary); font-size: 2.2rem;">Os Nossos 3 Pilares de Atuação</h2>
+            <p class="text-muted mb-0">Uma plataforma integrada desenhada para atender clientes, formandos e parceiros de forma especializada.</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <!-- Pilar 1: Serviços Corporativos -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pillar-card h-100">
+                    <div class="pillar-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80" alt="Software e Serviços de TI">
+                        <span class="badge bg-primary position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill shadow-sm">
+                            <i class="fa-solid fa-code me-1"></i> Soluções TI
+                        </span>
+                    </div>
+                    <div class="pillar-body">
+                        <div>
+                            <h4 class="fw-bold mb-3" style="color: var(--asoft-secondary);">Software & Serviços de TI</h4>
+                            <p class="text-muted small mb-4" style="line-height: 1.6;">
+                                Desenvolvimento de aplicações web, apps mobile, infraestruturas de rede, suporte técnico corporativo e segurança cibernética sob medida para sua empresa.
+                            </p>
+                            <ul class="list-unstyled d-flex flex-column gap-2 text-muted small mb-4">
+                                <li><i class="fa-solid fa-check text-success me-2"></i> Desenvolvimento à Medida</li>
+                                <li><i class="fa-solid fa-check text-success me-2"></i> Redes & Infraestrutura</li>
+                                <li><i class="fa-solid fa-check text-success me-2"></i> Consultoria Tecnológica</li>
+                            </ul>
+                        </div>
+                        <a href="#servicos" class="btn btn-outline-primary w-100 fw-bold rounded-3 py-2">
+                            Ver Todos os Serviços
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pilar 2: Treinamento LMS -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pillar-card h-100" style="border: 2px solid var(--asoft-accent);">
+                    <div class="pillar-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=600&q=80" alt="Academia e Treinamento LMS">
+                        <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill fw-bold shadow-sm">
+                            <i class="fa-solid fa-graduation-cap me-1"></i> Plataforma LMS
+                        </span>
+                    </div>
+                    <div class="pillar-body">
+                        <div>
+                            <h4 class="fw-bold mb-3" style="color: var(--asoft-secondary);">Academia & Treinamento</h4>
+                            <p class="text-muted small mb-4" style="line-height: 1.6;">
+                                Cursos presenciais e online nas áreas mais procuradas do mercado de TI com emissão de certificados válidos e acompanhamento prático.
+                            </p>
+                            <ul class="list-unstyled d-flex flex-column gap-2 text-muted small mb-4">
+                                <li><i class="fa-solid fa-check text-success me-2"></i> Plataforma E-learning completa</li>
+                                <li><i class="fa-solid fa-check text-success me-2"></i> Emissão de Certificados com QR Code</li>
+                                <li><i class="fa-solid fa-check text-success me-2"></i> Turmas e Acompanhamento Docente</li>
+                            </ul>
+                        </div>
+                        <a href="{{ function_exists('subdomain_url') ? subdomain_url('treinamento') : route('cursos') }}" class="btn btn-brand w-100 fw-bold rounded-3 py-2">
+                            Ir para Treinamento <i class="fa-solid fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pilar 3: Loja de Tecnologia -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pillar-card h-100">
+                    <div class="pillar-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1587831990711-23ca6441447b?auto=format&fit=crop&w=600&q=80" alt="Loja Online ASoft">
+                        <span class="badge bg-success position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill shadow-sm">
+                            <i class="fa-solid fa-bag-shopping me-1"></i> Loja Virtual
+                        </span>
+                    </div>
+                    <div class="pillar-body">
+                        <div>
+                            <h4 class="fw-bold mb-3" style="color: var(--asoft-secondary);">Loja Online ASoft</h4>
+                            <p class="text-muted small mb-4" style="line-height: 1.6;">
+                                Equipamentos de informática, periféricos de alto rendimento, peças de reposição e licenças de software com faturação e entrega rápida.
+                            </p>
+                            <ul class="list-unstyled d-flex flex-column gap-2 text-muted small mb-4">
+                                <li><i class="fa-solid fa-check text-success me-2"></i> Computadores e Periféricos</li>
+                                <li><i class="fa-solid fa-check text-success me-2"></i> Licenças Oficiais de Software</li>
+                                <li><i class="fa-solid fa-check text-success me-2"></i> Pagamento Seguro em Kwanzas (Kz)</li>
+                            </ul>
+                        </div>
+                        <a href="{{ function_exists('subdomain_url') ? subdomain_url('loja') : route('produtos') }}" class="btn btn-outline-dark w-100 fw-bold rounded-3 py-2">
+                            Ir para a Loja <i class="fa-solid fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section (Mission, Vision, Values) -->
+<section id="sobre" class="pt-5 pb-4" style="background-color: #f8fafc;">
+    <div class="container pt-4 pb-0">
+        <div class="row g-4 align-items-center mb-5">
+            <div class="col-lg-5">
+                <div class="mb-4 mb-lg-0">
+                    <div class="d-flex align-items-center bg-white p-4 rounded-4 shadow-sm mb-4 border-start border-4 animate-on-scroll delay-100" style="border-color: var(--asoft-primary) !important;">
+                        <div class="me-4 rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="fa-solid fa-eye fs-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-1">Visão</h4>
+                            <p class="text-muted mb-0">Ser referência em inovação tecnológica em Angola.</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center bg-white p-4 rounded-4 shadow-sm mb-4 border-start border-4 animate-on-scroll delay-200" style="border-color: var(--asoft-primary) !important;">
+                        <div class="me-4 rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="fa-solid fa-bullseye fs-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-1">Missão</h4>
+                            <p class="text-muted mb-0">Oferecer soluções e treinamentos digitais que empoderem comunidades e organizações.</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center bg-white p-4 rounded-4 shadow-sm border-start border-4 animate-on-scroll delay-300" style="border-color: var(--asoft-primary) !important;">
+                        <div class="me-4 rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="fa-solid fa-heart fs-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-1">Valores</h4>
+                            <p class="text-muted mb-0">Transparência, Inovação, Sustentabilidade.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7 px-lg-5 animate-on-scroll delay-400">
+                <img src="{{ isset($settings['about_img']) ? asset('storage/' . $settings['about_img']) : 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }}" alt="Tecnologia Asoftmedia" class="img-fluid rounded-4 shadow-sm w-100" style="object-fit: cover; max-height: 400px;">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <h3 class="fw-bold mb-4 text-center">Sobre a ASOFTMEDIA</h3>
+                @php
+                    $aboutText = $settings['about_text'] ?? "A ASOFTMEDIA é uma empresa de tecnologia fundada em 2018, com o objetivo de desenvolver soluções em software e proporcionar a digitalização de empresas. Com uma equipa qualificada, oferece serviços de desenvolvimento de software sob medida para empresas de todos os tamanhos.\n\nAlém disso, oferece serviços de consultoria em tecnologia, implementação de soluções e gerenciamento de ambientes de T.I. das pequenas e médias empresas, ajudando a garantir continuidade, produtividade e redução de custos.";
+                    $paragraphs = explode("\n", $aboutText);
+                @endphp
+                
+                @foreach($paragraphs as $paragraph)
+                    @if(trim($paragraph))
+                        <p class="mb-4 text-muted fs-6 fs-md-5" style="line-height: 1.8; text-align: justify;">{{ trim($paragraph) }}</p>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Partners Section -->
+<section class="pt-2 pb-5 bg-white border-bottom">
+    <div class="container pt-2 pb-4 text-center">
+        <h3 class="fw-bold mb-5">Nossos Parceiros</h3>
+        <style>
+            .partners-carousel-container {
+                overflow: hidden;
+                width: 100%;
+                white-space: nowrap;
+                position: relative;
+            }
+            .partners-carousel-container::before,
+            .partners-carousel-container::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                width: 150px;
+                height: 100%;
+                z-index: 2;
+            }
+            .partners-carousel-container::before {
+                left: 0;
+                background: linear-gradient(to right, white 0%, rgba(255, 255, 255, 0) 100%);
+            }
+            .partners-carousel-container::after {
+                right: 0;
+                background: linear-gradient(to left, white 0%, rgba(255, 255, 255, 0) 100%);
+            }
+            .partners-carousel-track {
+                display: inline-block;
+                animation: scroll-partners 15s linear infinite;
+            }
+            .partners-carousel-track:hover {
+                animation-play-state: paused;
+            }
+            .partner-logo {
+                height: 70px;
+                margin: 0 40px;
+                object-fit: contain;
+                transition: all 0.3s ease;
+            }
+            .partner-logo:hover {
+                transform: scale(1.05);
+            }
+            @keyframes scroll-partners {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+        </style>
+        <div class="partners-carousel-container">
+            <div class="partners-carousel-track">
+                @foreach($partners as $partner)
+                    <img src="{{ $partner->logo_url ? asset('storage/' . $partner->logo_url) : asset('images/default-partner.png') }}" class="partner-logo" alt="{{ $partner->name }}" title="{{ $partner->name }}">
+                @endforeach
+                @if($partners->count() > 0)
+                    @foreach($partners as $partner)
+                        <img src="{{ $partner->logo_url ? asset('storage/' . $partner->logo_url) : asset('images/default-partner.png') }}" class="partner-logo" alt="{{ $partner->name }}" title="{{ $partner->name }}">
+                    @endforeach
+                    @foreach($partners as $partner)
+                        <img src="{{ $partner->logo_url ? asset('storage/' . $partner->logo_url) : asset('images/default-partner.png') }}" class="partner-logo" alt="{{ $partner->name }}" title="{{ $partner->name }}">
+                    @endforeach
+                @else
+                    <p class="text-muted">Parceiros em breve</p>
+                @endif
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Featured Courses Section -->
 <section class="pt-5 pb-3 bg-white">
     <div class="container pt-4 pb-2">
@@ -213,138 +474,6 @@
                 </div>
             </div>
             @endforeach
-        </div>
-    </div>
-</section>
-
-
-<!-- About Section (Mission, Vision, Values) -->
-<section id="sobre" class="pt-5 pb-2" style="background-color: #f8fafc;">
-    <div class="container pt-5 pb-0">
-        <div class="row g-4 align-items-center mb-5">
-            <div class="col-lg-5">
-                <div class="mb-4 mb-lg-0">
-                    <div class="d-flex align-items-center bg-white p-4 rounded-4 shadow-sm mb-4 border-start border-4 animate-on-scroll delay-100" style="border-color: var(--asoft-primary) !important;">
-                        <div class="me-4 rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-                            <i class="fa-solid fa-eye fs-4"></i>
-                        </div>
-                        <div>
-                            <h4 class="fw-bold mb-1">Visão</h4>
-                            <p class="text-muted mb-0">Ser referência em inovação tecnológica em Angola.</p>
-                        </div>
-                    </div>
-
-                    <div class="d-flex align-items-center bg-white p-4 rounded-4 shadow-sm mb-4 border-start border-4 animate-on-scroll delay-200" style="border-color: var(--asoft-primary) !important;">
-                        <div class="me-4 rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-                            <i class="fa-solid fa-bullseye fs-4"></i>
-                        </div>
-                        <div>
-                            <h4 class="fw-bold mb-1">Missão</h4>
-                            <p class="text-muted mb-0">Oferecer soluções e treinamentos digitais que empoderem comunidades e organizações.</p>
-                        </div>
-                    </div>
-
-                    <div class="d-flex align-items-center bg-white p-4 rounded-4 shadow-sm border-start border-4 animate-on-scroll delay-300" style="border-color: var(--asoft-primary) !important;">
-                        <div class="me-4 rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-                            <i class="fa-solid fa-heart fs-4"></i>
-                        </div>
-                        <div>
-                            <h4 class="fw-bold mb-1">Valores</h4>
-                            <p class="text-muted mb-0">Transparência, Inovação, Sustentabilidade.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-7 px-lg-5 animate-on-scroll delay-400">
-                <img src="{{ isset($settings['about_img']) ? asset('storage/' . $settings['about_img']) : 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }}" alt="Tecnologia Asoftmedia" class="img-fluid rounded-4 shadow-sm w-100" style="object-fit: cover; max-height: 400px;">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12">
-                <h3 class="fw-bold mb-4 text-center">Sobre a ASOFTMEDIA</h3>
-                @php
-                    $aboutText = $settings['about_text'] ?? "A ASOFTMEDIA é uma empresa de tecnologia fundada em 2018, com o objetivo de desenvolver soluções em software e proporcionar a digitalização de empresas. Com uma equipa qualificada, oferece serviços de desenvolvimento de software sob medida para empresas de todos os tamanhos.\n\nAlém disso, oferece serviços de consultoria em tecnologia, implementação de soluções e gerenciamento de ambientes de T.I. das pequenas e médias empresas, ajudando a garantir continuidade, produtividade e redução de custos.";
-                    $paragraphs = explode("\n", $aboutText);
-                @endphp
-                
-                @foreach($paragraphs as $paragraph)
-                    @if(trim($paragraph))
-                        <p class="mb-4 text-muted fs-6 fs-md-5" style="line-height: 1.8; text-align: justify;">{{ trim($paragraph) }}</p>
-                    @endif
-                @endforeach
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Partners Section -->
-<section class="pt-2 pb-5 bg-white">
-    <div class="container pt-2 pb-4 text-center">
-        <h3 class="fw-bold mb-5">Nossos Parceiros</h3>
-        <style>
-            .partners-carousel-container {
-                overflow: hidden;
-                width: 100%;
-                white-space: nowrap;
-                position: relative;
-            }
-            .partners-carousel-container::before,
-            .partners-carousel-container::after {
-                content: '';
-                position: absolute;
-                top: 0;
-                width: 150px;
-                height: 100%;
-                z-index: 2;
-            }
-            .partners-carousel-container::before {
-                left: 0;
-                background: linear-gradient(to right, white 0%, rgba(255, 255, 255, 0) 100%);
-            }
-            .partners-carousel-container::after {
-                right: 0;
-                background: linear-gradient(to left, white 0%, rgba(255, 255, 255, 0) 100%);
-            }
-            .partners-carousel-track {
-                display: inline-block;
-                animation: scroll-partners 15s linear infinite;
-            }
-            .partners-carousel-track:hover {
-                animation-play-state: paused;
-            }
-            .partner-logo {
-                height: 70px;
-                margin: 0 40px;
-                object-fit: contain;
-                transition: all 0.3s ease;
-            }
-            .partner-logo:hover {
-                transform: scale(1.05);
-            }
-            @keyframes scroll-partners {
-                0% { transform: translateX(0); }
-                100% { transform: translateX(-50%); }
-            }
-        </style>
-        <div class="partners-carousel-container">
-            <div class="partners-carousel-track">
-                <!-- Loop over the dynamic partners twice for seamless scrolling if needed -->
-                @foreach($partners as $partner)
-                    <img src="{{ $partner->logo_url ? asset('storage/' . $partner->logo_url) : asset('images/default-partner.png') }}" class="partner-logo" alt="{{ $partner->name }}" title="{{ $partner->name }}">
-                @endforeach
-                <!-- Duplicated set for seamless scrolling if there are at least some partners -->
-                @if($partners->count() > 0)
-                    @foreach($partners as $partner)
-                        <img src="{{ $partner->logo_url ? asset('storage/' . $partner->logo_url) : asset('images/default-partner.png') }}" class="partner-logo" alt="{{ $partner->name }}" title="{{ $partner->name }}">
-                    @endforeach
-                    @foreach($partners as $partner)
-                        <img src="{{ $partner->logo_url ? asset('storage/' . $partner->logo_url) : asset('images/default-partner.png') }}" class="partner-logo" alt="{{ $partner->name }}" title="{{ $partner->name }}">
-                    @endforeach
-                @else
-                    <p class="text-muted">Parceiros em breve</p>
-                @endif
-            </div>
         </div>
     </div>
 </section>

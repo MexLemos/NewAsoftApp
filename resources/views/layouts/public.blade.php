@@ -160,21 +160,57 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('home') }}">
+            @php
+                $subdomain = function_exists('current_subdomain') ? current_subdomain() : 'main';
+                $isLoja = $subdomain === 'loja' || request()->routeIs('loja.*') || request()->routeIs('produtos') || request()->routeIs('carrinho.*') || request()->routeIs('checkout*');
+                $isTreinamento = $subdomain === 'treinamento' || request()->routeIs('treinamento.*') || request()->routeIs('cursos');
+                $mainSiteUrl = function_exists('subdomain_url') ? subdomain_url('', '/') : route('home');
+                $lojaUrl = function_exists('subdomain_url') ? subdomain_url('loja', '/') : route('produtos');
+                $treinamentoUrl = function_exists('subdomain_url') ? subdomain_url('treinamento', '/') : route('cursos');
+            @endphp
+
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{{ $isLoja ? $lojaUrl : ($isTreinamento ? $treinamentoUrl : $mainSiteUrl) }}">
                 <img src="{{ asset('images/logo.png') }}" alt="ASoftMedia Logo" height="55">
                 <span style="font-weight: 800; letter-spacing: 1px;">ASOFTMEDIA</span>
+                @if($isLoja)
+                    <span class="badge bg-warning text-dark px-2 py-1 small rounded-pill" style="font-size: 0.65rem;">LOJA</span>
+                @elseif($isTreinamento)
+                    <span class="badge bg-primary text-white px-2 py-1 small rounded-pill" style="font-size: 0.65rem;">TREINAMENTO</span>
+                @endif
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
                 <i class="fa-solid fa-bars text-white fs-4"></i>
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#sobre">Sobre</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#servicos">Serviços</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('cursos') ? 'active' : '' }}" href="{{ route('cursos') }}">Treinamento</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('produtos') ? 'active' : '' }}" href="{{ route('produtos') }}">Loja</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#contactos">Contactos</a></li>
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 align-items-lg-center">
+                    @if($isLoja)
+                        {{-- MENU EXCLUSIVO DO SUBDOMÍNIO LOJA --}}
+                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('loja.home') || request()->routeIs('produtos') ? 'active text-warning fw-bold' : '' }}" href="{{ $lojaUrl }}"><i class="fa-solid fa-store me-1"></i> Catálogo</a></li>
+                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('loja.carrinho.*') || request()->routeIs('carrinho.*') ? 'active' : '' }}" href="{{ function_exists('subdomain_url') ? subdomain_url('loja', '/carrinho') : route('carrinho.index') }}"><i class="fa-solid fa-cart-shopping me-1"></i> Carrinho</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ $treinamentoUrl }}"><i class="fa-solid fa-graduation-cap me-1"></i> Treinamento</a></li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-sm btn-outline-light rounded-pill px-3 py-1 mt-2 mt-lg-0" href="{{ $mainSiteUrl }}">
+                                <i class="fa-solid fa-arrow-left me-1"></i> Voltar ao Site
+                            </a>
+                        </li>
+                    @elseif($isTreinamento)
+                        {{-- MENU EXCLUSIVO DO SUBDOMÍNIO TREINAMENTO --}}
+                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('cursos') || request()->routeIs('treinamento.*') ? 'active text-primary fw-bold' : '' }}" href="{{ $treinamentoUrl }}"><i class="fa-solid fa-graduation-cap me-1"></i> Cursos & Formação</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ $lojaUrl }}"><i class="fa-solid fa-bag-shopping me-1"></i> Loja</a></li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-sm btn-outline-light rounded-pill px-3 py-1 mt-2 mt-lg-0" href="{{ $mainSiteUrl }}">
+                                <i class="fa-solid fa-arrow-left me-1"></i> Voltar ao Site
+                            </a>
+                        </li>
+                    @else
+                        {{-- MENU DO SITE PRINCIPAL / LANDING PAGE --}}
+                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#sobre">Sobre</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#servicos">Serviços</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ $treinamentoUrl }}">Treinamento</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ $lojaUrl }}">Loja</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#contactos">Contactos</a></li>
+                    @endif
                 </ul>
                 <div class="d-flex align-items-center">
                     <button class="btn btn-link text-white text-decoration-none me-3" id="theme-toggle">
