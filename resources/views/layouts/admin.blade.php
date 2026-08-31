@@ -247,7 +247,7 @@
             }
         }
 
-        // Global Form Submission Handler & Double-Click Prevention
+        // Global Form Submission Handler & Double-Click Prevention (Non-blocking with Safety Timeout)
         document.addEventListener('submit', function (e) {
             const form = e.target;
             if (form.dataset.submitting === 'true') {
@@ -258,13 +258,25 @@
             
             const submitBtn = form.querySelector('button[type="submit"]');
             if (submitBtn) {
-                submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A guardar...';
+                // Allow browser event loop to dispatch POST before disabling
+                setTimeout(() => { 
+                    if (submitBtn) submitBtn.disabled = true; 
+                }, 50);
             }
             
             const loader = document.getElementById('global-page-loader');
             if (loader) {
                 loader.style.display = 'flex';
+                // Safety timeout: never freeze the UI for more than 6 seconds
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = submitBtn.dataset.originalText || 'Salvar';
+                    }
+                    form.dataset.submitting = 'false';
+                }, 6000);
             }
         });
 
@@ -275,6 +287,7 @@
                 loader.style.display = 'none';
             }
             document.querySelectorAll('form').forEach(f => f.dataset.submitting = 'false');
+            document.querySelectorAll('button[type="submit"]').forEach(b => b.disabled = false);
         });
     </script>
 </body>
