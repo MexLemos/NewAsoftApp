@@ -1,0 +1,43 @@
+name: Deploy ASoftMedia to Hostinger Production
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  web-deploy:
+    name: 🚀 Deploy via FTP to Hostinger
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Obter código do repositório
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: 📂 Sincronizar ficheiros com a Hostinger
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT || 21 }}
+          protocol: ftp
+          server-dir: ${{ secrets.FTP_SERVER_DIR || '/domains/softmedia-ao.com/public_html/' }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/.env
+            **/.env.*
+            **/tests/**
+            **/node_modules/**
+            **/storage/logs/**
+            **/storage/framework/sessions/**
+            **/storage/framework/views/**
+            **/storage/framework/cache/**
+            **/asoftmedia_production.zip
+            **/*.sql
+            **/scratch/**
