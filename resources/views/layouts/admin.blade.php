@@ -210,6 +210,14 @@
         </div>
     </div>
 
+    <!-- Global Loading Overlay -->
+    <div id="global-page-loader" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.7); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; color: #fff;">
+        <div class="spinner-border text-primary" style="width: 3.5rem; height: 3.5rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <h5 class="mt-4 fw-bold text-white">A processar...</h5>
+    </div>
+
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -238,6 +246,36 @@
                 themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>';
             }
         }
+
+        // Global Form Submission Handler & Double-Click Prevention
+        document.addEventListener('submit', function (e) {
+            const form = e.target;
+            if (form.dataset.submitting === 'true') {
+                e.preventDefault();
+                return false;
+            }
+            form.dataset.submitting = 'true';
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A guardar...';
+            }
+            
+            const loader = document.getElementById('global-page-loader');
+            if (loader) {
+                loader.style.display = 'flex';
+            }
+        });
+
+        // Hide loader on page show (handles browser back/forward cache)
+        window.addEventListener('pageshow', function() {
+            const loader = document.getElementById('global-page-loader');
+            if (loader) {
+                loader.style.display = 'none';
+            }
+            document.querySelectorAll('form').forEach(f => f.dataset.submitting = 'false');
+        });
     </script>
 </body>
 </html>
