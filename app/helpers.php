@@ -45,10 +45,6 @@ if (!function_exists('subdomain_url')) {
         $port = request()->getPort();
         $portStr = ($port && !in_array($port, [80, 443])) ? ':' . $port : '';
         
-        if ($subdomain === 'loja') {
-            $subdomain = 'shop';
-        }
-        
         $host = !empty($subdomain) ? "{$subdomain}.{$baseDomain}" : $baseDomain;
         $cleanPath = '/' . ltrim($path, '/');
         
@@ -74,7 +70,7 @@ if (!function_exists('current_subdomain')) {
         $host = request()->getHost();
         $baseDomain = app_base_domain();
         
-        if (in_array($host, ["loja.{$baseDomain}", "shop.{$baseDomain}", "store.{$baseDomain}"])) {
+        if (in_array($host, ["loja.{$baseDomain}"])) {
             return 'loja';
         }
         
@@ -86,7 +82,7 @@ if (!function_exists('current_subdomain')) {
             return 'sysadmin';
         }
         
-        if (str_starts_with($host, 'loja.') || str_starts_with($host, 'shop.') || str_starts_with($host, 'store.')) {
+        if (str_starts_with($host, 'loja.')) {
             return 'loja';
         }
         
