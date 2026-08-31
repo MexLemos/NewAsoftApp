@@ -26,18 +26,20 @@ use Illuminate\Support\Facades\Route;
 $baseDomain = config('app.domain') ?: env('APP_DOMAIN', 'softmedia-ao.com');
 
 // =========================================================================
-// SUBDOMÍNIO: LOJA ONLINE (loja.softmedia-ao.com)
+// SUBDOMÍNIO: LOJA / SHOP / STORE (shop.softmedia-ao.com / loja.softmedia-ao.com)
 // =========================================================================
-Route::domain("loja.{$baseDomain}")->group(function () {
-    Route::get('/', [PageController::class, 'produtos'])->name('loja.home');
-    Route::get('/produtos', [PageController::class, 'produtos'])->name('loja.produtos');
-    Route::get('/carrinho', [CartController::class, 'index'])->name('loja.carrinho.index');
-    Route::post('/carrinho/add', [CartController::class, 'add'])->name('loja.carrinho.add');
-    Route::post('/carrinho/remove', [CartController::class, 'remove'])->name('loja.carrinho.remove');
-    Route::post('/carrinho/update', [CartController::class, 'update'])->name('loja.carrinho.update');
-    Route::get('/checkout', [CartController::class, 'checkout'])->name('loja.checkout');
-    Route::post('/checkout/process', [CartController::class, 'process'])->name('loja.checkout.process');
-});
+foreach (['shop', 'store', 'loja'] as $sub) {
+    Route::domain("{$sub}.{$baseDomain}")->group(function () use ($sub) {
+        Route::get('/', [PageController::class, 'produtos'])->name("{$sub}.home");
+        Route::get('/produtos', [PageController::class, 'produtos'])->name("{$sub}.produtos");
+        Route::get('/carrinho', [CartController::class, 'index'])->name("{$sub}.carrinho.index");
+        Route::post('/carrinho/add', [CartController::class, 'add'])->name("{$sub}.carrinho.add");
+        Route::post('/carrinho/remove', [CartController::class, 'remove'])->name("{$sub}.carrinho.remove");
+        Route::post('/carrinho/update', [CartController::class, 'update'])->name("{$sub}.carrinho.update");
+        Route::get('/checkout', [CartController::class, 'checkout'])->name("{$sub}.checkout");
+        Route::post('/checkout/process', [CartController::class, 'process'])->name("{$sub}.checkout.process");
+    });
+}
 
 // =========================================================================
 // SUBDOMÍNIO: TREINAMENTO LMS (treinamento.softmedia-ao.com)
