@@ -258,11 +258,11 @@
             
             const submitBtn = form.querySelector('button[type="submit"]');
             if (submitBtn) {
+                // Store original button text to restore later
+                submitBtn.dataset.originalText = submitBtn.innerHTML;
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A guardar...';
                 // Allow browser event loop to dispatch POST before disabling
-                setTimeout(() => { 
-                    if (submitBtn) submitBtn.disabled = true; 
-                }, 50);
+                setTimeout(() => { if (submitBtn) submitBtn.disabled = true; }, 50);
             }
             
             const loader = document.getElementById('global-page-loader');
