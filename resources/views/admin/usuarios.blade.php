@@ -23,12 +23,25 @@
 
 <div class="card border-0 shadow-sm rounded-4">
     <div class="card-body px-0 pb-0">
+        <div class="px-4 mb-3">
+            <form method="GET" action="{{ route('admin.usuarios') }}" class="d-flex">
+                <input type="text" name="search" class="form-control me-2" placeholder="Pesquisar por nome ou email" value="{{ request('search') }}" />
+                <button type="submit" class="btn btn-primary">Buscar</button>
+                @if(request('search'))
+                    <a href="{{ route('admin.usuarios') }}" class="btn btn-light ms-2">Limpar</a>
+                @endif
+            </form>
+        </div>
+
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-4">Nome</th>
-                        <th>Email</th>
+                        @php
+                            $dir = request('dir') === 'asc' ? 'desc' : 'asc';
+                        @endphp
+                        <th class="ps-4"><a href="{{ request()->fullUrlWithQuery(['sort' => 'name', 'dir' => $dir]) }}" class="text-decoration-none text-dark">Nome</a></th>
+                        <th><a href="{{ request()->fullUrlWithQuery(['sort' => 'email', 'dir' => $dir]) }}" class="text-decoration-none text-dark">Email</a></th>
                         <th>Função</th>
                         <th>Status</th>
                         <th class="text-end pe-4">Ações</th>

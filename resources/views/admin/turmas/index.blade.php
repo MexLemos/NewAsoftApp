@@ -50,7 +50,61 @@
                     <h5 class="mb-0 fw-bold text-success">{{ number_format($turma->monthly_fee, 2, ',', '.') }} Kz</h5>
                 </div>
                 
-                <a href="{{ route('admin.turmas.show', $turma->id) }}" class="btn btn-outline-primary w-100 fw-bold rounded-pill">Gerir Turma <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                            <a href="{{ route('admin.turmas.show', $turma->id) }}" class="btn btn-outline-primary w-100 fw-bold rounded-pill">Gerir Turma <i class="fa-solid fa-arrow-right ms-1"></i></a>
+            <!-- Edit Turma Button -->
+            <button type="button" class="btn btn-outline-secondary w-100 fw-bold rounded-pill mt-2" data-bs-toggle="modal" data-bs-target="#modalEditTurma{{ $turma->id }}">
+                Editar Turma <i class="fa-solid fa-pen ms-1"></i>
+            </button>
+            <!-- Edit Turma Modal -->
+            <div class="modal fade" id="modalEditTurma{{ $turma->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content border-0 rounded-4 shadow">
+                        <div class="modal-header border-bottom-0 pb-0">
+                            <h5 class="modal-title fw-bold">Editar Turma</h5>
+                            <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <form action="{{ route('admin.turmas.update', $turma->id) }}" method="POST" id="formEditTurma{{ $turma->id }}">
+                                @csrf
+                                @method('PUT')
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Curso de Referência</label>
+                                    <select name="course_id" class="form-select" required>
+                                        @foreach($courses as $curso)
+                                            <option value="{{ $curso->id }}" {{ $turma->course_id == $curso->id ? 'selected' : '' }}>{{ $curso->title }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Nome da Turma / Horário</label>
+                                    <input type="text" name="name" class="form-control" value="{{ $turma->name }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Valor da Mensalidade (Propina)</label>
+                                    <input type="number" step="0.01" name="monthly_fee" class="form-control fw-bold text-success" value="{{ $turma->monthly_fee }}" required>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" name="is_active" class="form-check-input" id="activeCheck{{ $turma->id }}" {{ $turma->is_active ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="activeCheck{{ $turma->id }}">Ativa</label>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Formador (Treinador)</label>
+                                    <select name="trainer_id" class="form-select">
+                                        <option value="" {{ $turma->trainer_id ? '' : 'selected' }}>Nenhum Formador</option>
+                                        @foreach($trainers as $formador)
+                                            <option value="{{ $formador->id }}" {{ $turma->trainer_id == $formador->id ? 'selected' : '' }}>{{ $formador->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
+                            <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" form="formEditTurma{{ $turma->id }}" class="btn btn-primary fw-bold" style="background-color: var(--asoft-primary); border: none;">Salvar Alterações</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </div>
             <!-- Decorative circle -->
             <div class="position-absolute rounded-circle" style="width: 150px; height: 150px; background-color: var(--asoft-primary); opacity: 0.05; top: -50px; right: -50px; z-index: 0;"></div>

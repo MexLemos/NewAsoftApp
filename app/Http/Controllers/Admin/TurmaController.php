@@ -14,7 +14,8 @@ class TurmaController extends Controller
     {
         $turmas = Turma::with('course')->withCount('users')->latest()->get();
         $courses = Course::latest()->get();
-        return view('admin.turmas.index', compact('turmas', 'courses'));
+        $trainers = User::role('formador')->get();
+        return view('admin.turmas.index', compact('turmas', 'courses', 'trainers'));
     }
 
     public function store(Request $request)
@@ -33,6 +34,27 @@ class TurmaController extends Controller
         ]);
 
         return back()->with('success', 'Turma criada com sucesso!');
+    }
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'course_id' => 'required|exists:courses,id',
+            'name' => 'required|string|max:255',
+            'monthly_fee' => 'required|numeric|min:0',
+            'trainer_id' => 'nullable|exists:users,id',
+            'is_active' => 'sometimes|in:on',
+        ]);
+
+        $turma = Turma::findOrFail($id);
+        $turma->update([
+            'course_id' => $request->course_id,
+            'name' => $request->name,
+            'monthly_fee' => $request->monthly_fee,
+            'trainer_id' => $request->trainer_id,
+            'is_active' => $request->has('is_active'),
+        ]);
+
+        return back()->with('success', 'Turma actualizada com sucesso.');
     }
 
     public function show($id)

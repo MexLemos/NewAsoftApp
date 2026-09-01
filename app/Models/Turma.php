@@ -9,16 +9,16 @@ class Turma extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['course_id', 'name', 'monthly_fee', 'is_active'];
+    protected $fillable = ['course_id', 'name', 'monthly_fee', 'is_active', 'trainer_id'];
 
     public function course()
     {
         return $this->belongsTo(Course::class);
     }
 
-    public function users()
+    public function trainer()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsTo(User::class, 'trainer_id');
     }
 
     public function tuitions()

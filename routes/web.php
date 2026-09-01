@@ -185,6 +185,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/admin/turmas/{id}', [TurmaController::class, 'show'])->name('admin.turmas.show');
         Route::post('/admin/turmas/{id}/alunos', [TurmaController::class, 'addStudent'])->name('admin.turmas.add_student');
         Route::delete('/admin/turmas/{id}/alunos/{user_id}', [TurmaController::class, 'removeStudent'])->name('admin.turmas.remove_student');
+        Route::put('/admin/turmas/{id}', [TurmaController::class, 'update'])->name('admin.turmas.update');
         
         Route::get('/admin/caixa', [CrmController::class, 'caixa'])->name('admin.caixa');
         Route::post('/admin/caixa', [CrmController::class, 'registrarMovimentoCaixa'])->name('admin.caixa.store');

@@ -52,11 +52,34 @@ class AdminController extends Controller
         return view('admin.servicos', compact('services'));
     }
 
-    public function usuarios()
+    public function usuarios(Request $request)
     {
-        $users = \App\Models\User::whereHas('roles', function($q){
-            $q->whereIn('name', ['aluno', 'cliente', 'empresa']);
-        })->orWhereDoesntHave('roles')->latest()->get();
+        // ----- Search -----
+        $search = $request->input('search');
+        $query = \App\Models\User::whereHas('roles', function($q){
+                $q->whereIn('name', ['aluno', 'cliente', 'empresa']);
+            })
+            ->orWhereDoesntHave('roles');
+
+        if (!empty($search)) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                  ->orWhere('email', 'like', "%$search%");
+            });
+        }
+
+        // ----- Sorting -----
+        $allowedSorts = ['name', 'email', 'is_active'];
+        $sort = $request->input('sort');
+        $dir  = $request->input('dir', 'asc');
+        if (in_array($sort, $allowedSorts)) {
+            $query->orderBy($sort, $dir);
+        } else {
+            $query->orderBy('name', 'asc');
+        }
+
+        // ----- Pagination (15 per page) -----
+        $users = $query->latest()->paginate(15)->appends($request->except('page'));
         return view('admin.usuarios', compact('users'));
     }
 
