@@ -290,5 +290,24 @@
             document.querySelectorAll('button[type="submit"]').forEach(b => b.disabled = false);
         });
     </script>
+<script>
+    // Autofocus first input in forms and modals
+    function focusFirstInput(form) {
+        const input = form.querySelector('input:not([type="hidden"]), textarea, select');
+        if (input) input.focus();
+    }
+    // On page load (non‑modal forms)
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('form').forEach(f => {
+            if (!f.closest('.modal')) focusFirstInput(f);
+        });
+    });
+    // When a Bootstrap modal is shown
+    document.addEventListener('shown.bs.modal', e => {
+        const modal = e.target;
+        const form = modal.querySelector('form');
+        if (form) focusFirstInput(form);
+    });
+</script>
 </body>
 </html>
