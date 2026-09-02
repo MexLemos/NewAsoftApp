@@ -35,8 +35,8 @@ class HrController extends Controller
         $lon = $request->longitude;
         
         // Coordenadas da ASoftMedia fornecidas pelo utilizador
-        $asoftLat = -8.9343238138973;
-        $asoftLon = 13.30569966776501;
+        $asoftLat = -8.8975;
+        $asoftLon = 13.3315;
         
         $distance = $this->calculateDistance($lat, $lon, $asoftLat, $asoftLon);
         
