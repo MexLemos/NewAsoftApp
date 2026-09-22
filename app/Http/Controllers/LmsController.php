@@ -143,11 +143,15 @@ class LmsController extends Controller
     {
         $certificado = \App\Models\Certificate::where('certificate_code', $code)->with(['user', 'course.modules.lessons'])->firstOrFail();
         
-        $totalHours = 0;
-        foreach($certificado->course->modules as $mod) {
-            $totalHours += $mod->lessons->sum('duration_minutes');
+        if (!empty($certificado->course->workload_hours) && $certificado->course->workload_hours > 0) {
+            $totalHours = $certificado->course->workload_hours;
+        } else {
+            $totalHours = 0;
+            foreach($certificado->course->modules as $mod) {
+                $totalHours += $mod->lessons->sum('duration_minutes');
+            }
+            $totalHours = max(1, round($totalHours / 60)); // mínimo 1 hora de fallback
         }
-        $totalHours = max(1, round($totalHours / 60)); // mínimo 1 hora
 
         return view('lms.certificado_view', compact('certificado', 'totalHours'));
     }

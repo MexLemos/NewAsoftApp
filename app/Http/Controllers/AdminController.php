@@ -319,12 +319,14 @@ class AdminController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric',
             'level' => 'required|in:basic,intermediate,advanced',
+            'workload_hours' => 'nullable|integer|min:1',
             'thumbnail' => 'nullable|image',
         ]);
 
         $validated['slug'] = \Illuminate\Support\Str::slug($request->title) . '-' . time();
         $validated['is_published'] = $request->has('is_published');
         $validated['is_free'] = $request->has('is_free');
+        $validated['workload_hours'] = $request->filled('workload_hours') ? (int)$request->workload_hours : null;
 
         if ($request->hasFile('thumbnail')) {
             $validated['thumbnail'] = $request->file('thumbnail')->store('courses', 'public');
@@ -345,11 +347,13 @@ class AdminController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric',
             'level' => 'required|in:basic,intermediate,advanced',
+            'workload_hours' => 'nullable|integer|min:1',
             'thumbnail' => 'nullable|image',
         ]);
 
         $validated['is_published'] = $request->has('is_published');
         $validated['is_free'] = $request->has('is_free');
+        $validated['workload_hours'] = $request->filled('workload_hours') ? (int)$request->workload_hours : null;
 
         if ($request->hasFile('thumbnail')) {
             $validated['thumbnail'] = $request->file('thumbnail')->store('courses', 'public');

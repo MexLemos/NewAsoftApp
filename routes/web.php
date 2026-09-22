@@ -53,11 +53,11 @@ Route::domain("treinamento.{$baseDomain}")->group(function () {
     Route::get('/catalogo', [PageController::class, 'cursos'])->name('treinamento.cursos');
     Route::get('/treinamento', [PageController::class, 'cursos']);
     Route::get('/cursos', [PageController::class, 'cursos']);
+    Route::get('/certificados/{code}', [LmsController::class, 'showCertificado'])->name('treinamento.certificados.show');
 
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dashboard', [LmsController::class, 'dashboard'])->name('treinamento.dashboard');
         Route::get('/certificados', [LmsController::class, 'certificados'])->name('treinamento.certificados');
-        Route::get('/certificados/{code}', [LmsController::class, 'showCertificado'])->name('treinamento.certificados.show');
         Route::get('/historico', [LmsController::class, 'historico'])->name('treinamento.historico');
         Route::get('/curso/{course}/aula/{lesson}', [LmsController::class, 'lesson'])->name('treinamento.lesson');
         Route::post('/curso/{course}/aula/{lesson}/concluir', [LmsController::class, 'completeLesson'])->name('treinamento.lesson.complete');
@@ -215,11 +215,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Rotas LMS
     Route::get('/lms/dashboard', [LmsController::class, 'dashboard'])->name('lms.dashboard');
     Route::get('/lms/certificados', [LmsController::class, 'certificados'])->name('lms.certificados');
-    Route::get('/lms/certificados/{code}', [LmsController::class, 'showCertificado'])->name('lms.certificados.show');
     Route::get('/lms/historico', [LmsController::class, 'historico'])->name('lms.historico');
     Route::get('/lms/curso/{course}/aula/{lesson}', [LmsController::class, 'lesson'])->name('lms.lesson');
     Route::post('/lms/curso/{course}/aula/{lesson}/concluir', [LmsController::class, 'completeLesson'])->name('lms.lesson.complete');
     Route::post('/lms/curso/{course}/comprar', [LmsController::class, 'enroll'])->name('lms.enroll');
 });
+
+// Verificação Pública de Certificados (Visitantes / QR Code sem necessidade de login)
+Route::get('/lms/certificados/{code}', [LmsController::class, 'showCertificado'])->name('lms.certificados.show');
+Route::get('/certificados/{code}', [LmsController::class, 'showCertificado']);
 
 require __DIR__.'/auth.php';

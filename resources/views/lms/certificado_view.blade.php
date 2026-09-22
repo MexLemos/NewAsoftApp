@@ -137,6 +137,15 @@
             font-weight: 700;
         }
 
+        .infosi-cert {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1b3d87;
+            text-align: center;
+            margin: 6px auto 0 auto;
+            letter-spacing: 0.5px;
+        }
+
         .footer {
             margin-top: 25px;
             display: flex;
@@ -251,6 +260,10 @@
                 Concluiu no dia {{ $certificado->created_at->format('d/m/Y') }} o Curso/Treinamento:<br>
                 <strong>{{ $certificado->course->title }}</strong>, com uma carga<br>
                 horária de {{ $totalHours }} horas.
+            </div>
+
+            <div class="infosi-cert">
+                Certificado Pelo INFOSI: 287569257120
             </div>
 
             <div class="footer">

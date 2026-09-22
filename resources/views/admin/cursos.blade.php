@@ -28,6 +28,7 @@
                         <th class="py-3">Capa</th>
                         <th class="py-3">Título do Curso</th>
                         <th class="py-3">Categoria</th>
+                        <th class="py-3">Carga Horária</th>
                         <th class="py-3">Preço</th>
                         <th class="py-3 text-center">Status</th>
                         <th class="px-4 py-3 text-end">Ações</th>
@@ -48,6 +49,13 @@
                         </td>
                         <td class="fw-bold">{{ $course->title }}</td>
                         <td>{{ $course->category->name ?? 'Geral' }}</td>
+                        <td>
+                            @if($course->workload_hours)
+                                <span class="badge bg-light text-dark border"><i class="fa-solid fa-clock me-1 text-primary"></i>{{ $course->workload_hours }} horas</span>
+                            @else
+                                <span class="text-muted small">Auto (Aulas)</span>
+                            @endif
+                        </td>
                         <td>
                             @if($course->is_free)
                                 <span class="badge bg-success">Grátis</span>
@@ -74,7 +82,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="text-center py-5 text-muted">
+                        <td colspan="8" class="text-center py-5 text-muted">
                             <i class="fa-solid fa-box-open fs-2 mb-3 text-opacity-50"></i><br>
                             Nenhum curso cadastrado ainda.
                         </td>
@@ -110,7 +118,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label fw-semibold">Nível</label>
                             <select name="level" class="form-select" required>
                                 <option value="basic">Básico</option>
@@ -118,11 +126,15 @@
                                 <option value="advanced">Avançado</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Carga Horária (Horas)</label>
+                            <input type="number" min="1" name="workload_hours" class="form-control" placeholder="Ex: 40">
+                        </div>
+                        <div class="col-md-3">
                             <label class="form-label fw-semibold">Preço (Kz)</label>
                             <input type="number" step="0.01" name="price" class="form-control" value="0">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label fw-semibold">Capa (Imagem)</label>
                             <input type="file" name="thumbnail" class="form-control" accept="image/*">
                         </div>
@@ -177,7 +189,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label fw-semibold">Nível</label>
                             <select name="level" class="form-select" required>
                                 <option value="basic" {{ $course->level == 'basic' ? 'selected' : '' }}>Básico</option>
@@ -185,11 +197,15 @@
                                 <option value="advanced" {{ $course->level == 'advanced' ? 'selected' : '' }}>Avançado</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Carga Horária (Horas)</label>
+                            <input type="number" min="1" name="workload_hours" class="form-control" value="{{ $course->workload_hours }}" placeholder="Ex: 40">
+                        </div>
+                        <div class="col-md-3">
                             <label class="form-label fw-semibold">Preço (Kz)</label>
                             <input type="number" step="0.01" name="price" class="form-control" value="{{ $course->price }}">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label fw-semibold">Capa (Imagem)</label>
                             <input type="file" name="thumbnail" class="form-control" accept="image/*">
                             @if($course->thumbnail)
