@@ -41,9 +41,12 @@
     
     <div class="col-md-6">
         <div class="card border-0 shadow-sm rounded-4 h-100">
-            <div class="card-header bg-transparent border-bottom-0 pt-4 pb-0 px-4">
-                <h5 class="fw-bold mb-0 text-muted"><i class="fa-solid fa-triangle-exclamation me-2 text-danger"></i>Alunos/Clientes Inadimplentes</h5>
-                <p class="small text-muted mt-1">Clientes com pagamentos pendentes/rejeitados.</p>
+            <div class="card-header bg-transparent border-bottom-0 pt-4 pb-0 px-4 d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="fw-bold mb-0 text-muted"><i class="fa-solid fa-triangle-exclamation me-2 text-danger"></i>Alunos/Clientes Inadimplentes</h5>
+                    <p class="small text-muted mt-1 mb-0">Clientes com pagamentos pendentes/rejeitados.</p>
+                </div>
+                <x-export-buttons list="inadimplentes" />
             </div>
             <div class="card-body p-4">
                 <div class="table-responsive" style="max-height: 250px;">

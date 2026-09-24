@@ -130,15 +130,20 @@ class CrmController extends Controller
     public function propinas(Request $request)
     {
         $mesFiltro = $request->mes ?? date('m/Y');
+        $statusFiltro = $request->status ?? null;
         
-        $tuitions = \App\Models\Tuition::with(['user', 'turma.course', 'payment'])
-            ->where('reference_month', $mesFiltro)
-            ->latest()
-            ->get();
+        $query = \App\Models\Tuition::with(['user', 'turma.course', 'payment'])
+            ->where('reference_month', $mesFiltro);
+
+        if ($statusFiltro && in_array($statusFiltro, ['pending', 'paid'])) {
+            $query->where('status', $statusFiltro);
+        }
+            
+        $tuitions = $query->latest()->get();
             
         $turmasAtivas = \App\Models\Turma::where('is_active', true)->count();
         
-        return view('admin.propinas', compact('tuitions', 'mesFiltro', 'turmasAtivas'));
+        return view('admin.propinas', compact('tuitions', 'mesFiltro', 'statusFiltro', 'turmasAtivas'));
     }
     
     public function gerarPropinas(Request $request)

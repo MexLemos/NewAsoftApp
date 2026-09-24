@@ -117,19 +117,73 @@ class ExportController extends Controller
 
             case 'propinas':
                 $mes = request('mes', date('m/Y'));
-                $rows = Tuition::with(['user', 'turma.course'])
-                    ->where('reference_month', $mes)->get()->map(fn($t) => [
-                        $t->user->name ?? 'N/D',
-                        $t->user->email ?? 'N/D',
-                        $t->turma->name ?? 'N/D',
-                        $t->turma->course->title ?? 'N/D',
-                        $t->reference_month,
-                        \Carbon\Carbon::parse($t->due_date)->format('d/m/Y'),
-                        number_format($t->amount, 2, ',', '.') . ' Kz',
-                        $t->status === 'paid' ? 'Pago' : 'Pendente',
-                    ]);
+                $status = request('status');
+
+                $query = Tuition::with(['user', 'turma.course']);
+
+                if ($mes) {
+                    $query->where('reference_month', $mes);
+                }
+
+                if ($status && in_array($status, ['pending', 'paid'])) {
+                    $query->where('status', $status);
+                } elseif (request()->has('dividas') || request()->boolean('apenas_dividas')) {
+                    $query->where('status', 'pending');
+                }
+
+                $rows = $query->get()->map(fn($t) => [
+                    $t->user->name ?? 'N/D',
+                    $t->user->email ?? 'N/D',
+                    $t->turma->name ?? 'N/D',
+                    $t->turma->course->title ?? 'N/D',
+                    $t->reference_month,
+                    $t->due_date ? \Carbon\Carbon::parse($t->due_date)->format('d/m/Y') : 'N/D',
+                    number_format($t->amount, 2, ',', '.') . ' Kz',
+                    $t->status === 'paid' ? 'Pago' : ($t->due_date && \Carbon\Carbon::parse($t->due_date)->isPast() ? 'Inadimplente (Atrasado)' : 'Pendente'),
+                ]);
                 $headings = ['Aluno', 'Email', 'Turma', 'Curso', 'Mes Ref.', 'Vencimento', 'Valor', 'Estado'];
-                $title    = 'Propinas - ' . $mes;
+                $suffix   = ($status === 'pending' || request()->has('dividas') || request()->boolean('apenas_dividas')) ? ' (Dividas)' : '';
+                $title    = 'Propinas - ' . $mes . $suffix;
+                break;
+
+            case 'inadimplentes':
+            case 'dividas':
+                $mes = request('mes');
+                $query = Tuition::with(['user', 'turma.course'])
+                    ->where('status', 'pending');
+
+                if ($mes) {
+                    $query->where('reference_month', $mes);
+                }
+
+                $rows = $query->orderBy('due_date', 'asc')->get()->map(fn($t) => [
+                    $t->user->name ?? 'N/D',
+                    $t->user->email ?? 'N/D',
+                    $t->turma->name ?? 'N/D',
+                    $t->turma->course->title ?? 'N/D',
+                    $t->reference_month,
+                    $t->due_date ? \Carbon\Carbon::parse($t->due_date)->format('d/m/Y') : 'N/D',
+                    number_format($t->amount, 2, ',', '.') . ' Kz',
+                    $t->due_date && \Carbon\Carbon::parse($t->due_date)->isPast() ? 'Atrasado (Vencido)' : 'Pendente',
+                ]);
+                $headings = ['Aluno', 'Email', 'Turma', 'Curso', 'Mes Ref.', 'Vencimento', 'Valor em Divida', 'Situacao'];
+                $title    = 'Alunos com Dividas' . ($mes ? ' - ' . $mes : '');
+                break;
+
+            case 'auditoria':
+                $query = \Spatie\Activitylog\Models\Activity::with('causer')->latest();
+                if (request()->filled('log_name')) {
+                    $query->where('log_name', request('log_name'));
+                }
+                $rows = $query->limit(500)->get()->map(fn($a) => [
+                    $a->created_at->format('d/m/Y H:i:s'),
+                    $a->causer->name ?? 'Sistema',
+                    $a->log_name,
+                    $a->description,
+                    $a->subject_type ? class_basename($a->subject_type) . ' #' . $a->subject_id : 'N/D',
+                ]);
+                $headings = ['Data/Hora', 'Utilizador', 'Modulo', 'Acao / Descricao', 'Alvo'];
+                $title    = 'Logs de Auditoria';
                 break;
 
             default:
@@ -139,10 +193,18 @@ class ExportController extends Controller
         return ['rows' => $rows, 'headings' => $headings, 'title' => $title];
     }
 
+    /**
+     * Sanitiza o nome do ficheiro para download seguro sem barras ou caracteres inválidos.
+     */
+    private function sanitizeFilename(string $filename): string
+    {
+        return str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $filename);
+    }
+
     public function exportExcel(string $list)
     {
         $meta = $this->resolveList($list);
-        $filename = $meta['title'] . ' - ' . now()->format('d-m-Y') . '.xlsx';
+        $filename = $this->sanitizeFilename($meta['title'] . ' - ' . now()->format('d-m-Y') . '.xlsx');
         return Excel::download(new GenericExport($meta['rows'], $meta['headings'], $meta['title']), $filename);
     }
 
@@ -156,7 +218,7 @@ class ExportController extends Controller
             'date'     => now()->format('d/m/Y H:i'),
         ])->setPaper('a4', 'landscape');
 
-        $filename = $meta['title'] . ' - ' . now()->format('d-m-Y') . '.pdf';
+        $filename = $this->sanitizeFilename($meta['title'] . ' - ' . now()->format('d-m-Y') . '.pdf');
         return $pdf->download($filename);
     }
 }

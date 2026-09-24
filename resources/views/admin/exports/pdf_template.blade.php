@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
@@ -20,16 +20,18 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <div>
-            <h1>ASoftMedia <span class="count-badge">{{ count($rows) }} registos</span></h1>
-            <div class="company">Sistema de Gestao Integrada</div>
-        </div>
-        <div class="meta">
-            <div style="font-size:13px; font-weight:bold;">{{ $title }}</div>
-            <div>Emitido em: {{ $date }}</div>
-        </div>
-    </div>
+    <table style="width: 100%; background-color: #1e3a8a; color: white; margin-bottom: 20px; border-collapse: collapse;">
+        <tr>
+            <td style="padding: 14px 18px; vertical-align: middle; border: none; background: none;">
+                <div style="font-size: 16px; font-weight: bold;">ASoftMedia <span class="count-badge">{{ count($rows) }} registos</span></div>
+                <div class="company">Sistema de Gestão Integrada</div>
+            </td>
+            <td style="padding: 14px 18px; vertical-align: middle; text-align: right; border: none; background: none;">
+                <div style="font-size: 13px; font-weight: bold;">{{ $title }}</div>
+                <div style="font-size: 9px; opacity: 0.85; margin-top: 2px;">Emitido em: {{ $date }}</div>
+            </td>
+        </tr>
+    </table>
 
     <table>
         <thead>

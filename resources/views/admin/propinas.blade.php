@@ -7,7 +7,7 @@
         <p class="text-muted mb-0">Gestão e faturação de mensalidades recorrentes por turma.</p>
     </div>
     <div class="d-flex gap-2 align-items-center flex-wrap">
-        <x-export-buttons list="propinas" :extra-params="'?mes=' . $mesFiltro" />
+        <x-export-buttons list="propinas" :extra-params="'?mes=' . $mesFiltro . (!empty($statusFiltro) ? '&status=' . $statusFiltro : '')" />
         <form action="{{ route('admin.propinas.gerar') }}" method="POST" onsubmit="return confirm('Tem a certeza que deseja gerar as faturas de propinas para o mês atual ({{ date('m/Y') }}) em todas as turmas ativas?')">
             @csrf
             <button type="submit" class="btn btn-warning text-dark fw-bold shadow-sm">
@@ -28,9 +28,9 @@
     <div class="col-md-8">
         <div class="card border-0 shadow-sm rounded-4 h-100">
             <div class="card-body p-4">
-                <form action="{{ route('admin.propinas') }}" method="GET" class="d-flex gap-3 align-items-end">
-                    <div class="flex-grow-1">
-                        <label class="form-label text-muted small fw-bold">Filtrar por Mês de Referência</label>
+                <form action="{{ route('admin.propinas') }}" method="GET" class="d-flex gap-3 align-items-end flex-wrap">
+                    <div class="flex-grow-1" style="min-width: 170px;">
+                        <label class="form-label text-muted small fw-bold">Filtrar por Mês</label>
                         <select name="mes" class="form-select">
                             @php
                                 // Gerar opções de meses (ex: últimos 6 e próximos 2)
@@ -43,6 +43,14 @@
                             @foreach($meses as $m)
                                 <option value="{{ $m }}" {{ $mesFiltro == $m ? 'selected' : '' }}>Mês {{ $m }}</option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div style="min-width: 170px;">
+                        <label class="form-label text-muted small fw-bold">Estado / Dívidas</label>
+                        <select name="status" class="form-select">
+                            <option value="">Todos os Estados</option>
+                            <option value="pending" {{ ($statusFiltro ?? '') == 'pending' ? 'selected' : '' }}>Com Dívida (Pendentes)</option>
+                            <option value="paid" {{ ($statusFiltro ?? '') == 'paid' ? 'selected' : '' }}>Apenas Pagos</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary fw-bold px-4" style="background-color: var(--asoft-primary); border: none;">Filtrar</button>
