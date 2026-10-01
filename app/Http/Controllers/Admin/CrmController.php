@@ -174,7 +174,7 @@ class CrmController extends Controller
                         'turma_id' => $turma->id,
                         'reference_month' => $mes,
                         'due_date' => $dueDate,
-                        'amount' => $turma->monthly_fee,
+                        'amount' => $turma->monthly_fee ?? 0,
                         'status' => 'pending'
                     ]);
                     $generated++;
@@ -182,7 +182,7 @@ class CrmController extends Controller
             }
         }
         
-        return back()->with('success', "Propinas geradas com sucesso! ($generated novas cobranças geradas para $mes)");
+        return redirect()->route('admin.propinas')->with('success', "Propinas geradas com sucesso! ($generated novas cobranças geradas para $mes)");
     }
 
     // --- RELATÓRIOS ---

@@ -177,7 +177,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/admin/pagamentos', [CrmController::class, 'registrarPagamento'])->name('admin.pagamentos.store');
         
         Route::get('/admin/propinas', [CrmController::class, 'propinas'])->name('admin.propinas');
-        Route::post('/admin/propinas/gerar', [CrmController::class, 'gerarPropinas'])->name('admin.propinas.gerar');
+        Route::match(['get', 'post'], '/admin/propinas/gerar', [CrmController::class, 'gerarPropinas'])->name('admin.propinas.gerar');
         
         // Turmas
         Route::get('/admin/turmas', [TurmaController::class, 'index'])->name('admin.turmas');

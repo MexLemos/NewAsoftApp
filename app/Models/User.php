@@ -56,4 +56,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Course::class, 'enrollments');
     }
+
+    public function turmas()
+    {
+        return $this->belongsToMany(Turma::class, 'turma_user')->withTimestamps();
+    }
+
+    public function tuitions()
+    {
+        return $this->hasMany(Tuition::class);
+    }
 }

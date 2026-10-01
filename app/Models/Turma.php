@@ -25,4 +25,9 @@ class Turma extends Model
     {
         return $this->hasMany(Tuition::class);
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'turma_user')->withTimestamps();
+    }
 }
