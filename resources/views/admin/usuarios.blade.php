@@ -76,6 +76,13 @@
                         <td class="text-end pe-4">
                             <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalCertificado{{ $user->id }}" title="Emitir Certificado"><i class="fa-solid fa-certificate"></i></button>
                             <button class="btn btn-sm btn-light ms-1" data-bs-toggle="modal" data-bs-target="#modalEditUsuario{{ $user->id }}" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                            @if($user->id !== auth()->id())
+                            <form action="{{ route('admin.usuarios.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem a certeza que deseja eliminar o utilizador {{ $user->name }}?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-outline-danger ms-1" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                            </form>
+                            @endif
                         </td>
                     </tr>
                     

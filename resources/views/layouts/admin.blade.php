@@ -180,7 +180,7 @@
             <nav class="navbar navbar-expand-lg navbar-top px-4 py-3 d-flex justify-content-between">
                 <div>
                     <button class="btn btn-sm btn-outline-secondary d-lg-none" type="button"><i class="fa-solid fa-bars"></i></button>
-                    <a href="{{ route('home') }}" class="btn btn-sm btn-outline-secondary me-2 ms-lg-2"><i class="fa-solid fa-arrow-left"></i> Voltar ao Site</a>
+                    <a href="{{ function_exists('subdomain_url') ? subdomain_url('', '/') : 'https://softmedia-ao.com' }}" class="btn btn-sm btn-outline-secondary me-2 ms-lg-2"><i class="fa-solid fa-arrow-left"></i> Voltar ao Site</a>
                     <span class="fw-semibold ms-2 d-none d-md-inline">Painel Administrativo</span>
                 </div>
                 <div>

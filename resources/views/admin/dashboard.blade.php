@@ -66,6 +66,42 @@
     </div>
 </div>
 
+<!-- Tráfego do Site -->
+<div class="row g-4 mb-4">
+    <div class="col-12 col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-light">
+            <div class="card-body d-flex align-items-center justify-content-between p-3 px-4">
+                <div class="d-flex align-items-center">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                        <i class="fa-solid fa-globe fs-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-muted small fw-bold text-uppercase d-block">Total de Acessos ao Site</span>
+                        <h4 class="mb-0 fw-bold text-dark">{{ number_format($metrics['acessos_site'], 0, ',', '.') }}</h4>
+                    </div>
+                </div>
+                <a href="{{ route('admin.leads') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Ver Detalhes</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-light">
+            <div class="card-body d-flex align-items-center justify-content-between p-3 px-4">
+                <div class="d-flex align-items-center">
+                    <div class="bg-success bg-opacity-10 text-success rounded-circle p-3 me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                        <i class="fa-solid fa-chart-simple fs-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-muted small fw-bold text-uppercase d-block">Acessos Registados Hoje</span>
+                        <h4 class="mb-0 fw-bold text-success">{{ number_format($metrics['acessos_hoje'], 0, ',', '.') }}</h4>
+                    </div>
+                </div>
+                <span class="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-2 rounded-pill">Hoje</span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Charts Section -->
 <div class="row g-4 mb-4">
     <div class="col-12 col-lg-8">

@@ -17,27 +17,81 @@
     .modal-footer { display: none !important; }
 }
 </style>
+<div class="row g-4 mb-4">
+    <!-- Métricas de Leads & CRM -->
     <div class="col-12 col-md-4">
         <div class="card border-0 shadow-sm rounded-4 h-100 bg-primary bg-opacity-10">
             <div class="card-body">
-                <h6 class="text-primary fw-bold mb-1">Novas Leads (Hoje)</h6>
-                <h2 class="fw-bolder text-primary mb-0">12</h2>
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h6 class="text-primary fw-bold mb-0">Novas Leads (Hoje)</h6>
+                    <i class="fa-solid fa-bell text-primary fs-5"></i>
+                </div>
+                <h2 class="fw-bolder text-primary mb-0">{{ $leadsHoje }}</h2>
+                <small class="text-muted">Mensagens e encomendas recebidas hoje</small>
             </div>
         </div>
     </div>
     <div class="col-12 col-md-4">
         <div class="card border-0 shadow-sm rounded-4 h-100">
             <div class="card-body">
-                <h6 class="text-muted fw-bold mb-1">Total de Contactos</h6>
-                <h2 class="fw-bolder mb-0">{{ $leads->count() }}</h2>
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h6 class="text-muted fw-bold mb-0">Total de Contactos</h6>
+                    <i class="fa-solid fa-address-book text-muted fs-5"></i>
+                </div>
+                <h2 class="fw-bolder mb-0">{{ $totalLeads }}</h2>
+                <small class="text-muted">Base total de leads acumuladas</small>
             </div>
         </div>
     </div>
     <div class="col-12 col-md-4">
         <div class="card border-0 shadow-sm rounded-4 h-100">
             <div class="card-body">
-                <h6 class="text-muted fw-bold mb-1">Taxa de Conversão</h6>
-                <h2 class="fw-bolder text-success mb-0">14.5%</h2>
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h6 class="text-muted fw-bold mb-0">Taxa de Conversão</h6>
+                    <i class="fa-solid fa-chart-line text-success fs-5"></i>
+                </div>
+                <h2 class="fw-bolder text-success mb-0">{{ $taxaConversao }}%</h2>
+                <small class="text-muted">{{ $leadsQualificados }} pedidos aprovados / convertidos</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Métricas de Tráfego e Acessos ao Site -->
+<div class="row g-4 mb-4">
+    <div class="col-12 col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-light">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted fw-bold small text-uppercase"><i class="fa-solid fa-globe me-1 text-primary"></i> Total de Acessos ao Site</span>
+                    <span class="badge bg-primary bg-opacity-10 text-primary">Global</span>
+                </div>
+                <h3 class="fw-bold mb-0 text-dark">{{ number_format($totalAcessos, 0, ',', '.') }}</h3>
+                <small class="text-muted">Visualizações de páginas registadas</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-light">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted fw-bold small text-uppercase"><i class="fa-solid fa-calendar-day me-1 text-success"></i> Acessos Hoje</span>
+                    <span class="badge bg-success bg-opacity-10 text-success">Hoje</span>
+                </div>
+                <h3 class="fw-bold mb-0 text-success">{{ number_format($acessosHoje, 0, ',', '.') }}</h3>
+                <small class="text-muted">Visitas no dia de hoje</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-light">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted fw-bold small text-uppercase"><i class="fa-solid fa-users-viewfinder me-1 text-info"></i> Visitantes Únicos</span>
+                    <span class="badge bg-info bg-opacity-10 text-info">IPs</span>
+                </div>
+                <h3 class="fw-bold mb-0 text-dark">{{ number_format($visitantesUnicos, 0, ',', '.') }}</h3>
+                <small class="text-muted">Endereços IP únicos no site</small>
             </div>
         </div>
     </div>

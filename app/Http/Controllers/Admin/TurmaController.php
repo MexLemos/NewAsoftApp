@@ -42,7 +42,7 @@ class TurmaController extends Controller
             'name' => 'required|string|max:255',
             'monthly_fee' => 'required|numeric|min:0',
             'trainer_id' => 'nullable|exists:users,id',
-            'is_active' => 'sometimes|in:on',
+            'is_active' => 'nullable',
         ]);
 
         $turma = Turma::findOrFail($id);
@@ -50,8 +50,8 @@ class TurmaController extends Controller
             'course_id' => $request->course_id,
             'name' => $request->name,
             'monthly_fee' => $request->monthly_fee,
-            'trainer_id' => $request->trainer_id,
-            'is_active' => $request->has('is_active'),
+            'trainer_id' => $request->trainer_id ?: null,
+            'is_active' => $request->boolean('is_active'),
         ]);
 
         return back()->with('success', 'Turma actualizada com sucesso.');

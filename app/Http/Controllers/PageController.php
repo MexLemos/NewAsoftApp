@@ -53,4 +53,29 @@ class PageController extends Controller
         
         return view('pages.produtos', compact('products', 'categories', 'totalProducts'));
     }
+
+    public function enviarContacto(Request $request)
+    {
+        // Anti-bot honeypot
+        if ($request->filled('website_hp')) {
+            return redirect()->to(url()->previous() . '#contactos')->with('success', 'Mensagem enviada com sucesso! A nossa equipa entrará em contacto brevemente.');
+        }
+
+        $request->validate([
+            'name'    => 'required|string|max:255',
+            'email'   => 'required|email|max:255',
+            'phone'   => 'nullable|string|max:50',
+            'message' => 'required|string|max:3000',
+        ]);
+
+        \App\Models\Lead::create([
+            'name'    => $request->name,
+            'email'   => $request->email,
+            'phone'   => $request->phone,
+            'message' => $request->message,
+            'status'  => 'new'
+        ]);
+
+        return redirect()->to(url()->previous() . '#contactos')->with('success', 'Mensagem enviada com sucesso! A nossa equipa entrará em contacto brevemente.');
+    }
 }

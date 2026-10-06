@@ -7,6 +7,12 @@
             <p class="text-muted small">Preencha os dados abaixo para se registar na plataforma.</p>
         </div>
 
+        {{-- Anti-bot honeypot field (hidden from real users) --}}
+        <div style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
+            <label for="website_reg_hp">Leave blank</label>
+            <input type="text" name="website_reg_hp" id="website_reg_hp" tabindex="-1" autocomplete="off">
+        </div>
+
         <div class="mb-3">
             <label for="name" class="form-label fw-bold small text-muted">Nome Completo</label>
             <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autofocus autocomplete="name">

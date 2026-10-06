@@ -86,6 +86,7 @@ Route::domain("sysadmin.{$baseDomain}")->group(function () {
 
 // Landing Page Principal
 Route::get('/', [PageController::class, 'home'])->name('home');
+Route::post('/contacto', [PageController::class, 'enviarContacto'])->name('contacto.send')->middleware('throttle:10,1');
 
 // Páginas Públicas Globais
 Route::get('/treinamento', [PageController::class, 'cursos'])->name('cursos');
@@ -168,6 +169,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/admin/usuarios', [AdminController::class, 'storeUser'])->name('admin.usuarios.store');
         Route::post('/admin/usuarios/store', [AdminController::class, 'storeUser'])->name('admin.store.user');
         Route::post('/admin/usuarios/{id}/update', [AdminController::class, 'updateUser'])->name('admin.usuarios.update');
+        Route::delete('/admin/usuarios/{id}', [AdminController::class, 'destroyUser'])->name('admin.usuarios.destroy');
         Route::get('/admin/usuarios/{id}/certificado', [AdminController::class, 'emitirCertificadoManual'])->name('admin.certificados.emitir');
 
         Route::get('/admin/funcionarios', [AdminController::class, 'funcionarios'])->name('admin.funcionarios');

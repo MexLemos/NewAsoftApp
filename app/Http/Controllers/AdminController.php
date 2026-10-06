@@ -8,6 +8,14 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
+        $acessosSite = 0;
+        $acessosHoje = 0;
+        try {
+            \App\Models\SiteVisit::ensureTableExists();
+            $acessosSite = \App\Models\SiteVisit::count();
+            $acessosHoje = \App\Models\SiteVisit::whereDate('created_at', \Carbon\Carbon::today())->count();
+        } catch (\Throwable $e) {}
+
         $metrics = [
             'cursos_vendidos' => \App\Models\Enrollment::where('status', 'active')->count(),
             'alunos_ativos' => \App\Models\User::whereHas('roles', function($q){
@@ -15,6 +23,8 @@ class AdminController extends Controller
             })->orWhereDoesntHave('roles')->count(),
             'produtos_catalogo' => \App\Models\Product::count(),
             'parceiros' => \App\Models\Partner::count(),
+            'acessos_site' => $acessosSite,
+            'acessos_hoje' => $acessosHoje,
         ];
         
         // Orders (Leads with orders)
@@ -134,7 +144,32 @@ class AdminController extends Controller
     public function leads()
     {
         $leads = \App\Models\Lead::latest()->get();
-        return view('admin.leads', compact('leads'));
+        $totalLeads = $leads->count();
+        $leadsHoje = \App\Models\Lead::whereDate('created_at', \Carbon\Carbon::today())->count();
+        $leadsQualificados = \App\Models\Lead::where('status', 'qualified')->count();
+        $taxaConversao = $totalLeads > 0 ? round(($leadsQualificados / $totalLeads) * 100, 1) : 0;
+
+        // Estatísticas reais de acessos ao site
+        \App\Models\SiteVisit::ensureTableExists();
+        $totalAcessos = 0;
+        $acessosHoje = 0;
+        $visitantesUnicos = 0;
+        try {
+            $totalAcessos = \App\Models\SiteVisit::count();
+            $acessosHoje = \App\Models\SiteVisit::whereDate('created_at', \Carbon\Carbon::today())->count();
+            $visitantesUnicos = \App\Models\SiteVisit::distinct('ip')->count('ip');
+        } catch (\Throwable $e) {}
+
+        return view('admin.leads', compact(
+            'leads', 
+            'totalLeads', 
+            'leadsHoje', 
+            'leadsQualificados', 
+            'taxaConversao',
+            'totalAcessos',
+            'acessosHoje',
+            'visitantesUnicos'
+        ));
     }
 
     public function approveLeadCourses($id)
@@ -286,6 +321,30 @@ class AdminController extends Controller
             ->log('Utilizador editado: ' . $user->name);
 
         return redirect()->back()->with('success', 'Usuário atualizado com sucesso!');
+    }
+
+    public function destroyUser($id)
+    {
+        $user = \App\Models\User::findOrFail($id);
+
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'Não pode eliminar a sua própria conta.');
+        }
+
+        if ($user->hasRole('admin') && \App\Models\User::role('admin')->count() <= 1) {
+            return back()->with('error', 'Não é possível eliminar o único administrador do sistema.');
+        }
+
+        $email = $user->email;
+        $name = $user->name;
+        $user->delete();
+
+        activity('utilizadores')
+            ->causedBy(auth()->user())
+            ->withProperties(['ip' => request()->ip(), 'user_removido' => $email])
+            ->log('Utilizador eliminado: ' . $name . ' (' . $email . ')');
+
+        return back()->with('success', "Utilizador {$name} ({$email}) eliminado com sucesso!");
     }
 
     public function cursos()

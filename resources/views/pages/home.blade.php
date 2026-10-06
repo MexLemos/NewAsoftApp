@@ -565,19 +565,46 @@
                 <p class="text-muted mb-5">Envie-nos uma mensagem e a nossa equipe entrará em contacto o mais breve possível.</p>
                 
                 <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5" style="background-color: #f8fafc;">
-                    <form action="#" method="POST">
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
+                            <i class="fa-solid fa-circle-check me-2"></i>{{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+                    @if($errors->any())
+                        <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
+                            <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                            <ul class="mb-0 ps-3">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('contacto.send') }}" method="POST">
                         @csrf
+                        {{-- Anti-bot Honeypot --}}
+                        <div style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
+                            <input type="text" name="website_hp" tabindex="-1" autocomplete="off">
+                        </div>
+
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Nome Completo</label>
-                            <input type="text" name="name" class="form-control form-control-lg" required>
+                            <input type="text" name="name" class="form-control form-control-lg" value="{{ old('name') }}" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">E-mail</label>
-                            <input type="email" name="email" class="form-control form-control-lg" required>
+                            <input type="email" name="email" class="form-control form-control-lg" value="{{ old('email') }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Telefone / WhatsApp (Opcional)</label>
+                            <input type="text" name="phone" class="form-control form-control-lg" value="{{ old('phone') }}" placeholder="+244 9...">
                         </div>
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Mensagem</label>
-                            <textarea name="message" class="form-control" rows="4" required></textarea>
+                            <textarea name="message" class="form-control" rows="4" required>{{ old('message') }}</textarea>
                         </div>
                         <div class="mb-4 form-check">
                             <input type="checkbox" class="form-check-input" id="consentCheck" required>
