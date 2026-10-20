@@ -12,12 +12,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-    
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --asoft-primary: #1e3a8a; /* Corporate Blue */
@@ -35,7 +35,7 @@
             font-family: 'Outfit', sans-serif;
             font-weight: 700;
         }
-        
+
         /* Navbar */
         .navbar-custom {
             background-color: var(--asoft-secondary);
@@ -116,8 +116,8 @@
         }
 
         /* Dark Mode overrides */
-        [data-bs-theme="dark"] body, 
-        [data-bs-theme="dark"] .bg-white, 
+        [data-bs-theme="dark"] body,
+        [data-bs-theme="dark"] .bg-white,
         [data-bs-theme="dark"] .bg-light,
         [data-bs-theme="dark"] [style*="background-color: #f8fafc"] {
             background-color: #0f172a !important;
@@ -128,7 +128,7 @@
             background-color: #1e293b !important;
             border-color: #334155 !important;
         }
-        [data-bs-theme="dark"] h1, [data-bs-theme="dark"] h2, [data-bs-theme="dark"] h3, 
+        [data-bs-theme="dark"] h1, [data-bs-theme="dark"] h2, [data-bs-theme="dark"] h3,
         [data-bs-theme="dark"] h4, [data-bs-theme="dark"] h5, [data-bs-theme="dark"] h6,
         [data-bs-theme="dark"] .text-dark,
         [data-bs-theme="dark"] [style*="color: #0f172a"],
@@ -156,7 +156,7 @@
     </style>
 </head>
 <body>
-    
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
         <div class="container">
@@ -285,19 +285,19 @@
                 <div class="col-lg-2 col-md-6">
                     <h5 class="text-white mb-4">Links Rápidos</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#">Sobre Nós</a></li>
-                        <li class="mb-2"><a href="#">Nossos Cursos</a></li>
-                        <li class="mb-2"><a href="#">Produtos de TI</a></li>
-                        <li class="mb-2"><a href="#">Área de Downloads</a></li>
+                        <li class="mb-2"><a href="#sobre">Sobre Nós</a></li>
+                        <li class="mb-2"><a href="#Treinamento">Nossos Cursos</a></li>
+                        <li class="mb-2"><a href="#produtos">Produtos de TI</a></li>
+
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h5 class="text-white mb-4">Serviços</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#">Desenvolvimento de Software</a></li>
-                        <li class="mb-2"><a href="#">Consultoria em TI</a></li>
-                        <li class="mb-2"><a href="#">Redes e Infraestrutura</a></li>
-                        <li class="mb-2"><a href="#">Gestão Escolar</a></li>
+                        <li class="mb-2"><a href="#servicos">Desenvolvimento de Software</a></li>
+                        <li class="mb-2"><a href="#servicos">Consultoria em TI</a></li>
+                        <li class="mb-2"><a href="#servicos">Redes e Infraestrutura</a></li>
+                        <li class="mb-2"><a href="#servicos">Gestão Escolar</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-6">
@@ -309,7 +309,7 @@
                         </li>
                         <li class="mb-3 d-flex align-items-start">
                             <i class="fa-solid fa-envelope mt-1 me-3 text-white"></i>
-                            <span>info@asoftmedia-ao.com</span>
+                            <span>info@softmedia-ao.com</span>
                         </li>
                         <li class="d-flex align-items-start">
                             <i class="fa-solid fa-location-dot mt-1 me-3 text-white"></i>
@@ -335,7 +335,7 @@
     <script>
         const themeToggle = document.getElementById('theme-toggle');
         const htmlElement = document.documentElement;
-        
+
         const savedTheme = localStorage.getItem('theme') || 'light';
         htmlElement.setAttribute('data-bs-theme', savedTheme);
         updateToggleIcon(savedTheme);
@@ -343,7 +343,7 @@
         themeToggle.addEventListener('click', () => {
             const currentTheme = htmlElement.getAttribute('data-bs-theme');
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
+
             htmlElement.setAttribute('data-bs-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             updateToggleIcon(newTheme);
@@ -380,7 +380,7 @@
             });
         });
     </script>
-    
+
     <!-- Global Loading Overlay -->
     <div id="global-page-loader" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.85); z-index: 10000; justify-content: center; align-items: center; flex-direction: column;">
         <div class="spinner-border" style="width: 3.5rem; height: 3.5rem; color: var(--asoft-primary);" role="status">
@@ -388,7 +388,7 @@
         </div>
         <h5 class="mt-4 fw-bold" style="color: var(--asoft-primary);">Processando...</h5>
     </div>
-    
+
     <script>
         // Intercept form submissions and link clicks to show loader
         document.addEventListener('submit', function () {
@@ -405,8 +405,8 @@
                 if(target.hasAttribute('download')) return;
 
                 // Ignore if it's the exact same page (only the hash # is changing)
-                if (target.hostname === window.location.hostname && 
-                    target.pathname === window.location.pathname && 
+                if (target.hostname === window.location.hostname &&
+                    target.pathname === window.location.pathname &&
                     target.search === window.location.search) {
                     return;
                 }
@@ -414,7 +414,7 @@
                 document.getElementById('global-page-loader').style.display = 'flex';
             }
         });
-        
+
         // Hide loader on page load (handles back/forward cache)
         window.addEventListener('pageshow', function() {
             document.getElementById('global-page-loader').style.display = 'none';
