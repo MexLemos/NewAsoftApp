@@ -68,7 +68,7 @@
 
 <!-- Tráfego do Site -->
 <div class="row g-4 mb-4">
-    <div class="col-12 col-md-6">
+    <div class="col-12 col-md-4">
         <div class="card border-0 shadow-sm rounded-4 h-100 bg-light">
             <div class="card-body d-flex align-items-center justify-content-between p-3 px-4">
                 <div class="d-flex align-items-center">
@@ -76,15 +76,15 @@
                         <i class="fa-solid fa-globe fs-5"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-bold text-uppercase d-block">Total de Acessos ao Site</span>
+                        <span class="text-muted small fw-bold text-uppercase d-block">Total de Acessos</span>
                         <h4 class="mb-0 fw-bold text-dark">{{ number_format($metrics['acessos_site'], 0, ',', '.') }}</h4>
                     </div>
                 </div>
-                <a href="{{ route('admin.leads') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Ver Detalhes</a>
+                <a href="{{ route('admin.leads') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Ver Tráfego</a>
             </div>
         </div>
     </div>
-    <div class="col-12 col-md-6">
+    <div class="col-12 col-md-4">
         <div class="card border-0 shadow-sm rounded-4 h-100 bg-light">
             <div class="card-body d-flex align-items-center justify-content-between p-3 px-4">
                 <div class="d-flex align-items-center">
@@ -92,11 +92,27 @@
                         <i class="fa-solid fa-chart-simple fs-5"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-bold text-uppercase d-block">Acessos Registados Hoje</span>
+                        <span class="text-muted small fw-bold text-uppercase d-block">Acessos Hoje</span>
                         <h4 class="mb-0 fw-bold text-success">{{ number_format($metrics['acessos_hoje'], 0, ',', '.') }}</h4>
                     </div>
                 </div>
                 <span class="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-2 rounded-pill">Hoje</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-light">
+            <div class="card-body d-flex align-items-center justify-content-between p-3 px-4">
+                <div class="d-flex align-items-center">
+                    <div class="bg-info bg-opacity-10 text-info rounded-circle p-3 me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                        <i class="fa-solid fa-users-viewfinder fs-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-muted small fw-bold text-uppercase d-block">Visitantes Únicos</span>
+                        <h4 class="mb-0 fw-bold text-dark">{{ number_format($metrics['visitantes_unicos'] ?? 0, 0, ',', '.') }}</h4>
+                    </div>
+                </div>
+                <span class="badge bg-info bg-opacity-10 text-info fw-bold px-3 py-2 rounded-pill">IPs</span>
             </div>
         </div>
     </div>
@@ -145,7 +161,7 @@
                                 <th>Cliente</th>
                                 <th>Data</th>
                                 <th>Status</th>
-                                <th>Total</th>
+                                <th class="text-end">Ação</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -163,10 +179,19 @@
                                         <span class="badge bg-secondary">{{ $order->status }}</span>
                                     @endif
                                 </td>
+                                <td class="text-end">
+                                    <form action="{{ route('admin.leads.destroy', $order->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Excluir esta notificação de pedido?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger border-0 p-1" title="Excluir notificação">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4" class="text-center text-muted">Nenhum pedido recente.</td>
+                                <td colspan="5" class="text-center text-muted">Nenhum pedido recente.</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -188,11 +213,20 @@
                             <div class="fw-bold">{{ $lead->name }}</div>
                             <small class="text-muted">{{ Str::limit($lead->message, 30) }}</small>
                         </div>
-                        @if($lead->status === 'new')
-                            <span class="badge bg-primary rounded-pill">Novo</span>
-                        @else
-                            <span class="badge bg-secondary rounded-pill">Visto</span>
-                        @endif
+                        <div class="d-flex align-items-center gap-1">
+                            @if($lead->status === 'new')
+                                <span class="badge bg-primary rounded-pill">Novo</span>
+                            @else
+                                <span class="badge bg-secondary rounded-pill">Visto</span>
+                            @endif
+                            <form action="{{ route('admin.leads.destroy', $lead->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Excluir esta notificação?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm text-danger border-0 p-1" title="Excluir notificação">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </form>
+                        </div>
                     </li>
                     @empty
                     <li class="list-group-item px-0 border-0 text-muted">

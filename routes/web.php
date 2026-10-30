@@ -154,7 +154,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/admin/servicos/{id}', [AdminController::class, 'updateService'])->name('admin.servicos.update');
         
         Route::get('/admin/leads', [AdminController::class, 'leads'])->name('admin.leads');
+        Route::delete('/admin/leads/{id}', [AdminController::class, 'destroyLead'])->name('admin.leads.destroy');
+        Route::post('/admin/leads/bulk-destroy', [AdminController::class, 'bulkDestroyLeads'])->name('admin.leads.bulk_destroy');
+        Route::post('/admin/leads/{id}/read', [AdminController::class, 'markLeadRead'])->name('admin.leads.read');
+        Route::post('/admin/leads/read-all', [AdminController::class, 'markAllLeadsRead'])->name('admin.leads.read_all');
         Route::post('/admin/leads/{id}/approve-courses', [AdminController::class, 'approveLeadCourses'])->name('admin.leads.approve_courses');
+        Route::post('/admin/visitas/reset', [AdminController::class, 'resetVisits'])->name('admin.visitas.reset');
     });
 
     // Recursos Humanos / Marcação de Ponto (Todos os funcionários)
@@ -212,6 +217,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         Route::get('/admin/auditoria',           [AuditController::class, 'index'])->name('admin.auditoria');
         Route::get('/admin/auditoria/seguranca', [AuditController::class, 'seguranca'])->name('admin.auditoria.seguranca');
+        Route::post('/admin/auditoria/seguranca/dismiss', [AuditController::class, 'dismissAlerts'])->name('admin.auditoria.seguranca.dismiss');
     });
     
     // Rotas LMS

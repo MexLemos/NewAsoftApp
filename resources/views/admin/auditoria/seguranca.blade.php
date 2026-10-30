@@ -1,4 +1,4 @@
-﻿@extends("layouts.admin")
+@extends("layouts.admin")
 
 @section("content")
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -10,6 +10,13 @@
         <i class="fa-solid fa-list me-1"></i> Ver Todos os Logs
     </a>
 </div>
+
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4 rounded-4" role="alert">
+        <i class="fa-solid fa-circle-check me-2"></i>{{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 
 {{-- RESUMO --}}
 <div class="row g-3 mb-4">
@@ -60,12 +67,20 @@
 
 {{-- ALERTAS DE SEGURANCA --}}
 <div class="card border-0 shadow-sm rounded-4">
-    <div class="card-header bg-transparent border-bottom-0 pt-4 px-4 pb-0">
+    <div class="card-header bg-transparent border-bottom-0 pt-4 px-4 pb-0 d-flex justify-content-between align-items-center">
         <h6 class="fw-bold mb-0">
             <i class="fa-solid fa-triangle-exclamation me-2 text-warning"></i>
             Alertas Detectados
             <span class="badge bg-danger ms-2">{{ count($alertas) }}</span>
         </h6>
+        @if(count($alertas) > 0)
+        <form action="{{ route('admin.auditoria.seguranca.dismiss') }}" method="POST" onsubmit="return confirm('Deseja marcar como resolvidos e limpar os alertas de segurança?')">
+            @csrf
+            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill fw-bold">
+                <i class="fa-solid fa-check-double me-1"></i> Limpar / Dispensar Alertas
+            </button>
+        </form>
+        @endif
     </div>
     <div class="card-body p-4">
         @forelse($alertas as $alerta)

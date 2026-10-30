@@ -145,4 +145,10 @@ class AuditController extends Controller
 
         return view("admin.auditoria.seguranca", compact("alertas", "resumo", "atividadePorHora"));
     }
+
+    public function dismissAlerts(Request $request)
+    {
+        Activity::where("log_name", "seguranca")->delete();
+        return redirect()->back()->with('success', 'Alertas de segurança marcados como resolvidos e limpos com sucesso!');
+    }
 }

@@ -183,7 +183,83 @@
                     <a href="{{ function_exists('subdomain_url') ? subdomain_url('', '/') : 'https://softmedia-ao.com' }}" class="btn btn-sm btn-outline-secondary me-2 ms-lg-2"><i class="fa-solid fa-arrow-left"></i> Voltar ao Site</a>
                     <span class="fw-semibold ms-2 d-none d-md-inline">Painel Administrativo</span>
                 </div>
-                <div>
+                <div class="d-flex align-items-center">
+                    <!-- Notifications Dropdown -->
+                    @php
+                        $unreadNotificationsCount = \App\Models\Lead::where('status', 'new')->count();
+                        $latestNotifications = \App\Models\Lead::latest()->take(6)->get();
+                    @endphp
+                    <div class="dropdown d-inline me-3">
+                        <button class="btn btn-sm btn-light position-relative rounded-pill px-3 py-1 border shadow-sm" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Notificações">
+                            <i class="fa-solid fa-bell text-secondary"></i>
+                            @if($unreadNotificationsCount > 0)
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white" style="font-size: 0.65rem;">
+                                    {{ $unreadNotificationsCount > 99 ? '99+' : $unreadNotificationsCount }}
+                                </span>
+                            @endif
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-0 mt-2" style="width: 340px; max-width: 90vw;" aria-labelledby="notifDropdown">
+                            <div class="p-3 bg-light border-bottom rounded-top-4 d-flex justify-content-between align-items-center">
+                                <div class="fw-bold text-dark">
+                                    <i class="fa-solid fa-bell me-1 text-primary"></i> Notificações
+                                    @if($unreadNotificationsCount > 0)
+                                        <span class="badge bg-danger rounded-pill ms-1" style="font-size: 0.7rem;">{{ $unreadNotificationsCount }} novas</span>
+                                    @endif
+                                </div>
+                                @if($unreadNotificationsCount > 0)
+                                <form action="{{ route('admin.leads.read_all') }}" method="POST" class="m-0 p-0">
+                                    @csrf
+                                    <button type="submit" class="btn btn-link text-decoration-none text-muted small p-0" title="Marcar todas como lidas" style="font-size: 0.75rem;">
+                                        Marcar lidas
+                                    </button>
+                                </form>
+                                @endif
+                            </div>
+                            <div class="list-group list-group-flush" style="max-height: 320px; overflow-y: auto;">
+                                @forelse($latestNotifications as $notif)
+                                <div class="list-group-item p-3 {{ $notif->status === 'new' ? 'bg-primary bg-opacity-10' : '' }} d-flex justify-content-between align-items-start gap-2 border-bottom">
+                                    <div class="flex-grow-1 overflow-hidden">
+                                        <div class="d-flex align-items-center gap-1 mb-1">
+                                            @if(str_contains($notif->message, 'PEDIDO DE COMPRA'))
+                                                <span class="badge bg-success rounded-pill" style="font-size: 0.65rem;">Pedido</span>
+                                            @else
+                                                <span class="badge bg-info rounded-pill" style="font-size: 0.65rem;">Contacto</span>
+                                            @endif
+                                            <span class="fw-bold small text-dark text-truncate d-inline-block" style="max-width: 160px;">{{ $notif->name }}</span>
+                                        </div>
+                                        <div class="text-muted small text-truncate" style="font-size: 0.75rem;">
+                                            {{ Str::limit(strip_tags($notif->message), 45) }}
+                                        </div>
+                                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">
+                                            <i class="fa-regular fa-clock me-1"></i>{{ $notif->created_at->diffForHumans() }}
+                                        </small>
+                                    </div>
+                                    <div class="d-flex flex-column gap-1">
+                                        {{-- Botão Excluir Notificação --}}
+                                        <form action="{{ route('admin.leads.destroy', $notif->id) }}" method="POST" onsubmit="return confirm('Excluir esta notificação?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger border-0 p-1" title="Excluir notificação">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                @empty
+                                <div class="text-center py-4 text-muted small">
+                                    <i class="fa-regular fa-bell-slash fa-2x mb-2 d-block opacity-50"></i>
+                                    Nenhuma notificação encontrada.
+                                </div>
+                                @endforelse
+                            </div>
+                            <div class="p-2 text-center bg-light border-top rounded-bottom-4">
+                                <a href="{{ route('admin.leads') }}" class="small fw-bold text-decoration-none text-primary">
+                                    Ver todas as notificações / leads <i class="fa-solid fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                     <button class="btn btn-sm btn-outline-secondary me-3" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
                     <div class="dropdown d-inline">
                         <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">

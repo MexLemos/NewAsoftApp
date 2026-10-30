@@ -10,10 +10,14 @@ class AdminController extends Controller
     {
         $acessosSite = 0;
         $acessosHoje = 0;
+        $visitantesUnicos = 0;
+        $recentVisits = collect();
         try {
             \App\Models\SiteVisit::ensureTableExists();
             $acessosSite = \App\Models\SiteVisit::count();
             $acessosHoje = \App\Models\SiteVisit::whereDate('created_at', \Carbon\Carbon::today())->count();
+            $visitantesUnicos = \App\Models\SiteVisit::distinct('ip')->count('ip');
+            $recentVisits = \App\Models\SiteVisit::latest()->take(6)->get();
         } catch (\Throwable $e) {}
 
         $metrics = [
@@ -25,6 +29,7 @@ class AdminController extends Controller
             'parceiros' => \App\Models\Partner::count(),
             'acessos_site' => $acessosSite,
             'acessos_hoje' => $acessosHoje,
+            'visitantes_unicos' => $visitantesUnicos,
         ];
         
         // Orders (Leads with orders)
@@ -32,7 +37,7 @@ class AdminController extends Controller
         // Just contact leads
         $recentLeads = \App\Models\Lead::where('message', 'not like', '%PEDIDO DE COMPRA%')->latest()->take(5)->get();
 
-        return view('admin.dashboard', compact('metrics', 'recentOrders', 'recentLeads'));
+        return view('admin.dashboard', compact('metrics', 'recentOrders', 'recentLeads', 'recentVisits'));
     }
 
     public function produtos()
@@ -153,11 +158,24 @@ class AdminController extends Controller
         \App\Models\SiteVisit::ensureTableExists();
         $totalAcessos = 0;
         $acessosHoje = 0;
+        $acessosSemana = 0;
         $visitantesUnicos = 0;
+        $recentVisits = collect();
+        $topPages = collect();
+        $ultimaVisita = null;
+
         try {
             $totalAcessos = \App\Models\SiteVisit::count();
             $acessosHoje = \App\Models\SiteVisit::whereDate('created_at', \Carbon\Carbon::today())->count();
+            $acessosSemana = \App\Models\SiteVisit::where('created_at', '>=', \Carbon\Carbon::now()->subDays(7))->count();
             $visitantesUnicos = \App\Models\SiteVisit::distinct('ip')->count('ip');
+            $recentVisits = \App\Models\SiteVisit::latest()->take(30)->get();
+            $topPages = \App\Models\SiteVisit::select('path', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+                ->groupBy('path')
+                ->orderByDesc('total')
+                ->take(5)
+                ->get();
+            $ultimaVisita = \App\Models\SiteVisit::latest()->first();
         } catch (\Throwable $e) {}
 
         return view('admin.leads', compact(
@@ -168,8 +186,101 @@ class AdminController extends Controller
             'taxaConversao',
             'totalAcessos',
             'acessosHoje',
-            'visitantesUnicos'
+            'acessosSemana',
+            'visitantesUnicos',
+            'recentVisits',
+            'topPages',
+            'ultimaVisita'
         ));
+    }
+
+    public function destroyLead($id)
+    {
+        $lead = \App\Models\Lead::findOrFail($id);
+        $leadName = $lead->name;
+        $leadEmail = $lead->email;
+        $lead->delete();
+
+        activity('leads')
+            ->causedBy(auth()->user())
+            ->withProperties(['ip' => request()->ip(), 'lead_email' => $leadEmail])
+            ->log('Notificação / Lead eliminada: ' . $leadName . ' (' . $leadEmail . ')');
+
+        if (request()->wantsJson() || request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Notificação excluída com sucesso!',
+                'remaining' => \App\Models\Lead::where('status', 'new')->count()
+            ]);
+        }
+
+        return redirect()->back()->with('success', "Notificação de {$leadName} excluída com sucesso!");
+    }
+
+    public function markLeadRead($id)
+    {
+        $lead = \App\Models\Lead::findOrFail($id);
+        if ($lead->status === 'new') {
+            $lead->update(['status' => 'contacted']);
+        }
+
+        if (request()->wantsJson() || request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Notificação marcada como vista.',
+                'remaining' => \App\Models\Lead::where('status', 'new')->count()
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Notificação marcada como vista.');
+    }
+
+    public function markAllLeadsRead()
+    {
+        \App\Models\Lead::where('status', 'new')->update(['status' => 'contacted']);
+
+        if (request()->wantsJson() || request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Todas as notificações foram marcadas como lidas.',
+                'remaining' => 0
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Todas as notificações foram marcadas como lidas.');
+    }
+
+    public function bulkDestroyLeads(Request $request)
+    {
+        if ($request->has('clear_all') && $request->clear_all === 'qualified') {
+            $count = \App\Models\Lead::where('status', 'qualified')->count();
+            \App\Models\Lead::where('status', 'qualified')->delete();
+            return redirect()->back()->with('success', "{$count} notificações/pedidos concluídos foram excluídos com sucesso!");
+        }
+
+        if ($request->has('clear_all') && $request->clear_all === 'all') {
+            $count = \App\Models\Lead::count();
+            \App\Models\Lead::truncate();
+            return redirect()->back()->with('success', "Todas as {$count} notificações/leads foram excluídas com sucesso!");
+        }
+
+        $ids = $request->input('ids', []);
+        if (!empty($ids) && is_array($ids)) {
+            $count = \App\Models\Lead::whereIn('id', $ids)->delete();
+            return redirect()->back()->with('success', "{$count} notificações selecionadas foram excluídas com sucesso!");
+        }
+
+        return redirect()->back()->with('error', 'Nenhuma notificação selecionada para exclusão.');
+    }
+
+    public function resetVisits(Request $request)
+    {
+        try {
+            \App\Models\SiteVisit::truncate();
+            return redirect()->back()->with('success', 'Histórico de acessos ao site limpo com sucesso!');
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Erro ao limpar acessos: ' . $e->getMessage());
+        }
     }
 
     public function approveLeadCourses($id)

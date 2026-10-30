@@ -9,6 +9,8 @@ use App\Models\SiteVisit;
 
 class TrackSiteVisits
 {
+    private static bool $tableChecked = false;
+
     /**
      * Handle an incoming request.
      *
@@ -18,28 +20,36 @@ class TrackSiteVisits
     {
         $response = $next($request);
 
-        // Only track successful GET requests on non-administrative pages
-        if ($request->isMethod('GET') && $response->getStatusCode() === 200) {
-            $path = $request->path();
+        // Track GET requests on public pages (status 200 OK, 301/302 Redirect, 304 Not Modified)
+        if ($request->isMethod('GET')) {
+            $status = $response->getStatusCode();
+            if ($status >= 200 && $status < 400) {
+                $path = $request->path();
+                $host = $request->getHost();
 
-            if (!str_starts_with($path, 'admin') && 
-                !str_starts_with($path, 'api') && 
-                !str_starts_with($path, '_') && 
-                !str_starts_with($path, 'storage') &&
-                !$request->ajax()) {
-                
-                try {
-                    SiteVisit::ensureTableExists();
+                if (!str_starts_with($path, 'admin') && 
+                    !str_starts_with($path, 'api') && 
+                    !str_starts_with($path, '_') && 
+                    !str_starts_with($path, 'storage') &&
+                    !str_contains($host, 'sysadmin.') &&
+                    !$request->ajax()) {
+                    
+                    try {
+                        if (!self::$tableChecked) {
+                            SiteVisit::ensureTableExists();
+                            self::$tableChecked = true;
+                        }
 
-                    SiteVisit::create([
-                        'ip'         => $request->ip(),
-                        'url'        => substr($request->fullUrl(), 0, 500),
-                        'path'       => substr('/' . ltrim($path, '/'), 0, 255),
-                        'referer'    => substr($request->headers->get('referer') ?? '', 0, 500),
-                        'user_agent' => substr($request->userAgent() ?? '', 0, 500),
-                    ]);
-                } catch (\Throwable $e) {
-                    // Fail silently to never interrupt visitor browsing
+                        SiteVisit::create([
+                            'ip'         => $request->ip() ?: '127.0.0.1',
+                            'url'        => substr($request->fullUrl(), 0, 500),
+                            'path'       => substr('/' . ltrim($path, '/'), 0, 255),
+                            'referer'    => substr($request->headers->get('referer') ?? '', 0, 500),
+                            'user_agent' => substr($request->userAgent() ?? '', 0, 500),
+                        ]);
+                    } catch (\Throwable $e) {
+                        \Illuminate\Support\Facades\Log::warning('Site visit tracking error: ' . $e->getMessage());
+                    }
                 }
             }
         }

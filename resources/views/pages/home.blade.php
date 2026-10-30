@@ -621,8 +621,7 @@
             <div class="col-lg-6">
                 <!-- Google Maps iframe -->
                 <div class="h-100 rounded-4 overflow-hidden shadow position-relative" style="min-height: 400px; background: #eaeaea;">
-                    <!-- Insert a real map embed here -->
-                    <iframe width="100%" height="100%" frameborder="0" style="border:0; position: absolute; top: 0; left: 0;" src="https://maps.google.com/maps?q=3884%2B57%20Luanda&t=&z=14&ie=UTF8&iwloc=&output=embed" allowfullscreen loading="lazy"></iframe>
+                    <iframe width="100%" height="100%" frameborder="0" style="border:0; position: absolute; top: 0; left: 0;" src="https://maps.google.com/maps?q=-8.934662,13.305087&t=&z=16&ie=UTF8&iwloc=&output=embed" allowfullscreen loading="lazy"></iframe>
                 </div>
             </div>
         </div>
