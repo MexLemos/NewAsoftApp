@@ -27,13 +27,24 @@ class TrackSiteVisits
                 $path = $request->path();
                 $host = $request->getHost();
 
-                if (!str_starts_with($path, 'admin') && 
-                    !str_starts_with($path, 'api') && 
-                    !str_starts_with($path, '_') && 
-                    !str_starts_with($path, 'storage') &&
-                    !str_contains($host, 'sysadmin.') &&
-                    !$request->ajax()) {
-                    
+                // Ignorar acessos administrativos, internos, API, storage e subdomínio do sysadmin
+                $isInternalOrAdminPath = str_starts_with($path, 'admin') || 
+                                         str_starts_with($path, 'api') || 
+                                         str_starts_with($path, '_') || 
+                                         str_starts_with($path, 'storage') ||
+                                         str_contains($host, 'sysadmin.') ||
+                                         $request->ajax();
+
+                // Ignorar visitas quando for um Administrador ou Técnico logado navegando no site
+                $isAdminUser = false;
+                if (auth()->check()) {
+                    $user = auth()->user();
+                    if (method_exists($user, 'hasAnyRole') && $user->hasAnyRole(['admin', 'tech', 'formador', 'instrutor'])) {
+                        $isAdminUser = true;
+                    }
+                }
+
+                if (!$isInternalOrAdminPath && !$isAdminUser) {
                     try {
                         if (!self::$tableChecked) {
                             SiteVisit::ensureTableExists();
